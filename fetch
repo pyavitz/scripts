@@ -225,9 +225,9 @@ while getopts "123hru" OPTION; do
                         ;;
                 h)
                         echo ""
-                        echo "Fetch, Linux kernel installer for the RPi Image Builder"
+                        echo "Fetch, Linux kernel installer for the Raspberry Pi Image Builder"
                         echo "https://github.com/pyavitz/rpi-img-builder"
-                        echo -e "Usage: \e[0;31mfetch -opt\e[0m"
+                        echo "Usage: fetch -opt"
                         echo ""
                         echo -e "   \e[0m-1)    4.19.y\e[0m"
                         echo -e "   \e[0m-2)    5.4.y\e[0m"
