@@ -2,10 +2,8 @@
 
 ###
 list () {
-echo
 content=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/version)
 echo $content
-echo
 }
 
 update () {
@@ -226,7 +224,8 @@ while getopts "123hru" OPTION; do
                         ECHO="up"
                         ;;
                 h)
-                        echo ""
+                        echo
+                        list
                         echo "Fetch, Linux kernel installer for the Raspberry Pi Image Builder"
                         echo "https://github.com/pyavitz/rpi-img-builder"
                         echo "Usage: fetch -opt"
