@@ -231,7 +231,8 @@ while getopts "123hru" OPTION; do
                         echo -e "   \e[0m2) 5.4.y\e[0m"
                         echo -e "   \e[0m3) Stable\e[0m"
                         echo -e "   \e[0mr) Revisions\e[0m"
-                        echo -e "   \e[1mh) Help\e[0m"
+                        echo -e "   ------------"
+                        echo -e "   \e[0mh) Help\e[0m"
                         echo ""
                         exit 0
                         ;;
