@@ -1,5 +1,4 @@
 #!/bin/bash
-# 1-2
 
 ###
 list () {
@@ -226,6 +225,8 @@ while getopts "123hru" OPTION; do
                         ;;
                 h)
                         echo ""
+                        echo "Fetch, Linux kernel installer for the RPi Image Builder"
+                        echo "https://github.com/pyavitz/rpi-img-builder"
                         echo -e "Usage: \e[0;31mfetch -opt\e[0m"
                         echo ""
                         echo -e "   \e[0m-1)    4.19.y\e[0m"
@@ -235,6 +236,8 @@ while getopts "123hru" OPTION; do
                         echo -e "   \e[0m-u)    Update\e[0m"
                         echo -e "   \e[0m-h)    Help\e[0m"
                         echo ""
+                        echo "Should you come across any bugs, either open an issue on GitHub or talk"
+                        echo "with us directly by joining our channel on Freenode; #debianarm-port"
                         exit 0
                         ;;
 
