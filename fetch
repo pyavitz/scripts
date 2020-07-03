@@ -2,8 +2,10 @@
 
 ###
 list () {
+echo
 content=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/version)
 echo $content
+echo
 }
 
 update () {
