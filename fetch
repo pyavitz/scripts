@@ -227,12 +227,12 @@ while getopts "123hru" OPTION; do
                         echo ""
                         echo -e "Usage: \e[0;31mfetch -opt\e[0m"
                         echo ""
-                        echo -e "   \e[0m1) 4.19.y\e[0m"
-                        echo -e "   \e[0m2) 5.4.y\e[0m"
-                        echo -e "   \e[0m3) Stable\e[0m"
-                        echo -e "   \e[0mr) Revisions\e[0m"
-                        echo -e "   ------------"
-                        echo -e "   \e[0mh) Help\e[0m"
+                        echo -e "   \e[0m-1     # 4.19.y\e[0m"
+                        echo -e "   \e[0m-2     # 5.4.y\e[0m"
+                        echo -e "   \e[0m-3     # Stable\e[0m"
+                        echo -e "   \e[0m-r     # Revisions\e[0m"
+                        echo -e "   \e[0m-u     # Update\e[0m"
+                        echo -e "   \e[0m-h     # Help\e[0m"
                         echo ""
                         exit 0
                         ;;
