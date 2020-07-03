@@ -225,13 +225,12 @@ while getopts "123hru" OPTION; do
                         ;;
                 h)
                         echo ""
-                        echo -e "Usage: \e[37mfetch -opt\e[0m"
+                        echo -e "Usage: \e[0;31mfetch -opt\e[0m"
                         echo ""
-                        echo -e "   \e[1m1) 4.19.y\e[0m"
-                        echo -e "   \e[1m2) 5.4.y\e[0m"
-                        echo -e "   \e[1m3) Stable\e[0m"
-                        echo -e "   \e[1mr) Revisions\e[0m"
-                        echo ""
+                        echo -e "   \e[0m1) 4.19.y\e[0m"
+                        echo -e "   \e[0m2) 5.4.y\e[0m"
+                        echo -e "   \e[0m3) Stable\e[0m"
+                        echo -e "   \e[0mr) Revisions\e[0m"
                         echo -e "   \e[1mh) Help\e[0m"
                         echo ""
                         exit 0
