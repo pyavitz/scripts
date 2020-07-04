@@ -1,0 +1,15 @@
+#!/bin/bash
+# Fetch screenshot of another computers display
+# depends: scrot
+
+USER="user@10.0.0.1"
+DESC="Fetching Screenshot . . ."
+SHOT='DISPLAY=:0 scrot -d 1'
+
+echo
+echo -e "\e[1;31m${DESC}\e[0m"
+ssh ${USER} ${SHOT}
+scp -3 ${USER}:~/*.png ~/nameofyourshot.png
+ssh ${USER} 'rm ~/*.png'
+echo -e "\e[1;31mDone.\e[0m"
+echo
