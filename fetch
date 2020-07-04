@@ -224,7 +224,6 @@ while getopts "123hru" OPTION; do
                         ECHO="up"
                         ;;
                 h)
-                        echo
                         list
                         echo "Fetch, Linux kernel installer for the Raspberry Pi Image Builder"
                         echo "https://github.com/pyavitz/rpi-img-builder"
