@@ -70,11 +70,11 @@ while getopts "hsudWI" OPTION; do
                 d)
                         ECHO="down"
                         ;;
-                1)
-                        ECHO="1"
+                W)
+                        ECHO="W"
                         ;;
-                2)
-                        ECHO="2"
+                I)
+                        ECHO="I"
                         ;;
                 h)
                         echo "Simple wifi helper script"
