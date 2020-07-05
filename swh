@@ -104,11 +104,11 @@ if [ $ECHO = "down" ]
 then
         ifdown;
 fi
-if [ $ECHO = "2" ]
+if [ $ECHO = "I" ]
 then
         interfaces;
 fi
-if [ $ECHO = "1" ]
+if [ $ECHO = "W" ]
 then
         wpa;
 fi
