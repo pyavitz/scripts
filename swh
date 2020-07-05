@@ -58,7 +58,7 @@ fi
 
 ECHO="false"
 
-while getopts "hsud12" OPTION; do
+while getopts "hsudWI" OPTION; do
         case $OPTION in
 
                 s)
@@ -77,14 +77,14 @@ while getopts "hsud12" OPTION; do
                         ECHO="2"
                         ;;
                 h)
-                        echo ""
+                        echo "Simple wifi helper script"
                         echo "Usage: wifi -opt"
                         echo ""
                         echo "   -s       Scan for SSID's"
                         echo "   -u       Bring up interface"
                         echo "   -d       Bring down interface"
-                        echo "   -1       Edit wpa supplicant"
-                        echo "   -2       Edit interfaces"
+                        echo "   -W       Edit wpa supplicant"
+                        echo "   -I       Edit interfaces"
                         echo ""
                         exit 0
                         ;;
