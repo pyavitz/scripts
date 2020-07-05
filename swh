@@ -25,7 +25,7 @@ printf '\n'
 
 ifup () {
 echo
-echo Bringing up Wifi.
+echo Bringing up interface.
 sudo ifup ${INTERFACE}
 echo Done.
 echo
@@ -33,7 +33,7 @@ echo
 
 ifdown () {
 echo
-echo Bringing up Wifi.
+echo Bringing down interface.
 sudo ifdown ${INTERFACE}
 echo Done.
 echo
