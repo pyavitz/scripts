@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+INTERFACE="wlan0"
+
+scan () {
+spinner() {
+    local i sp n
+    sp='|\-/'
+    n=${#sp}
+    printf ' '
+    while sleep 0.1; do
+        printf "%s\b" "${sp:i++%n:1}"
+    done
+}
+echo
+printf 'Scanning: '
+spinner &
+
+printf '\n'
+sudo iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption key:'
+
+kill "$!" # kill the spinner
+printf '\n'
+}
+
+ifup () {
+echo
+echo Bringing up Wifi.
+sudo ifup ${INTERFACE}
+echo Done.
+echo
+}
+
+ifdown () {
+echo
+echo Bringing up Wifi.
+sudo ifdown ${INTERFACE}
+echo Done.
+echo
+}
+
+interfaces () {
+sudo nano /etc/network/interfaces
+}
+
+wpa () {
+sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+}
+
+# Commands
+if [ $# -eq 0 ]
+then
+        echo "Missing options!"
+        echo "(run $0 -h for help)"
+        echo ""
+        exit 0
+fi
+
+ECHO="false"
+
+while getopts "hsud12" OPTION; do
+        case $OPTION in
+
+                s)
+                        ECHO="scan"
+                        ;;
+                u)
+                        ECHO="up"
+                        ;;
+                d)
+                        ECHO="down"
+                        ;;
+                1)
+                        ECHO="1"
+                        ;;
+                2)
+                        ECHO="2"
+                        ;;
+                h)
+                        echo ""
+                        echo "Usage: wifi -opt"
+                        echo ""
+                        echo "   -s       Scan for SSID's"
+                        echo "   -u       Bring up interface"
+                        echo "   -d       Bring down interface"
+                        echo "   -1       Edit wpa supplicant"
+                        echo "   -2       Edit interfaces"
+                        echo ""
+                        exit 0
+                        ;;
+
+        esac
+done
+
+if [ $ECHO = "scan" ]
+then
+        scan;
+fi
+if [ $ECHO = "up" ]
+then
+        ifup;
+fi
+if [ $ECHO = "down" ]
+then
+        ifdown;
+fi
+if [ $ECHO = "2" ]
+then
+        interfaces;
+fi
+if [ $ECHO = "1" ]
+then
+        wpa;
+fi
+
