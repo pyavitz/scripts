@@ -78,7 +78,7 @@ while getopts "hsudWI" OPTION; do
                         ;;
                 h)
                         echo "Simple wifi helper script"
-                        echo "Usage: wifi -opt"
+                        echo "Usage: swh -opt"
                         echo ""
                         echo "   -s       Scan for SSID's"
                         echo "   -u       Bring up interface"
