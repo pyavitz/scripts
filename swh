@@ -39,6 +39,14 @@ echo Done.
 echo
 }
 
+restart () {
+echo
+echo Restarting ...
+ifdown
+ifup
+}
+
+
 interfaces () {
 sudo nano /etc/network/interfaces
 }
@@ -58,7 +66,7 @@ fi
 
 ECHO="false"
 
-while getopts "hsudWI" OPTION; do
+while getopts "hsudrWI" OPTION; do
         case $OPTION in
 
                 s)
@@ -69,6 +77,9 @@ while getopts "hsudWI" OPTION; do
                         ;;
                 d)
                         ECHO="down"
+                        ;;
+                r)
+                        ECHO="restart"
                         ;;
                 W)
                         ECHO="W"
@@ -83,6 +94,7 @@ while getopts "hsudWI" OPTION; do
                         echo "   -s       Scan for SSID's"
                         echo "   -u       Bring up interface"
                         echo "   -d       Bring down interface"
+                        echo "   -r       Restart interface"
                         echo "   -W       Edit wpa supplicant"
                         echo "   -I       Edit interfaces"
                         echo ""
@@ -103,6 +115,10 @@ fi
 if [ $ECHO = "down" ]
 then
         ifdown;
+fi
+if [ $ECHO = "restart" ]
+then
+        restart;
 fi
 if [ $ECHO = "I" ]
 then
