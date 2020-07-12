@@ -258,7 +258,7 @@ then
                 else : > /dev/null 2>&1
         fi
 
-        if ls /boot/broadcom/bcm2711*.dtb > /dev/null 2>&1; then rpi4-4.19.y ;
+        if ls /boot/broadcom/bcm2711*.dtb /boot/bcm2711*.dtb > /dev/null 2>&1; then rpi4-4.19.y ;
                 else : > /dev/null 2>&1
         fi
 fi
@@ -274,7 +274,7 @@ then
                 else : > /dev/null 2>&1
         fi
 
-        if ls /boot/broadcom/bcm2711*.dtb > /dev/null 2>&1; then rpi4-5.4.y ;
+        if ls /boot/broadcom/bcm2711*.dtb /boot/bcm2711*.dtb > /dev/null 2>&1; then rpi4-5.4.y ;
                 else : > /dev/null 2>&1
         fi
 fi
