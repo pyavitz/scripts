@@ -290,7 +290,7 @@ then
                 else : > /dev/null 2>&1
         fi
 
-        if ls /boot/broadcom/bcm2711*.dtb > /dev/null 2>&1; then rpi4-stable ;
+        if ls /boot/broadcom/bcm2711*.dtb /boot/bcm2711*.dtb > /dev/null 2>&1; then rpi4-stable ;
                 else : > /dev/null 2>&1
         fi
 fi
