@@ -1,0 +1,103 @@
+### RUN AS ROOT
+run_as_root () {
+if [ "$USER" != "root" ]; then
+        echo "Please run this as root or with sudo privileges."
+        exit 1
+fi
+}
+
+### EEPROM
+update_eeprom () {
+sed -i 's/FIRMWARE_RELEASE_STATUS="critical"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
+sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieeprom-2020-06-15.bin
+}
+
+### PARTITION DRIVE
+partition_usb () {
+dd if=/dev/zero of=/dev/sda bs=512 count=1
+truncate -s 2300MB /dev/sda
+fdisk /dev/sda <<EOF
+o
+n
+p
+1
+2048
+524287
+a
+c
+t
+b
+n
+p
+2
+524288
+
+p
+w
+
+EOF
+partprobe /dev/sda
+echo 'y' | mkfs.vfat -n BOOT /dev/sda1
+echo 'y' | mkfs.ext4 -L ROOTFS /dev/sda2
+mkdir -p /mnt/p1 /mnt/p2
+mount /dev/sda1 /mnt/p1
+mount /dev/sda2 /mnt/p2
+sync
+umount /mnt/p2
+mount -o defaults,noatime /dev/sda2 /mnt/p2
+bash growpart /dev/sda 2 > /dev/null 2>&1
+sleep 1s
+resize2fs /dev/sda2 > /dev/null 2>&1
+mkdir -p /mnt/p2/boot
+mount -o bind /mnt/p1 /mnt/p2/boot
+sleep 1
+lsblk -dno NAME,SIZE
+}
+
+### TRANSFER TO USB
+transfer_to_usb () {
+cd /
+time tar -S -cf - . |tar -C /mnt/p2 -xf -
+}
+
+### FETCH UUID
+partition_uuid () {
+echo 'BOOT_UUID="' > boot1
+blkid -o export -- "/dev/sda1" | sed -ne 's/^UUID=//p' > boot2
+echo '"' > boot3
+paste -d '\0' boot1 boot2 boot3  > /etc/opt/boot-id.txt
+rm -f boot1 boot2 boot3
+
+echo 'ROOT_UUID="' > root1
+blkid -o export -- "/dev/sda2" | sed -ne 's/^UUID=//p' > root2
+echo '"' > root3
+paste -d '\0' root1 root2 root3  > /etc/opt/root-id.txt
+rm -f root1 root2 root3
+
+echo 'ROOT_PARTUUID="' > root1
+blkid -o export -- "/dev/sda2" | sed -ne 's/^PARTUUID=//p' > root2
+echo '"' > root3
+paste -d '\0' root1 root2 root3  > /etc/opt/root-pid.txt
+rm -f root1 root2 root3
+}
+
+### CMDLINE
+create_cmdline () {
+source /etc/opt/root-pid.txt
+rm -f /mnt/p1/cmdline.txt
+tee /mnt/p1/cmdline.txt <<EOF
+console=serial0,115200 console=tty1 root=PARTUUID=${ROOT_PARTUUID} rootfstype=ext4 elevator=deadline fsck.repair=yes logo.nologo rootwait
+EOF
+}
+
+### FSTAB
+create_fstab () {
+source /etc/opt/boot-id.txt
+source /etc/opt/root-id.txt
+rm -f /mnt/p2/etc/fstab
+tee /mnt/p2/etc/fstab <<EOF
+UUID=${BOOT_UUID}	/boot		vfat    defaults 0 2
+UUID=${ROOT_UUID}	/		ext4	defaults,noatime,nodiratime,commit=600,errors=remount-ro 0 1
+tmpfs	/tmp		tmpfs	defaults,nosuid 0 0
+EOF
+}

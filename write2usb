@@ -1,0 +1,69 @@
+#!/bin/bash
+source /etc/opt/usb_func.txt
+RED="\e[1;31m"
+FIN="\e[0m"
+USB="/dev/sda"
+
+check_node () {
+echo ""
+echo -e "You ${RED}don't${FIN} have a ${RED}USB storage device${FIN} connected."
+while [ true ] ; do
+read -t 3 -n 1
+if [ $? = 0 ] ; then
+exit ;
+else
+dialog --infobox "Please connect a usb storage device" 3 40
+fi
+done
+}
+
+run_as_root
+
+if [ -e "$USB" ]; then
+    echo ""
+    echo "$USB node found."
+else 
+    check_node
+fi
+
+echo
+echo Updating eeprom ...
+update_eeprom
+echo Done.
+
+echo
+echo Partitioning USB ...
+partition_usb > /dev/null 2>&1
+echo Done.
+
+echo
+echo Copying to USB ...
+transfer_to_usb > /dev/null 2>&1
+echo Done.
+
+echo
+echo Fetching UUID ...
+partition_uuid
+echo Done.
+
+echo
+echo Creating cmdline dot txt ...
+create_cmdline
+echo Done.
+
+echo
+echo Creating fstab ...
+create_fstab
+echo Done.
+
+echo 
+echo Unmounting USB ...
+rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt /etc/opt/boot-id.txt
+rm -fdr /mnt/p2/mnt/*
+umount /mnt/p2/boot
+umount /mnt/p2
+umount /mnt/p1
+rm -fdr /mnt/*
+echo Done.
+echo
+echo You may now power down and remove the sdcard.
