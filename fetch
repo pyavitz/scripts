@@ -236,8 +236,7 @@ while getopts "123hru" OPTION; do
                         echo -e "   -1        Linux 4.19.y LTS"
                         echo -e "   -2        Linux 5.4.y LTS"
                         echo -e "   -3        Linux Stable Branch"
-                        echo -e "   -u        Update Fetch"
-                        echo -e "   -h        Help"
+                        echo -e "   -u        Update Fetch
                         echo ""
                         echo "Should you come across any bugs, either open an issue on GitHub or talk"
                         echo "with us directly by joining our channel on Freenode; #debianarm-port"
