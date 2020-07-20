@@ -11,3 +11,7 @@ sshot, takes screenshot of computer A and moves it to computer B
 ```
 ```sh
 swh, simple wifi helper
+```
+```sh
+write2usb, updates Raspberry Pi 4B eeprom and sets up usb boot
+```
