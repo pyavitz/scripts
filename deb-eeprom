@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+RED="\e[1;31m"
+FIN="\e[0m"
+
+update () {
+sudo rm -f /usr/local/bin/deb-eeprom
+sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
+sudo chmod +x /usr/local/bin/deb-eeprom
+}
+
+rite2usb () {
+sudo write2usb
+}
+
+upgrade_eeprom () {
+deb-eeprom-update
+}
+
+eeprom_version () {
+nano ~/.eeprom
+}
+
+# Commands
+if [ $# -eq 0 ]
+then
+        echo "Missing options!"
+        echo "(run $0 -h for help)"
+        echo ""
+        exit 0
+fi
+
+ECHO="false"
+
+while getopts "vuUwh" OPTION; do
+        case $OPTION in
+
+                v)
+                        ECHO="version"
+                        ;;
+                U)
+                        ECHO="upgrade"
+                        ;;
+                w)
+                        ECHO="rite2usb"
+                        ;;
+                u)
+                        ECHO="update"
+                        ;;
+                h)
+                        echo -e "${RED}Raspberry Pi 4B EEPROM Helper Script${FIN}"
+                        echo "Usage: deb-eeprom -opt"
+                        echo ""
+                        echo "   -v       Edit version variable"
+                        echo "   -U       Upgrade eeprom package"
+                        echo "   -w       Setup and install usb boot"
+                        echo "   -u       Update script"
+                        echo "   -h       Help"
+                        echo ""
+                        exit 0
+                        ;;
+
+        esac
+done
+
+if [ $ECHO = "version" ]
+then
+        eeprom_version;
+fi
+if [ $ECHO = "upgrade" ]
+then
+        upgrade_eeprom;
+fi
+if [ $ECHO = "rite2usb" ]
+then
+        rite2usb;
+fi
+if [ $ECHO = "update" ]
+then
+        update;
+fi
