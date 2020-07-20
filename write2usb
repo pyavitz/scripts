@@ -29,6 +29,7 @@ done
 ### EEPROM
 update_eeprom () {
 sed -i 's/FIRMWARE_RELEASE_STATUS="critical"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
+sed -i 's/FIRMWARE_RELEASE_STATUS="beta"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
 sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieeprom-2020-06-15.bin
 }
 
