@@ -56,7 +56,6 @@ while getopts "vuUwh" OPTION; do
                         echo "   -U       Upgrade eeprom package"
                         echo "   -w       Setup and install usb boot"
                         echo "   -u       Update script"
-                        echo "   -h       Help"
                         echo ""
                         exit 0
                         ;;
