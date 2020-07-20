@@ -1,9 +1,18 @@
 #!/bin/bash
-source /etc/opt/usb_func.txt
+USB="/dev/sda"
 RED="\e[1;31m"
 FIN="\e[0m"
-USB="/dev/sda"
+# do not edit below this line
 
+### RUN AS ROOT
+run_as_root () {
+if [ "$USER" != "root" ]; then
+        echo "Please run this as root or with sudo privileges."
+        exit 1
+fi
+}
+
+### CHECK FOR NODE
 check_node () {
 echo ""
 echo -e "You ${RED}don't${FIN} have a ${RED}USB storage device${FIN} connected."
@@ -17,53 +26,148 @@ fi
 done
 }
 
+### EEPROM
+update_eeprom () {
+sed -i 's/FIRMWARE_RELEASE_STATUS="critical"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
+sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieeprom-2020-06-15.bin
+}
+
+### PARTITION DRIVE
+partition_usb () {
+dd if=/dev/zero of=${USB} bs=512 count=1
+truncate -s 2300MB ${USB}
+fdisk ${USB} <<EOF
+o
+n
+p
+1
+2048
+524287
+a
+c
+t
+b
+n
+p
+2
+524288
+
+p
+w
+
+EOF
+partprobe ${USB}
+echo 'y' | mkfs.vfat -n BOOT ${USB}1
+echo 'y' | mkfs.ext4 -L ROOTFS ${USB}2
+mkdir -p /mnt/p1 /mnt/p2
+mount ${USB}1 /mnt/p1
+mount ${USB}2 /mnt/p2
+sync
+umount /mnt/p2
+mount -o defaults,noatime ${USB}2 /mnt/p2
+bash growpart ${USB} 2 > /dev/null 2>&1
+sleep 1s
+resize2fs ${USB}2 > /dev/null 2>&1
+mkdir -p /mnt/p2/boot
+mount -o bind /mnt/p1 /mnt/p2/boot
+sleep 1s
+}
+
+### TRANSFER TO USB
+transfer_to_usb () {
+cd /
+time tar -S -cf - . |tar -C /mnt/p2 -xf -
+}
+
+### FETCH UUID
+partition_uuid () {
+echo 'BOOT_UUID="' > boot1
+blkid -o export -- "${USB}1" | sed -ne 's/^UUID=//p' > boot2
+echo '"' > boot3
+paste -d '\0' boot1 boot2 boot3  > /etc/opt/boot-id.txt
+rm -f boot1 boot2 boot3
+
+echo 'ROOT_UUID="' > root1
+blkid -o export -- "${USB}2" | sed -ne 's/^UUID=//p' > root2
+echo '"' > root3
+paste -d '\0' root1 root2 root3  > /etc/opt/root-id.txt
+rm -f root1 root2 root3
+
+echo 'ROOT_PARTUUID="' > root1
+blkid -o export -- "${USB}2" | sed -ne 's/^PARTUUID=//p' > root2
+echo '"' > root3
+paste -d '\0' root1 root2 root3  > /etc/opt/root-pid.txt
+rm -f root1 root2 root3
+}
+
+### CMDLINE
+create_cmdline () {
+source /etc/opt/root-pid.txt
+rm -f /mnt/p1/cmdline.txt
+tee /mnt/p1/cmdline.txt <<EOF
+console=serial0,115200 console=tty1 root=PARTUUID=${ROOT_PARTUUID} rootfstype=ext4 elevator=deadline fsck.repair=yes logo.nologo rootwait
+EOF
+}
+
+### FSTAB
+create_fstab () {
+source /etc/opt/boot-id.txt
+source /etc/opt/root-id.txt
+rm -f /mnt/p2/etc/fstab
+tee /mnt/p2/etc/fstab <<EOF
+UUID=${BOOT_UUID}	/boot		vfat    defaults 0 2
+UUID=${ROOT_UUID}	/		ext4	defaults,noatime,nodiratime,commit=600,errors=remount-ro 0 1
+tmpfs	/tmp		tmpfs	defaults,nosuid 0 0
+EOF
+}
+
+### EXECUTION
 run_as_root
 
 if [ -e "$USB" ]; then
     echo ""
-    echo "$USB node found."
+    echo -e "${RED}$USB found${FIN}."
 else 
     check_node
 fi
-
 echo
-echo Updating eeprom ...
+echo -e "${RED}Updating eeprom${FIN} ..."
 update_eeprom
-echo Done.
+echo -e "${RED}Done${FIN}."
 
 echo
-echo Partitioning USB ...
+echo -e "${RED}Partitioning USB${FIN} ..."
 partition_usb > /dev/null 2>&1
-echo Done.
+echo -e "${RED}Done${FIN}."
 
 echo
-echo Copying to USB ...
+echo -e "${RED}Copying to USB${FIN} ..."
 transfer_to_usb > /dev/null 2>&1
-echo Done.
+echo -e "${RED}Done${FIN}."
 
 echo
-echo Fetching UUID ...
+echo -e "${RED}Fetching UUID${FIN} ..."
 partition_uuid
-echo Done.
+echo -e "${RED}Done${FIN}."
 
 echo
-echo Creating cmdline dot txt ...
+echo -e "${RED}Creating cmdline dot txt${FIN} ..."
 create_cmdline
-echo Done.
+echo -e "${RED}Done${FIN}."
 
 echo
-echo Creating fstab ...
+echo -e "${RED}Creating fstab${FIN} ..."
 create_fstab
-echo Done.
+echo -e "${RED}Done${FIN}."
 
 echo 
-echo Unmounting USB ...
+echo -e "${RED}Unmounting USB${FIN} ..."
 rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt /etc/opt/boot-id.txt
 rm -fdr /mnt/p2/mnt/*
 umount /mnt/p2/boot
 umount /mnt/p2
 umount /mnt/p1
 rm -fdr /mnt/*
-echo Done.
+echo -e "${RED}Done${FIN}."
 echo
 echo You may now power down and remove the sdcard.
