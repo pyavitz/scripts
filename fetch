@@ -13,6 +13,7 @@ update () {
 sudo rm -f /usr/local/bin/fetch
 sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/fetch -P /usr/local/bin
 sudo chmod +x /usr/local/bin/fetch
+fetch -h
 }
 
 ###
