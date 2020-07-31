@@ -4,6 +4,7 @@ update () {
 sudo rm -f /usr/local/bin/wifidrv
 sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/wifidrv -P /usr/local/bin
 sudo chmod +x /usr/local/bin/wifidrv
+wifidrv -h
 }
 
 rtl88x2bu () {
@@ -43,6 +44,24 @@ sudo rm -fdr ~/.build/*
 echo Done.
 }
 
+rtl8821cu () {
+mkdir -p ~/.build
+cd ~/.build
+echo
+echo Checking for dkms.
+sudo apt update
+sudo apt install dkms git -y
+echo
+echo Fetching . . . rtl8821cu.
+git clone https://github.com/brektrou/rtl8821CU.git
+cd rtl8821CU
+sudo cp /lib/modules/$(uname -r)/build/arch/arm64/Makefile /lib/modules/$(uname -r)/build/arch/arm64/Makefile.$(date +%Y%m%d%H%M)
+sudo sed -i 's/-mgeneral-regs-only//' /lib/modules/$(uname -r)/build/arch/arm64/Makefile
+sudo ./dkms-install.sh
+sudo rm -fdr ~/.build/*
+echo Done.
+}
+
 # Commands
 if [ $# -eq 0 ]
 then
@@ -54,14 +73,17 @@ fi
 
 ECHO="false"
 
-while getopts "hu12" OPTION; do
+while getopts "hu123" OPTION; do
         case $OPTION in
 
                 1)
-                        ECHO="rtl88x2bu"
+                        ECHO="rtl8812au"
                         ;;
                 2)
-                        ECHO="rtl8812au"
+                        ECHO="rtl88x2bu"
+                        ;;
+                1)
+                        ECHO="rtl8821cu"
                         ;;
                 u)
                         ECHO="up"
@@ -71,8 +93,9 @@ while getopts "hu12" OPTION; do
                         echo ""
                         echo "Usage: wifidrv -opt"
                         echo ""
-                        echo "   -1     rtl88x2bu (cilynx)"
-                        echo "   -2     rtl8812au (aircrack)"
+                        echo "   -1     rtl8812au (aircrack)"
+                        echo "   -2     rtl88x2bu (cilynx)"
+                        echo "   -3     rtl8821cu (brektrou)"
                         echo "   -u     update script"
                         echo ""
                         exit 0
@@ -88,6 +111,10 @@ fi
 if [ $ECHO = "rtl8812au" ]
 then
         rtl8812au;
+fi
+if [ $ECHO = "rtl8821cu" ]
+then
+        rtl8821cu;
 fi
 if [ $ECHO = "up" ]
 then
