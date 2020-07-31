@@ -19,16 +19,16 @@ sudo chmod +x /usr/local/bin/fetch
 rpi-4.19.y () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi-4.19.y${FIN}"
+echo -e "${RED}Fetching rpi-4.19.y${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi-4.19.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi-4.19.y.tar.xz
 rm -f rpi-4.19.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi-4.19.y
 sudo dpkg -i *.deb
 cd ~
@@ -39,16 +39,16 @@ sudo rm -fdr ~/.build/*
 rpi3-4.19.y () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi3-4.19.y${FIN}"
+echo -e "${RED}Fetching rpi3-4.19.y${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi3-4.19.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi3-4.19.y.tar.xz
 rm -f rpi3-4.19.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi3-4.19.y
 sudo dpkg -i *.deb
 cd ~
@@ -59,16 +59,16 @@ sudo rm -fdr ~/.build/*
 rpi4-4.19.y () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-4.19.y${FIN}"
+echo -e "${RED}Fetching rpi4-4.19.y${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi4-4.19.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi4-4.19.y.tar.xz
 rm -f rpi4-4.19.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi4-4.19.y
 sudo dpkg -i *.deb
 cd ~
@@ -80,16 +80,16 @@ sudo rm -fdr ~/.build/*
 rpi-5.4.y () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi-5.4.y${FIN}"
+echo -e "${RED}Fetching rpi-5.4.y${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi-5.4.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi-5.4.y.tar.xz
 rm -f rpi-5.4.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi-5.4.y
 sudo dpkg -i *.deb
 cd ~
@@ -100,16 +100,16 @@ sudo rm -fdr ~/.build/*
 rpi3-5.4.y () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi3-5.4.y${FIN}"
+echo -e "${RED}Fetching rpi3-5.4.y${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi3-5.4.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi3-5.4.y.tar.xz
 rm -f rpi3-5.4.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi3-5.4.y
 sudo dpkg -i *.deb
 cd ~
@@ -120,16 +120,16 @@ sudo rm -fdr ~/.build/*
 rpi4-5.4.y () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-5.4.y${FIN}"
+echo -e "${RED}Fetching rpi4-5.4.y${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi4-5.4.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi4-5.4.y.tar.xz
 rm -f rpi4-5.4.y.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi4-5.4.y
 sudo dpkg -i *.deb
 cd ~
@@ -141,16 +141,16 @@ sudo rm -fdr ~/.build/*
 rpi-stable () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi-stable${FIN}"
+echo -e "${RED}Fetching rpi-stable${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi-stable.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi-stable.tar.xz
 rm -f rpi-stable.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi-stable
 sudo dpkg -i *.deb
 cd ~
@@ -161,16 +161,16 @@ sudo rm -fdr ~/.build/*
 rpi3-stable () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi3-stable${FIN}"
+echo -e "${RED}Fetching rpi3-stable${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi3-stable.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi3-stable.tar.xz
 rm -f rpi3-stable.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi3-stable
 sudo dpkg -i *.deb
 cd ~
@@ -181,16 +181,16 @@ sudo rm -fdr ~/.build/*
 rpi4-stable () {
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-stable${FIN}"
+echo -e "${RED}Fetching rpi4-stable${FIN} . . ."
 wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi4-stable.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Extracting archive${FIN}"
+echo -e "${RED}Extracting archive${FIN} . . ."
 tar xf rpi4-stable.tar.xz
 rm -f rpi4-stable.tar.xz
 echo -e "${RED}Done.${FIN}"
 echo
-echo -e "${RED}Starting install${FIN}"
+echo -e "${RED}Starting install${FIN} . . ."
 cd rpi4-stable
 sudo dpkg -i *.deb
 cd ~
