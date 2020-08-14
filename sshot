@@ -3,7 +3,7 @@
 # depends: scrot, ssh
 
 USER="user@10.0.0.1"
-DESC="Fetching Screenshot . . ."
+DESC="Fetching Screenshot ..."
 SHOT='DISPLAY=:0 scrot -d 1'
 NAME="filename"
 
