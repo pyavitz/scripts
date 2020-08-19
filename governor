@@ -31,7 +31,7 @@ fi
 
 ECHO="false"
 
-while getopts "coph" OPTION; do
+while getopts "coprh" OPTION; do
         case $OPTION in
 
                 c)
