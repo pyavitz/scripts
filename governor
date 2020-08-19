@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+performance () {
+sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/sbin/set-governor
+sudo set-governor
+}
+
+ondemand () {
+sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" /usr/local/sbin/set-governor
+sudo set-governor
+}
+
+conservative () {
+sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/sbin/set-governor
+sudo set-governor
+}
+
+# Commands
+if [ $# -eq 0 ]
+then
+        echo "Missing options!"
+        echo "(run $0 -h for help)"
+        echo ""
+        exit 0
+fi
+
+ECHO="false"
+
+while getopts "coph" OPTION; do
+        case $OPTION in
+
+                c)
+                        ECHO="conservative"
+                        ;;
+                o)
+                        ECHO="ondemand"
+                        ;;
+                p)
+                        ECHO="performance"
+                        ;;
+                h)
+                        echo "Set the governor"
+                        echo "Usage: swh -opt"
+                        echo ""
+                        echo "   -c       Conservative"
+                        echo "   -o       Ondemand"
+                        echo "   -p       Performance"
+                        echo ""
+                        exit 0
+                        ;;
+
+        esac
+done
+
+if [ $ECHO = "conservative" ]
+then
+        conservative;
+fi
+if [ $ECHO = "ondemand" ]
+then
+        ondemand;
+fi
+if [ $ECHO = "performance" ]
+then
+        performance;
+fi
+
