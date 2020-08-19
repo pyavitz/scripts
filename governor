@@ -57,8 +57,8 @@ while getopts "copruh" OPTION; do
                         ECHO="update"
                         ;;
                 h)
-                        echo "Set the governor"
-                        echo "Usage: swh -opt"
+                        echo "CPU frequency scaling"
+                        echo "Usage: governor -opt"
                         echo ""
                         echo "   -c       Conservative"
                         echo "   -o       Ondemand"
