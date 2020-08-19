@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
+GOVERNOR="performance"
 
 performance () {
-sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/sbin/set-governor
-sudo set-governor
+sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/bin/governor
+governor -r
 }
 
 ondemand () {
-sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" /usr/local/sbin/set-governor
-sudo set-governor
+sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" /usr/local/bin/governor
+governor -r
 }
 
 conservative () {
-sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/sbin/set-governor
-sudo set-governor
+sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/bin/governor
+governor -r
+}
+
+run () {
+echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 }
 
 # Commands
@@ -37,6 +42,9 @@ while getopts "coph" OPTION; do
                         ;;
                 p)
                         ECHO="performance"
+                        ;;
+                r)
+                        ECHO="run"
                         ;;
                 h)
                         echo "Set the governor"
@@ -64,4 +72,7 @@ if [ $ECHO = "performance" ]
 then
         performance;
 fi
-
+if [ $ECHO = "run" ]
+then
+        run;
+fi
