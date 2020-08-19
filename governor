@@ -22,7 +22,7 @@ echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
 update () {
 sudo rm /usr/local/bin/governor
-sudo wget --cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/governor  -P /usr/local/bin/
+sudo wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/governor  -P /usr/local/bin/
 sudo chmod +x /usr/local/bin/governor
 governor -h
 }
