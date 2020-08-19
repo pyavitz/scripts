@@ -20,6 +20,13 @@ run () {
 echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 }
 
+update () {
+rm /usr/local/bin/governor
+wget --cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/governor
+chmod +x /usr/local/bin/governor
+governor -h
+}
+
 # Commands
 if [ $# -eq 0 ]
 then
@@ -46,6 +53,9 @@ while getopts "coprh" OPTION; do
                 r)
                         ECHO="run"
                         ;;
+                u)
+                        ECHO="update"
+                        ;;
                 h)
                         echo "Set the governor"
                         echo "Usage: swh -opt"
@@ -53,6 +63,9 @@ while getopts "coprh" OPTION; do
                         echo "   -c       Conservative"
                         echo "   -o       Ondemand"
                         echo "   -p       Performance"
+                        echo ""
+                        echo "   -r       Run"
+                        echo "   -u       Update"
                         echo ""
                         exit 0
                         ;;
@@ -75,4 +88,8 @@ fi
 if [ $ECHO = "run" ]
 then
         run;
+fi
+if [ $ECHO = "update" ]
+then
+        update;
 fi
