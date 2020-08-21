@@ -21,12 +21,12 @@ echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 }
 
 update () {
-sudo mv /usr/local/bin/governor /usr/local/bin/governor.orig
+sudo mv -f /usr/local/bin/governor /usr/local/bin/governor.orig
 sudo wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/governor  -P /usr/local/bin/
 sudo chmod +x /usr/local/bin/governor
 if ls /usr/local/bin/governor ;
    then sudo rm -f /usr/local/bin/governor.orig ;
-   else sudo mv /usr/local/bin/governor.orig /usr/local/bin/governor
+   else sudo mv -f /usr/local/bin/governor.orig /usr/local/bin/governor
 fi
 governor -h
 }
