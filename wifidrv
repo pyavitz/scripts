@@ -4,7 +4,7 @@ update () {
 sudo mv -f /usr/local/bin/wifidrv /usr/local/bin/wifidrv.orig
 sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/wifidrv -P /usr/local/bin
 sudo chmod +x /usr/local/bin/wifidrv
-if ls /usr/local/bin/wifidrv ;
+if ls /usr/local/bin/wifidrv > /dev/null 2>&1;
    then sudo rm -f /usr/local/bin/wifidrv.orig ;
    else sudo mv -f /usr/local/bin/wifidrv.orig /usr/local/bin/wifidrv
 fi
