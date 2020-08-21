@@ -7,7 +7,7 @@ update () {
 sudo mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
 sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
 sudo chmod +x /usr/local/bin/deb-eeprom
-if ls /usr/local/bin/deb-eeprom ;
+if ls /usr/local/bin/deb-eeprom > /dev/null 2>&1;
    then sudo rm -f /usr/local/bin/deb-eeprom.orig ;
    else sudo mv -f /usr/local/bin/deb-eeprom.orig /usr/local/bin/deb-eeprom
 fi   
