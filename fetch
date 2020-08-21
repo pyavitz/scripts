@@ -10,9 +10,13 @@ echo $content
 }
 
 update () {
-sudo rm -f /usr/local/bin/fetch
+sudo mv -f /usr/local/bin/fetch /usr/local/bin/fetch.orig
 sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/fetch -P /usr/local/bin
 sudo chmod +x /usr/local/bin/fetch
+if ls /usr/local/bin/fetch ;
+   then sudo rm -f /usr/local/bin/fetch ;
+   else sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch
+fi
 fetch -h
 }
 
