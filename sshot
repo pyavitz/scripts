@@ -3,14 +3,14 @@
 # depends: scrot, ssh
 
 USER="user@10.0.0.1"
-DESC="Fetching Screenshot ..."
+DESC="Fetching Screenshot"
 SHOT='DISPLAY=:0 scrot -d 1'
 NAME="filename"
 
 echo
-echo -e "\e[1;31m${DESC}\e[0m"
+echo -e "\e[1;31m${DESC}\e[0m ..."
 ssh ${USER} ${SHOT}
 scp -3 ${USER}:~/*.png ~/${NAME}.png
 ssh ${USER} 'rm ~/*.png'
-echo -e "\e[1;31mDone.\e[0m"
+echo -e "\e[1;31mDone\e[0m."
 echo
