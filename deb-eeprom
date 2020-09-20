@@ -37,8 +37,8 @@ echo Setting up build dir.
 sleep 2s
 mkdir -p /home/$USER/.build/eeprom
 cd /home/$USER/.build/eeprom
-wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/rpi-img-builder/feature/files/patches/rpi-eeprom-control.patch
-wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/rpi-img-builder/feature/files/patches/rpi-eeprom-update.patch
+wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/rpi-eeprom-control.patch
+wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/rpi-eeprom-update.patch
 echo Done.
 echo
 }
