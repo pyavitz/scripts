@@ -3,8 +3,8 @@ USB="/dev/sda"
 RED="\e[1;31m"
 YLW="\e[1;33m"
 FIN="\e[0m"
-DPB="sudo wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
-MPB="sudo mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
+DPB="wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
+MPB="mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
 if ls /etc/opt/progressbar > /dev/null 2>&1
 	then exit ;
 	else $DPB && $MPB ;
