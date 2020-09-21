@@ -74,10 +74,21 @@ mount -o bind /mnt/p1 /mnt/p2/boot
 sleep 1s
 }
 
+### FILE COUNT
+count (){
+echo 'FC="' > count1
+find / | wc -l > count2
+echo '"' > count3
+paste -d '\0' count1 count2 count3  > /etc/opt/count.txt
+rm -f count1 count2 count3
+}
+
 ### TRANSFER TO USB
 transfer_to_usb () {
+source /etc/opt/count.txt
 cd /
-time tar -S -cf - . |tar -C /mnt/p2 -xf -
+(rsync -vaxHAWXS --stats --human-readable . /mnt/p2 | \
+pv -lep -s ${FC}) >/dev/null
 }
 
 ### FETCH UUID
@@ -143,7 +154,8 @@ echo -e "${RED}Done${FIN}."
 
 echo
 echo -e "${RED}Copying to USB${FIN} ..."
-transfer_to_usb > /dev/null 2>&1
+count > /dev/null 2>&1
+transfer_to_usb
 echo -e "${RED}Done${FIN}."
 
 echo
@@ -152,7 +164,7 @@ partition_uuid
 echo -e "${RED}Done${FIN}."
 
 echo
-echo -e "${RED}Creating cmdline dot txt${FIN} ..."
+echo -e "${RED}Creating cmdline.txt${FIN} ..."
 create_cmdline
 echo -e "${RED}Done${FIN}."
 
@@ -163,7 +175,8 @@ echo -e "${RED}Done${FIN}."
 
 echo 
 echo -e "${RED}Unmounting USB${FIN} ..."
-rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt /etc/opt/boot-id.txt
+rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt \
+/etc/opt/boot-id.txt /etc/opt/count.txt
 rm -fdr /mnt/p2/mnt/*
 umount /mnt/p2/boot
 umount /mnt/p2
