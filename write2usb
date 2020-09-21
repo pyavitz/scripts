@@ -3,19 +3,21 @@ USB="/dev/sda"
 RED="\e[1;31m"
 YLW="\e[1;33m"
 FIN="\e[0m"
-DPB="sudo wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
-MPB="sudo mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
-if ls /etc/opt/progressbar > /dev/null 2>&1
-	then exit ;
-	else $DPB && $MPB ;
-fi
-# do not edit below this line
 
 ### RUN AS ROOT
 run_as_root(){
 if [ "$USER" != "root" ]; then
         echo "Please run this as root or with sudo privileges."
         exit 1
+fi
+}
+
+check_progressbar(){
+DPB="sudo wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
+MPB="sudo mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
+if ls /etc/opt/progressbar > /dev/null 2>&1
+	then exit ;
+	else $DPB && $MPB ;
 fi
 }
 
@@ -149,6 +151,7 @@ EOF
 
 ### EXECUTION
 run_as_root
+check_progressbar
 
 if [ -e "$USB" ]; then
     echo ""
