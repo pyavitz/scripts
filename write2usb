@@ -1,11 +1,18 @@
 #!/bin/bash
 USB="/dev/sda"
 RED="\e[1;31m"
+YLW="\e[1;33m"
 FIN="\e[0m"
+DPB="sudo wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
+MPB="sudo mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
+if ls /etc/opt/progressbar > /dev/null 2>&1
+	then exit ;
+	else $DPB && $MPB ;
+fi
 # do not edit below this line
 
 ### RUN AS ROOT
-run_as_root () {
+run_as_root(){
 if [ "$USER" != "root" ]; then
         echo "Please run this as root or with sudo privileges."
         exit 1
@@ -13,7 +20,7 @@ fi
 }
 
 ### CHECK FOR NODE
-check_node () {
+check_node(){
 echo ""
 echo -e "You ${RED}don't${FIN} have a ${RED}USB storage device${FIN} connected."
 while [ true ] ; do
@@ -27,14 +34,16 @@ done
 }
 
 ### EEPROM
-update_eeprom () {
+update_eeprom(){
 sed -i 's/FIRMWARE_RELEASE_STATUS="critical"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
 sed -i 's/FIRMWARE_RELEASE_STATUS="beta"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
 sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieeprom-2020-06-15.bin
 }
 
 ### PARTITION DRIVE
-partition_usb () {
+partition_usb(){
+partprobe ${USB}
+sleep 4s
 dd if=/dev/zero of=${USB} bs=512 count=1
 truncate -s 2300MB ${USB}
 fdisk ${USB} <<EOF
@@ -69,19 +78,35 @@ mount -o defaults,noatime ${USB}2 /mnt/p2
 bash growpart ${USB} 2 > /dev/null 2>&1
 sleep 1s
 resize2fs ${USB}2 > /dev/null 2>&1
-mkdir -p /mnt/p2/boot
-mount -o bind /mnt/p1 /mnt/p2/boot
 sleep 1s
 }
 
-### TRANSFER TO USB
-transfer_to_usb () {
+### RSYNC
+transfer(){
 cd /
-time tar -S -cf - . |tar -C /mnt/p2 -xf -
+cp -fdrP /boot/* /mnt/p1/
+rsync -apvx --progress --stats --human-readable . /mnt/p2 > /dev/null 
+}
+
+transfer_to_usb(){
+source /etc/opt/progressbar.txt
+    enable_trapping
+    setup_scroll_area
+    for i in {1..99}
+    do
+        if [ $i = 1 ]; then
+            block_progress_bar $i
+        else
+            transfer
+            draw_progress_bar $i
+        fi
+    done
+    destroy_scroll_area
 }
 
 ### FETCH UUID
-partition_uuid () {
+sleep 1s
+partition_uuid(){
 echo 'BOOT_UUID="' > boot1
 blkid -o export -- "${USB}1" | sed -ne 's/^UUID=//p' > boot2
 echo '"' > boot3
@@ -102,7 +127,7 @@ rm -f root1 root2 root3
 }
 
 ### CMDLINE
-create_cmdline () {
+create_cmdline(){
 source /etc/opt/root-pid.txt
 rm -f /mnt/p1/cmdline.txt
 tee /mnt/p1/cmdline.txt <<EOF
@@ -111,7 +136,7 @@ EOF
 }
 
 ### FSTAB
-create_fstab () {
+create_fstab(){
 source /etc/opt/boot-id.txt
 source /etc/opt/root-id.txt
 rm -f /mnt/p2/etc/fstab
@@ -142,32 +167,38 @@ partition_usb > /dev/null 2>&1
 echo -e "${RED}Done${FIN}."
 
 echo
-echo -e "${RED}Copying to USB${FIN} ..."
-transfer_to_usb > /dev/null 2>&1
-echo -e "${RED}Done${FIN}."
+echo -e "${YLW}Please be patient as the boot and root filesystem${FIN}"
+echo -e "${YLW}are transferred over to the USB drive${FIN}."
+transfer_to_usb
+clear
+sleep 1s
 
 echo
 echo -e "${RED}Fetching UUID${FIN} ..."
 partition_uuid
+sleep 1s
 echo -e "${RED}Done${FIN}."
 
 echo
-echo -e "${RED}Creating cmdline dot txt${FIN} ..."
+echo -e "${RED}Creating cmdline.txt${FIN} ..."
 create_cmdline
+sleep 1s
 echo -e "${RED}Done${FIN}."
 
 echo
 echo -e "${RED}Creating fstab${FIN} ..."
 create_fstab
+sleep 1s
 echo -e "${RED}Done${FIN}."
 
 echo 
 echo -e "${RED}Unmounting USB${FIN} ..."
-rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt /etc/opt/boot-id.txt
+rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt \
+/etc/opt/boot-id.txt
 rm -fdr /mnt/p2/mnt/*
-umount /mnt/p2/boot
-umount /mnt/p2
-umount /mnt/p1
+umount /mnt/p2/boot > /dev/null 2>&1
+umount /mnt/p2 > /dev/null 2>&1
+umount /mnt/p1 > /dev/null 2>&1
 rm -fdr /mnt/*
 echo -e "${RED}Done${FIN}."
 echo
