@@ -1,7 +1,14 @@
 #!/bin/bash
 USB="/dev/sda"
 RED="\e[1;31m"
+YLW="\e[1;33m"
 FIN="\e[0m"
+DPB="sudo wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
+MPB="sudo mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
+if ls /etc/opt/progressbar > /dev/null 2>&1
+	then exit ;
+	else $DPB && $MPB ;
+fi
 # do not edit below this line
 
 ### RUN AS ROOT
@@ -35,6 +42,8 @@ sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieepro
 
 ### PARTITION DRIVE
 partition_usb () {
+partprobe ${USB}
+sleep 3s
 dd if=/dev/zero of=${USB} bs=512 count=1
 truncate -s 2300MB ${USB}
 fdisk ${USB} <<EOF
@@ -74,21 +83,28 @@ mount -o bind /mnt/p1 /mnt/p2/boot
 sleep 1s
 }
 
-### FILE COUNT
-count (){
-echo 'FC="' > count1
-find / | wc -l > count2
-echo '"' > count3
-paste -d '\0' count1 count2 count3  > /etc/opt/count.txt
-rm -f count1 count2 count3
+### RSYNC
+rsync_transfer () {
+cd /
+rsync -vaxHAWXS --progress --stats --human-readable . /mnt/p2 > /dev/null 
 }
 
-### TRANSFER TO USB
-transfer_to_usb () {
-source /etc/opt/count.txt
-cd /
-(rsync -vaxHAWXS --stats --human-readable . /mnt/p2 | \
-pv -lep -s ${FC}) >/dev/null
+transfer_to_usb (){
+source /etc/opt/progressbar.txt
+    # Make sure that the progress bar is cleaned up when user presses ctrl+c
+    enable_trapping
+    # Create progress bar
+    setup_scroll_area
+    for i in {1..99}
+    do
+        if [ $i = 1 ]; then
+            block_progress_bar $i
+        else
+            rsync_transfer
+            draw_progress_bar $i
+        fi
+    done
+    destroy_scroll_area
 }
 
 ### FETCH UUID
@@ -153,10 +169,11 @@ partition_usb > /dev/null 2>&1
 echo -e "${RED}Done${FIN}."
 
 echo
-echo -e "${RED}Copying to USB${FIN} ..."
-count > /dev/null 2>&1
+echo -e "${YLW}Please be patient as the boot and root filesystem${FIN}"
+echo -e "${YLW}are transferred over to the USB drive${FIN}."
 transfer_to_usb
-echo -e "${RED}Done${FIN}."
+clear
+sleep 1s
 
 echo
 echo -e "${RED}Fetching UUID${FIN} ..."
@@ -178,9 +195,9 @@ echo -e "${RED}Unmounting USB${FIN} ..."
 rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt \
 /etc/opt/boot-id.txt /etc/opt/count.txt
 rm -fdr /mnt/p2/mnt/*
-umount /mnt/p2/boot
-umount /mnt/p2
-umount /mnt/p1
+umount /mnt/p2/boot > /dev/null 2>&1
+umount /mnt/p2 > /dev/null 2>&1
+umount /mnt/p1 > /dev/null 2>&1
 rm -fdr /mnt/*
 echo -e "${RED}Done${FIN}."
 echo
