@@ -43,7 +43,7 @@ sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieepro
 ### PARTITION DRIVE
 partition_usb () {
 partprobe ${USB}
-sleep 3s
+sleep 4s
 dd if=/dev/zero of=${USB} bs=512 count=1
 truncate -s 2300MB ${USB}
 fdisk ${USB} <<EOF
