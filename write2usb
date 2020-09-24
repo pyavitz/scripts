@@ -94,9 +94,9 @@ transfer_to_usb(){
 source /etc/opt/progressbar.txt
     enable_trapping
     setup_scroll_area
-    for i in {1..99}
+    for i in {0..100}
     do
-        if [ $i = 1 ]; then
+        if [ $i = 0 ]; then
             block_progress_bar $i
         else
             transfer
