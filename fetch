@@ -5,8 +5,12 @@ FIN="\e[0m"
 
 ###
 list () {
-content=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/version)
-echo $content
+bcm2708=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2708)
+echo $bcm2708
+bcm2710=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2710)
+echo $bcm2710
+bcm2711=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2711)
+echo $bcm2711
 }
 
 update () {
@@ -217,12 +221,9 @@ while getopts "123hru" OPTION; do
         case $OPTION in
 
                 1)
-                        ECHO="4.19"
-                        ;;
-                2)
                         ECHO="5.4"
                         ;;
-                3)
+                2)
                         ECHO="stable"
                         ;;
                 r)
@@ -238,9 +239,8 @@ while getopts "123hru" OPTION; do
                         echo ""
                         list
                         echo ""
-                        echo -e "   -1        Linux 4.19.y LTS"
-                        echo -e "   -2        Linux 5.4.y LTS"
-                        echo -e "   -3        Linux Stable Branch"
+                        echo -e "   -1        Linux 5.4.y LTS"
+                        echo -e "   -2        Linux Stable Branch"
                         echo -e "   -u        Update Fetch"
                         echo ""
                         echo "Should you come across any bugs, either open an issue on GitHub or talk"
