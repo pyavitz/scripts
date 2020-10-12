@@ -1,5 +1,6 @@
 #!/bin/bash
 USB="/dev/sda"
+PI_EEPROM="pieeprom-2020-09-03"
 RED="\e[1;31m"
 YLW="\e[1;33m"
 FIN="\e[0m"
@@ -39,7 +40,7 @@ done
 update_eeprom(){
 sed -i 's/FIRMWARE_RELEASE_STATUS="critical"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
 sed -i 's/FIRMWARE_RELEASE_STATUS="beta"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
-sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieeprom-2020-09-03.bin
+sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/${PI_EEPROM}.bin
 }
 
 ### PARTITION DRIVE
@@ -137,6 +138,17 @@ console=serial0,115200 console=tty1 root=PARTUUID=${ROOT_PARTUUID} rootfstype=ex
 EOF
 }
 
+### EXTLINUX
+create_extlinux(){
+source /etc/opt/root-pid.txt
+rm -f /mnt/p1/extlinux/extlinux.conf
+tee /mnt/p1/extlinux/extlinux.conf <<EOF
+label kernel
+    kernel /Image
+    append  earlyprintk /uInitrd console=serial0,115200 console=tty1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=ext4 fsck.repair=yes logo.nologo rootwait
+EOF
+}
+
 ### FSTAB
 create_fstab(){
 source /etc/opt/boot-id.txt
@@ -183,8 +195,13 @@ sleep 1s
 echo -e "${RED}Done${FIN}."
 
 echo
-echo -e "${RED}Creating cmdline.txt${FIN} ..."
-create_cmdline
+echo -e "${RED}Creating new cmdline${FIN} ..."
+if `grep -Fx "bcm2711" "/etc/opt/soc.txt" >/dev/null;`
+	then create_cmdline;
+fi
+if `grep -Fx "bcm2711" "/etc/opt/board.txt" >/dev/null;`
+	then create_extlinux;
+fi
 sleep 1s
 echo -e "${RED}Done${FIN}."
 
