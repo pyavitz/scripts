@@ -5,12 +5,14 @@ FIN="\e[0m"
 
 ###
 list () {
-bcm2708=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2708)
-echo $bcm2708
-bcm2710=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2710)
-echo $bcm2710
-bcm2711=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2711)
-echo $bcm2711
+version=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/version)
+echo $version
+#bcm2708=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2708)
+#echo $bcm2708
+#bcm2710=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2710)
+#echo $bcm2710
+#bcm2711=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2711)
+#echo $bcm2711
 }
 
 update () {
