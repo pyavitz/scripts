@@ -196,10 +196,10 @@ echo -e "${RED}Done${FIN}."
 
 echo
 echo -e "${RED}Creating new cmdline${FIN} ..."
-if `grep -Fx "bcm2711" "/etc/opt/soc.txt" >/dev/null;`
+if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
 	then create_cmdline;
 fi
-if `grep -Fx "bcm2711" "/etc/opt/board.txt" >/dev/null;`
+if `grep -Fx "bcm2711" "/etc/opt/board.txt" > /dev/null 2>&1;`
 	then create_extlinux;
 fi
 sleep 1s
