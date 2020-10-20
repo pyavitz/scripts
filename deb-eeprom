@@ -65,7 +65,7 @@ mv rpi-eeprom-control.patch rpi-eeprom-${EEPROM_VERSION}/
 cd rpi-eeprom-${EEPROM_VERSION}
 patch -p1 < rpi-eeprom-control.patch
 rm -f rpi-eeprom-control.patch
-dpkg-buildpackage -us -uc
+dpkg-buildpackage -us -nc -uc
 cd ..
 sudo dpkg -i *.deb
 cd ..
