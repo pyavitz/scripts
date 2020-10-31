@@ -20,7 +20,7 @@ sudo apt update
 sudo apt install dkms git -y
 echo
 echo Fetching . . . rtl88x2bu.
-git clone https://github.com/cilynx/rtl88x2bu.git
+git clone https://github.com/mabrand/rtl88x2bu.git -b linux-5.8-compatibility rtl88x2bu
 cd rtl88x2bu
 VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
 sudo rsync -rvhP ./ /usr/src/rtl88x2bu-${VER}
