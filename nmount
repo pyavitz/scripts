@@ -1,0 +1,62 @@
+#!/bin/bash
+# depends on cifs
+RED="\e[1;31m"
+WHT="\e[1;37m"
+FIN="\e[0m"
+ADDR="10.0.0.1"
+FOLDER="Name"
+MNT="/your/location"
+USER="user"
+
+smount(){
+sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,rw,uid=$USER
+}
+
+sumount(){
+sudo umount $MNT
+}
+
+# Commands
+if [ $# -eq 0 ]
+then
+        echo "Missing options!"
+        echo "(run $0 -h for help)"
+        echo ""
+        exit 0
+fi
+
+ECHO="false"
+
+while getopts "muh" OPTION; do
+        case $OPTION in
+
+                m)
+                        ECHO="smount"
+                        ;;
+                u)
+                        ECHO="sumount"
+                        ;;
+                h)
+                        echo ""
+                        echo -e "${RED}Mount Network Share${FIN}"
+                        echo -e "${WHT}Usage:${FIN} nmount -opt"
+                        echo ""
+                        echo -e "${WHT}   -m${FIN}       Mount"
+                        echo -e "${WHT}   -u${FIN}       Unmount"
+                        echo ""
+                        echo -e "${WHT}   -h${FIN}       Help"
+                        echo ""
+                        exit 0
+                        ;;
+
+        esac
+done
+
+if [ $ECHO = "smount" ]
+then
+        smount;
+fi
+if [ $ECHO = "sumount" ]
+then
+        sumount;
+fi
