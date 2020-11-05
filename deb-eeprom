@@ -6,11 +6,18 @@ FIN="\e[0m"
 
 update () {
 sudo mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
+sudo mv -f /usr/local/bin/write2usb /usr/local/bin/write2usb.orig
 sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
+sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/write2usb -P /usr/local/bin
 sudo chmod +x /usr/local/bin/deb-eeprom
+sudo chmod +x /usr/local/bin/write2usb
 if ls /usr/local/bin/deb-eeprom > /dev/null 2>&1;
    then sudo rm -f /usr/local/bin/deb-eeprom.orig ;
    else sudo mv -f /usr/local/bin/deb-eeprom.orig /usr/local/bin/deb-eeprom
+fi
+if ls /usr/local/bin/write2usb > /dev/null 2>&1;
+   then sudo rm -f /usr/local/bin/write2usb.orig ;
+   else sudo mv -f /usr/local/bin/write2usb.orig /usr/local/bin/write2usb
 fi
 deb-eeprom -h
 }

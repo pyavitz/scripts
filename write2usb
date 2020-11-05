@@ -13,6 +13,18 @@ if [ "$USER" != "root" ]; then
 fi
 }
 
+confirm(){
+echo -e "${YLW}If more than one USB device is connected then"
+echo -e "select no... or risk losing important data${FIN}."
+echo -e ""
+read -p "Continue (y/n)?" choice
+case "$choice" in 
+  y|Y ) echo -e -n " ${RED}Confirmed${FIN}";;
+  n|N ) exit 0;;
+  * ) echo "invalid";;
+esac
+}
+
 check_progressbar(){
 DPB="sudo wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
 MPB="sudo mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
@@ -171,6 +183,8 @@ if [ -e "$USB" ]; then
 else 
     check_node
 fi
+echo
+confirm
 echo
 echo -e "${RED}Updating eeprom${FIN} ..."
 update_eeprom
