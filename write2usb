@@ -19,9 +19,9 @@ echo -e "select no... or risk losing important data${FIN}."
 echo -e ""
 read -p "Continue (y/n)?" choice
 case "$choice" in 
-  y|Y ) echo -e -n " ${RED}Confirmed${FIN}";;
+  y|Y ) echo && echo -e -"${RED}Confirmed${FIN}.";;
   n|N ) exit 0;;
-  * ) echo -e -n " ${YWL}invalid${FIN}." && exit 0;;
+  * ) echo && echo -e "${YWL}invalid choice${FIN}." && exit 0;;
 esac
 }
 
