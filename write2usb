@@ -21,7 +21,7 @@ read -p "Continue (y/n)?" choice
 case "$choice" in 
   y|Y ) echo -e -n " ${RED}Confirmed${FIN}";;
   n|N ) exit 0;;
-  * ) echo "invalid";;
+  * ) exit 0 && echo -e "${YWL}invalid${FIN}.";;
 esac
 }
 
