@@ -1,5 +1,6 @@
 #!/bin/bash
 USB="/dev/sda"
+ERROR="$(ls {/dev/sdb,/dev/sdc,/dev/sdd} 2> /dev/null)"
 PI_EEPROM="pieeprom-2020-09-03"
 RED="\e[1;31m"
 YLW="\e[1;33m"
@@ -10,6 +11,15 @@ run_as_root(){
 if [ "$USER" != "root" ]; then
         echo "Please run this as root or with sudo privileges."
         exit 1
+fi
+}
+
+correct(){
+if [ -e "$USB" ]; then
+    echo ""
+    echo -e "${RED}$USB found${FIN}."
+else 
+    check_node
 fi
 }
 
@@ -44,6 +54,19 @@ if [ $? = 0 ] ; then
 exit ;
 else
 dialog --infobox "Please connect a usb storage device" 3 40
+fi
+done
+}
+
+error_node(){
+echo ""
+echo -e "You have one to many ${RED}USB storage devices${FIN} connected."
+while [ true ] ; do
+read -t 3 -n 1
+if [ $? = 0 ] ; then
+exit ;
+else
+dialog --infobox "Please connect only ONE usb storage device" 3 40
 fi
 done
 }
@@ -177,12 +200,12 @@ EOF
 run_as_root
 check_progressbar
 
-if [ -e "$USB" ]; then
-    echo ""
-    echo -e "${RED}$USB found${FIN}."
+if [ $ERROR ]; then
+    error_node;
 else 
-    check_node
+    correct
 fi
+
 echo
 confirm
 echo
