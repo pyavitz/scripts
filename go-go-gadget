@@ -51,7 +51,7 @@ auto usb0
 allow-hotplug usb0
 iface usb0 inet static
   address 10.55.0.1
-  netmask 255.255.255.0
+  netmask 255.255.255.248
 EOF
 }
 
@@ -111,6 +111,16 @@ EOF
 systemctl enable gadget
 }
 
+add_gadget_init(){
+wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/gadget.init -P /etc/init.d/
+if ls /etc/init.d/gadget.init > /dev/null 2>&1;
+   then mv -f /etc/init.d/gadget.init /etc/init.d/gadget ;
+   else echo -e "Gadget init install failed!" && exit 0;
+fi
+if ls /etc/init.d/gadget > /dev/null 2>&1;
+   then chmod +x /etc/init.d/gadget && update-rc.d gadget defaults 2
+fi
+
 # The Magic
 run_as_root
 echo
@@ -125,22 +135,29 @@ echo -e "Done."
 
 echo
 echo -e "Setting up overlays ..."
-setup_overlays
+setup_overlays > /dev/null 2>&1
+sleep 1s
 echo -e "Done."
 
 echo
 echo -e "Creating usb0 file ..."
-create_usb0
+create_usb0 > /dev/null 2>&1
+sleep 1s
 echo -e "Done."
 
 echo
 echo -e "Creating gadget script ..."
-create_gadget_script
+create_gadget_script > /dev/null 2>&1
+sleep 1s
 echo -e "Done."
 
 echo
 echo -e "Creating gadget service ..."
-create_gadget_service
+if ls /etc/devuan_version > /dev/null 2>&1;
+   then add_gadget_init;
+   else create_gadget_service > /dev/null 2>&1;
+fi
+sleep 1s
 echo -e "Done."
 
 echo
@@ -150,6 +167,5 @@ echo -e "Your Pi4 will show up as a ethernet device with an IP address of 10.55.
 echo -e "and should assign the device you plug it into an IP address via DHCP. This"
 echo -e "means you can just ssh to username@10.55.0.1 to start using it."
 echo
-echo -e "To disable execute: sudo systemctl disable gadget"
 
 
