@@ -1,0 +1,181 @@
+#!/bin/bash
+# Source: https://www.hardill.me.uk/wordpress/2019/11/02/pi4-usb-c-gadget/
+RED="\e[1;31m"
+YLW="\e[1;33m"
+FIN="\e[0m"
+
+run_as_root(){
+if [ "$USER" != "root" ]; then
+        echo "Please run this as root or with sudo privileges."
+        exit 1
+fi
+}
+
+confirm(){
+echo -e "${YLW}If you have no clue as to what Pi4 USB-C Gadget"
+echo -e "mode is, then please do not run this script${FIN}."
+echo -e ""
+read -p "Continue (y/n)?" choice
+case "$choice" in 
+  y|Y ) echo && echo -e "${RED}Confirmed${FIN}!";;
+  n|N ) echo && echo -e "${YLW}You have chosen${FIN}... ${YLW}wisely${FIN}." && exit 0;;
+  * ) echo && echo -e "${YLW}Invalid choice${FIN}." && exit 0;;
+esac
+}
+
+setup_overlays(){
+sed -i "1 s|$| modules-load=dwc2,g_ether|" "/boot/cmdline.txt"
+echo -e "" >> /boot/config.txt && echo -e "# enable USB OTG" >> /boot/config.txt
+echo "dtoverlay=dwc2,dr_mode=peripheral" >> /boot/config.txt
+echo "libcomposite" >> /etc/modules
+}
+
+install_dnsmasq(){
+sudo apt update
+sudo apt upgrade -y
+sudo apt install dnsmasq -y
+}
+
+create_usb0(){
+mkdir -p /etc/dnsmasq.d
+tee /etc/dnsmasq.d/usb <<EOF
+interface=usb0
+dhcp-range=10.55.0.2,10.55.0.6,255.255.255.248,1h
+dhcp-option=3,10.55.0.1
+leasefile-ro
+EOF
+
+mkdir -p /etc/network/interfaces.d/
+tee /etc/network/interfaces.d/usb0 <<EOF
+auto usb0
+allow-hotplug usb0
+iface usb0 inet static
+  address 10.55.0.1
+  netmask 255.255.255.248
+EOF
+}
+
+create_gadget_script(){
+tee /usr/local/sbin/gadget-mode <<EOF
+#!/bin/bash -e
+
+cd /sys/kernel/config/usb_gadget/
+mkdir g && cd g
+
+echo 0x1d6b > idVendor  # Linux Foundation
+echo 0x0104 > idProduct # Multifunction Composite Gadget
+echo 0x0100 > bcdDevice # v1.0.0
+echo 0x0200 > bcdUSB    # USB 2.0
+
+echo 0xEF > bDeviceClass
+echo 0x02 > bDeviceSubClass
+echo 0x01 > bDeviceProtocol
+
+mkdir -p strings/0x409
+echo "deadbeef00115599" > strings/0x409/serialnumber
+echo "irq5 labs"        > strings/0x409/manufacturer
+echo "Pi Zero Gadget"   > strings/0x409/product
+
+mkdir -p functions/acm.usb0    # serial
+mkdir -p functions/rndis.usb0  # network
+
+mkdir -p configs/c.1
+echo 250 > configs/c.1/MaxPower
+ln -s functions/rndis.usb0 configs/c.1/
+ln -s functions/acm.usb0   configs/c.1/
+
+# OS descriptors
+echo 1       > os_desc/use
+echo 0xcd    > os_desc/b_vendor_code
+echo MSFT100 > os_desc/qw_sign
+
+echo RNDIS   > functions/rndis.usb0/os_desc/interface.rndis/compatible_id
+echo 5162001 > functions/rndis.usb0/os_desc/interface.rndis/sub_compatible_id
+
+ln -s configs/c.1 os_desc
+
+udevadm settle -t 5 || :
+ls /sys/class/udc/ > UDC
+
+ifup usb0
+service dnsmasq restart
+EOF
+chown root:root /usr/local/sbin/gadget-mode
+chmod +x /usr/local/sbin/gadget-mode
+}
+
+create_gadget_service(){
+tee /etc/systemd/system/gadget.service <<EOF
+[Unit]
+Description=Enable Gadget Mode
+ConditionPathExists=/usr/local/sbin/gadget-mode
+After=systemd-modules-load.service
+
+[Service]
+ExecStart=/usr/local/sbin/gadget-mode &>/dev/null
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target
+EOF
+systemctl enable gadget
+}
+
+add_gadget_init(){
+wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/gadget.init -P /etc/init.d/
+if ls /etc/init.d/gadget.init > /dev/null 2>&1;
+   then mv -f /etc/init.d/gadget.init /etc/init.d/gadget ;
+   else echo -e "Gadget init install failed!" && exit 0;
+fi
+if ls /etc/init.d/gadget > /dev/null 2>&1;
+   then chmod +x /etc/init.d/gadget && update-rc.d gadget defaults 2
+fi
+}
+
+# The Magic
+run_as_root
+echo
+confirm
+
+echo
+echo -e "Pi4 USB-C Gadget Setup"
+echo
+echo -e "Installing dnsmasq ..."
+install_dnsmasq
+echo -e "Done."
+
+echo
+echo -e "Setting up overlays ..."
+setup_overlays > /dev/null 2>&1
+sleep 1s
+echo -e "Done."
+
+echo
+echo -e "Creating usb0 file ..."
+create_usb0 > /dev/null 2>&1
+sleep 1s
+echo -e "Done."
+
+echo
+echo -e "Creating gadget script ..."
+create_gadget_script > /dev/null 2>&1
+sleep 1s
+echo -e "Done."
+
+echo
+echo -e "Creating gadget service ..."
+if ls /etc/devuan_version > /dev/null 2>&1;
+   then add_gadget_init;
+   else create_gadget_service > /dev/null 2>&1;
+fi
+sleep 1s
+echo -e "Done."
+
+echo
+echo -e "Install complete!"
+echo
+echo -e "Your Pi4 will show up as a ethernet device with an IP address of 10.55.0.1"
+echo -e "and should assign the device you plug it into an IP address via DHCP. This"
+echo -e "means you can just ssh to username@10.55.0.1 to start using it."
+echo
