@@ -120,6 +120,7 @@ fi
 if ls /etc/init.d/gadget > /dev/null 2>&1;
    then chmod +x /etc/init.d/gadget && update-rc.d gadget defaults 2
 fi
+}
 
 # The Magic
 run_as_root
@@ -167,5 +168,3 @@ echo -e "Your Pi4 will show up as a ethernet device with an IP address of 10.55.
 echo -e "and should assign the device you plug it into an IP address via DHCP. This"
 echo -e "means you can just ssh to username@10.55.0.1 to start using it."
 echo
-
-
