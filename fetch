@@ -1,21 +1,16 @@
 #!/bin/bash
 
+URL="https://github.com/pyavitz/rpi-img-builder/releases/download/linux/"
 RED="\e[1;31m"
 FIN="\e[0m"
 
 ###
-list () {
-version=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/version)
+list(){
+version=$(curl --silent -L ${URL}version)
 echo $version
-#bcm2708=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2708)
-#echo $bcm2708
-#bcm2710=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2710)
-#echo $bcm2710
-#bcm2711=$(curl --silent -L https://github.com/pyavitz/rpi-img-builder/releases/download/linux/bcm2711)
-#echo $bcm2711
 }
 
-update () {
+update(){
 sudo mv -f /usr/local/bin/fetch /usr/local/bin/fetch.orig
 sudo wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/fetch -P /usr/local/bin
 sudo chmod +x /usr/local/bin/fetch
@@ -26,73 +21,12 @@ fi
 fetch -h
 }
 
-###
-rpi-4.19.y () {
-mkdir -p ~/.build
-cd ~/.build
-echo -e "${RED}Fetching rpi-4.19.y${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi-4.19.y.tar.xz
-echo -e "${RED}Done${FIN}."
-echo
-echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi-4.19.y.tar.xz
-rm -f rpi-4.19.y.tar.xz
-echo -e "${RED}Done${FIN}."
-echo
-echo -e "${RED}Starting install${FIN} ..."
-cd rpi-4.19.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${RED}Done${FIN}."
-sudo rm -fdr ~/.build/*
-}
-
-rpi3-4.19.y () {
-mkdir -p ~/.build
-cd ~/.build
-echo -e "${RED}Fetching rpi3-4.19.y${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi3-4.19.y.tar.xz
-echo -e "${RED}Done${FIN}."
-echo
-echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi3-4.19.y.tar.xz
-rm -f rpi3-4.19.y.tar.xz
-echo -e "${RED}Done${FIN}."
-echo
-echo -e "${RED}Starting install${FIN} ..."
-cd rpi3-4.19.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${RED}Done${FIN}."
-sudo rm -fdr ~/.build/*
-}
-
-rpi4-4.19.y () {
-mkdir -p ~/.build
-cd ~/.build
-echo -e "${RED}Fetching rpi4-4.19.y${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi4-4.19.y.tar.xz
-echo -e "${RED}Done${FIN}."
-echo
-echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi4-4.19.y.tar.xz
-rm -f rpi4-4.19.y.tar.xz
-echo -e "${RED}Done${FIN}."
-echo
-echo -e "${RED}Starting install${FIN} ..."
-cd rpi4-4.19.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${RED}Done${FIN}."
-sudo rm -fdr ~/.build/*
-}
-
 ### 
-rpi-5.4.y () {
+rpi-5.4.y(){
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-5.4.y${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi-5.4.y.tar.xz
+wget -cq --show-progress ${URL}rpi-5.4.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -108,11 +42,11 @@ echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi3-5.4.y () {
+rpi3-5.4.y(){
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-5.4.y${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi3-5.4.y.tar.xz
+wget -cq --show-progress ${URL}rpi3-5.4.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -128,11 +62,11 @@ echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi4-5.4.y () {
+rpi4-5.4.y(){
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-5.4.y${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi4-5.4.y.tar.xz
+wget -cq --show-progress ${URL}rpi4-5.4.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -149,11 +83,11 @@ sudo rm -fdr ~/.build/*
 }
 
 ###
-rpi-stable () {
+rpi-stable(){
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-stable${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi-stable.tar.xz
+wget -cq --show-progress ${URL}rpi-stable.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -169,11 +103,11 @@ echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi3-stable () {
+rpi3-stable(){
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-stable${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi3-stable.tar.xz
+wget -cq --show-progress ${URL}rpi3-stable.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -189,11 +123,11 @@ echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi4-stable () {
+rpi4-stable(){
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-stable${FIN} ..."
-wget -cq --show-progress https://github.com/pyavitz/rpi-img-builder/releases/download/linux/rpi4-stable.tar.xz
+wget -cq --show-progress ${URL}rpi4-stable.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -209,6 +143,61 @@ echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
+###
+rpi4-mainline(){
+mkdir -p ~/.build
+cd ~/.build
+echo -e "${RED}Fetching rpi4-mainline${FIN} ..."
+wget -cq --show-progress ${URL}rpi4-mainline.tar.xz
+echo -e "${RED}Done${FIN}."
+echo
+echo -e "${RED}Extracting archive${FIN} ..."
+tar xf rpi4-mainline.tar.xz
+rm -f rpi4-mainline.tar.xz
+echo -e "${RED}Done${FIN}."
+echo
+echo -e "${RED}Starting install${FIN} ..."
+cd rpi4-mainline
+sudo dpkg -i *.deb
+cd ~
+echo -e "${RED}Done${FIN}."
+sudo rm -fdr ~/.build/*
+}
+
+###
+bcm2708_setup(){
+echo -e "${RED}bcm2708 found${FIN}! Adding needed file."
+sudo rm -f /etc/opt/soc.txt
+sudo mkdir -p /etc/opt
+sudo sh -c 'echo "bcm2708" > /etc/opt/soc.txt'
+echo -e "${RED}Done${FIN}. Restarting fetch."
+sleep 2s
+clear
+fetch -u
+}
+
+bcm2710_setup(){
+echo -e "${RED}bcm2710 found${FIN}! Adding needed file."
+sudo rm -f /etc/opt/soc.txt
+sudo mkdir -p /etc/opt
+sudo sh -c 'echo "bcm2710" > /etc/opt/soc.txt'
+echo -e "${RED}Done${FIN}. Restarting fetch."
+sleep 2s
+clear
+fetch -u
+}
+
+bcm2711_setup(){
+echo -e "${RED}bcm2711 found${FIN}! Adding needed file."
+sudo rm -f /etc/opt/soc.txt
+sudo mkdir -p /etc/opt
+sudo sh -c 'echo "bcm2711" > /etc/opt/soc.txt'
+echo -e "${RED}Done${FIN}. Restarting fetch."
+sleep 2s
+clear
+fetch -u
+}
+
 if [ $# -eq 0 ]
 then
         echo -e "\e[0;31mMissing options!${FIN}"
@@ -219,7 +208,7 @@ fi
 
 ECHO="false"
 
-while getopts "123hru" OPTION; do
+while getopts "123hrus" OPTION; do
         case $OPTION in
 
                 1)
@@ -228,14 +217,21 @@ while getopts "123hru" OPTION; do
                 2)
                         ECHO="stable"
                         ;;
+                3)
+                        ECHO="mainline"
+                        ;;
                 r)
                         ECHO="rev"
                         ;;
                 u)
                         ECHO="up"
                         ;;
+                s)
+                        ECHO="setup"
+                        ;;
+
                 h)                       
-                        echo "Fetch, Linux kernel installer for the Raspberry Pi Image Builder"
+                        echo -e "${RED}Fetch, Linux kernel installer for the Raspberry Pi Image Builder${FIN}"
                         echo "https://github.com/pyavitz/rpi-img-builder"
                         echo "Usage: fetch -opt"
                         echo ""
@@ -243,7 +239,9 @@ while getopts "123hru" OPTION; do
                         echo ""
                         echo -e "   -1        Linux 5.4.y LTS"
                         echo -e "   -2        Linux Stable Branch"
+                        echo -e "   -3        Linux Mainline Branch"
                         echo -e "   -u        Update Fetch"
+                        echo -e "   -s        Not working? Setup Fetch"
                         echo ""
                         echo "Should you come across any bugs, either open an issue on GitHub or talk"
                         echo "with us directly by joining our channel on Freenode; #debianarm-port"
@@ -253,52 +251,67 @@ while getopts "123hru" OPTION; do
         esac
 done
 
-if [ $ECHO = "4.19" ]
-then
-        echo
-        if ls /boot/bcm2708*.dtb > /dev/null 2>&1; then rpi-4.19.y ;
-                else : > /dev/null 2>&1
-        fi
-
-        if ls /boot/bcm2710*.dtb > /dev/null 2>&1; then rpi3-4.19.y ;
-                else : > /dev/null 2>&1
-        fi
-
-        if ls /boot/bcm2711*.dtb > /dev/null 2>&1; then rpi4-4.19.y ;
-                else : > /dev/null 2>&1
-        fi
-fi
-
 if [ $ECHO = "5.4" ]
 then
         echo
-        if ls /boot/bcm2708*.dtb > /dev/null 2>&1; then rpi-5.4.y ;
-                else : > /dev/null 2>&1
+	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+		then rpi-5.4.y && exit 0;
+                else echo -e "${RED}OOPS!${FIN} Your board is not supported." && exit 0;
         fi
 
-        if ls /boot/bcm2710*.dtb > /dev/null 2>&1; then rpi3-5.4.y ;
-                else : > /dev/null 2>&1
+	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+		then rpi3-5.4.y && exit 0;
+                else echo -e "${RED}OOPS!${FIN} Your board is not supported." && exit 0;
         fi
 
-        if ls /boot/bcm2711*.dtb > /dev/null 2>&1; then rpi4-5.4.y ;
-                else : > /dev/null 2>&1
+	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+		then rpi4-5.4.y && exit 0;
+                else echo -e "${RED}OOPS!${FIN} Your board is not supported." && exit 0;
         fi
 fi
 
 if [ $ECHO = "stable" ]
 then
         echo
-        if ls /boot/bcm2708*.dtb > /dev/null 2>&1; then rpi-stable ;
-                else : > /dev/null 2>&1
+	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+		then rpi-stable && exit 0;
+                else echo -e "${RED}OOPS!${FIN} Your board is not supported." && exit 0;
         fi
 
-        if ls /boot/bcm2710*.dtb > /dev/null 2>&1; then rpi3-stable ;
-                else : > /dev/null 2>&1
+	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+		then rpi3-stable && exit 0;
+                else echo -e "${RED}OOPS!${FIN} Your board is not supported." && exit 0;
         fi
 
-        if ls /boot/bcm2711*.dtb > /dev/null 2>&1; then rpi4-stable ;
-                else : > /dev/null 2>&1
+	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+		then rpi4-stable && exit 0;
+                else echo -e "${RED}OOPS!${FIN} Your board is not supported." && exit 0;
         fi
+fi
+
+if [ $ECHO = "mainline" ]
+then
+        echo
+	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+		then rpi4-mainline && exit 0;
+		else echo -e "${RED}OOPS!${FIN} Your board is not supported." && exit 0;
+	fi
+fi
+
+if [ $ECHO = "setup" ]
+then
+        echo
+	if ls /boot/{bcm2708-rpi-zero.dtb,bcm2708-rpi-zero-w.dtb} > /dev/null 2>&1
+		then bcm2708_setup;
+	fi
+
+	if ls /boot/{bcm2710-rpi-3-b-plus.dtb,bcm2710-rpi-3-b.dtb} > /dev/null 2>&1
+		then bcm2710_setup;
+	fi
+
+	if ls /boot/bcm2711-rpi-4-b.dtb > /dev/null 2>&1
+		then bcm2711_setup;
+	fi
 fi
 
 if [ $ECHO = "rev" ]
