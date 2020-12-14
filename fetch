@@ -265,7 +265,6 @@ then
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
 		then rpi4-5.4.y;
         fi
-else echo -e "${RED}OOPS!${FIN} Your board is not supported.";
 fi
 
 if [ $ECHO = "stable" ]
@@ -282,7 +281,6 @@ then
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
 		then rpi4-stable;
         fi
-else echo -e "${RED}OOPS!${FIN} Your board is not supported.";
 fi
 
 if [ $ECHO = "mainline" ]
@@ -290,7 +288,6 @@ then
         echo
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
 		then rpi4-mainline;
-		else echo -e "${RED}OOPS!${FIN} Your board is not supported.";
 	fi
 fi
 
