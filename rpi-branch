@@ -1,6 +1,0 @@
-#!/bin/bash
-BRANCH="5.9.y"
-curl --silent -L https://raw.githubusercontent.com/raspberrypi/linux/rpi-$BRANCH/Makefile | grep -m1 VERSION
-curl --silent -L https://raw.githubusercontent.com/raspberrypi/linux/rpi-$BRANCH/Makefile | grep -m1 PATCHLEVEL
-curl --silent -L https://raw.githubusercontent.com/raspberrypi/linux/rpi-$BRANCH/Makefile | grep -m1 SUBLEVEL
-curl --silent -L https://raw.githubusercontent.com/raspberrypi/linux/rpi-$BRANCH/Makefile | grep -m1 EXTRAVERSION
