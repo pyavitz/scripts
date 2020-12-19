@@ -3,6 +3,8 @@
 URL="https://github.com/pyavitz/rpi-img-builder/releases/download/linux/"
 RED="\e[1;31m"
 SRED="\e[0;31m"
+SGRN="\e[0;32m"
+SYLW="\e[0;33m"
 FIN="\e[0m"
 
 ###
@@ -240,7 +242,7 @@ while getopts "123hrus" OPTION; do
                         echo ""
                         echo -e "   -1        Linux 5.4.y LTS"
                         echo -e "   -2        Linux Stable Branch"
-                        echo -e "   -3        Linux Mainline Branch (${SRED}use at own risk!${FIN})"
+                        echo -e "   -3        Linux Mainline Branch ${SYLW}(use at own risk!)${FIN}"
                         echo -e "   -u        Update Fetch"
                         echo -e "   -s        Not working? Setup Fetch"
                         echo ""
