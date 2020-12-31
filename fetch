@@ -243,7 +243,7 @@ while getopts "123hrus" OPTION; do
                         list
                         echo ""
                         echo -e "   -1        Linux 5.4.y LTS"
-                        echo -e "   -2        Linux Stable Branch"
+                        echo -e "   -2        Linux Stable Branch ${YLW}(use at own risk!)${FIN}"
                         echo -e "   -3        Linux Mainline Branch ${YLW}(use at own risk!)${FIN}"
                         echo -e "   -u        Update Fetch"
                         echo -e "   -s        Not working? Setup Fetch"
