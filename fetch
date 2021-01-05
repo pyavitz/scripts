@@ -203,6 +203,86 @@ clear
 fetch -u
 }
 
+rpi4_downbins(){
+mkdir -p ~/.build
+sudo rm -fdr ~/.build/*
+cd ~/.build
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup4.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup4cd.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup4db.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup4x.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4.elf
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4cd.elf
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4db.elf
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4x.elf
+echo
+}
+
+rpi_downbins(){
+mkdir -p ~/.build
+sudo rm -fdr ~/.build/*
+cd ~/.build
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/bootcode.bin
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup_cd.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup_db.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/fixup_x.dat
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start.elf
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_cd.elf
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_db.elf
+wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_x.elf
+echo
+}
+
+rpi4_cleanbins(){
+sudo rm -f /boot/fixup4*.dat
+sudo rm -f /boot/start4*.elf
+}
+
+rpi_cleanbins(){
+sudo rm -f /boot/bootcode.bin
+sudo rm -f /boot/fixup*.dat
+sudo rm -f /boot/start*.elf
+}
+
+rpi4_install(){
+echo -e -n "${SGRN}"
+sudo install -v -m 0644 ~/.build/fixup4*.dat /boot
+sudo install -v -m 0644 ~/.build/start4*.elf /boot
+cd ~
+sudo rm -fdr ~/.build/*
+echo -e -n "${FIN}"
+echo
+}
+
+rpi_install(){
+echo -e -n "${SGRN}"
+sudo install -v -m 0644 ~/.build/bootcode.bin /boot
+sudo install -v -m 0644 ~/.build/fixup*.dat /boot
+sudo install -v -m 0644 ~/.build/start*.elf /boot
+cd ~
+sudo rm -fdr ~/.build/*
+echo -e -n "${FIN}"
+echo
+}
+
+rpi4_check(){
+rpi4_downbins
+if ls ~/.build/{fixup4.dat,fixup4cd.dat,fixup4db.dat,fixup4x.dat,start4.elf,start4cd.elf,start4db.elf,start4x.elf} > /dev/null 2>&1;
+	then rpi4_cleanbins && rpi4_install && echo -e "${GRN}Install Done${FIN}.";
+	else echo -e "${RED}Install Failed${FIN}.";
+fi
+}
+
+rpi_check(){
+rpi_downbins
+if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,start.elf,start_cd.elf,start_db.elf,start_x.elf} > /dev/null 2>&1;
+	then rpi_cleanbins && rpi_install && echo -e "${GRN}Install Done${FIN}.";
+	else echo -e "${RED}Install Failed${FIN}.";
+fi
+}
+
+
 if [ $# -eq 0 ]
 then
         echo -e "\e[0;31mMissing options!${FIN}"
@@ -213,7 +293,7 @@ fi
 
 ECHO="false"
 
-while getopts "123hrus" OPTION; do
+while getopts "1234hrus" OPTION; do
         case $OPTION in
 
                 1)
@@ -224,6 +304,9 @@ while getopts "123hrus" OPTION; do
                         ;;
                 3)
                         ECHO="mainline"
+                        ;;
+                4)
+                        ECHO="binary"
                         ;;
                 r)
                         ECHO="rev"
@@ -243,8 +326,10 @@ while getopts "123hrus" OPTION; do
                         list
                         echo ""
                         echo -e "   -1        Linux 5.4.y LTS"
-                        echo -e "   -2        Linux Stable Branch ${YLW}(use at own risk!)${FIN}"
+                        echo -e "   -2        Linux Stable Branch"
                         echo -e "   -3        Linux Mainline Branch ${YLW}(use at own risk!)${FIN}"
+                        echo -e "   -4        Update Boot Binaries"
+                        echo ""
                         echo -e "   -u        Update Fetch"
                         echo -e "   -s        Not working? Setup Fetch"
                         echo ""
@@ -310,6 +395,22 @@ then
 
 	if ls /boot/bcm2711-rpi-4-b.dtb > /dev/null 2>&1
 		then bcm2711_setup;
+	fi
+fi
+
+if [ $ECHO = "binary" ]
+then
+        echo
+	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" >/dev/null;`
+		then rpi4_check;
+	fi
+
+	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" >/dev/null;`
+		then rpi_check;
+	fi
+
+	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" >/dev/null;`
+		then rpi_check;
 	fi
 fi
 
