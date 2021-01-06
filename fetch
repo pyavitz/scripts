@@ -269,16 +269,16 @@ echo
 rpi4_check(){
 rpi4_downbins
 if ls ~/.build/{fixup4.dat,fixup4cd.dat,fixup4db.dat,fixup4x.dat,start4.elf,start4cd.elf,start4db.elf,start4x.elf} > /dev/null 2>&1;
-	then rpi4_cleanbins && rpi4_install && echo -e "${GRN}Install Done${FIN}.";
-	else echo -e "${RED}Install Failed${FIN}.";
+	then rpi4_cleanbins && rpi4_install && echo -e "${SGRN}Install Done${FIN}!" && echo;
+	else echo -e "${SRED}Install Failed${FIN}?" && echo;
 fi
 }
 
 rpi_check(){
 rpi_downbins
 if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,start.elf,start_cd.elf,start_db.elf,start_x.elf} > /dev/null 2>&1;
-	then rpi_cleanbins && rpi_install && echo -e "${GRN}Install Done${FIN}.";
-	else echo -e "${RED}Install Failed${FIN}.";
+	then rpi_cleanbins && rpi_install && echo -e "${SGRN}Install Done${FIN}!" && echo;
+	else echo -e "${SRED}Install Failed${FIN}?" && echo;
 fi
 }
 
