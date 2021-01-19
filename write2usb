@@ -1,7 +1,7 @@
 #!/bin/bash
 USB="/dev/sda"
 ERROR="$(ls {/dev/sdb,/dev/sdc,/dev/sdd} 2> /dev/null)"
-PI_EEPROM="pieeprom-2021-01-16.bin"
+PI_EEPROM="pieeprom-2021-01-16"
 RED="\e[1;31m"
 YLW="\e[1;33m"
 FIN="\e[0m"
