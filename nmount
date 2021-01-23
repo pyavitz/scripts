@@ -1,5 +1,5 @@
 #!/bin/bash
-# depends on cifs
+# depends on cifs-utils
 RED="\e[1;31m"
 WHT="\e[1;37m"
 FIN="\e[0m"
@@ -7,9 +7,10 @@ ADDR="10.0.0.1"
 FOLDER="Name"
 MNT="/your/location"
 USER="user"
+PASSWD="password"
 
 smount(){
-sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,rw,uid=$USER
+sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,password=$PASSWD,rw,uid=$USER
 }
 
 sumount(){
