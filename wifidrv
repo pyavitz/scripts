@@ -43,7 +43,7 @@ echo
 echo Fetching . . . rtl8812au.
 git clone https://github.com/aircrack-ng/rtl8812au.git
 cd rtl8812au
-sudo ./dkms-install.sh
+sudo make dkms_install
 sudo rm -fdr ~/.build/*
 echo Done.
 }
