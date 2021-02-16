@@ -27,60 +27,60 @@ fetch -h
 }
 
 ### 
-rpi-5.4.y(){
+rpi-5.10.y(){
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi-5.4.y${FIN} ..."
-wget -cq --show-progress ${URL}rpi-5.4.y.tar.xz
+echo -e "${RED}Fetching rpi-5.10.y${FIN} ..."
+wget -cq --show-progress ${URL}rpi-5.10.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi-5.4.y.tar.xz
-rm -f rpi-5.4.y.tar.xz
+tar xf rpi-5.10.y.tar.xz
+rm -f rpi-5.10.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
-cd rpi-5.4.y
+cd rpi-5.10.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi3-5.4.y(){
+rpi3-5.10.y(){
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi3-5.4.y${FIN} ..."
-wget -cq --show-progress ${URL}rpi3-5.4.y.tar.xz
+echo -e "${RED}Fetching rpi3-5.10.y${FIN} ..."
+wget -cq --show-progress ${URL}rpi3-5.10.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi3-5.4.y.tar.xz
-rm -f rpi3-5.4.y.tar.xz
+tar xf rpi3-5.10.y.tar.xz
+rm -f rpi3-5.10.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
-cd rpi3-5.4.y
+cd rpi3-5.10.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi4-5.4.y(){
+rpi4-5.10.y(){
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-5.4.y${FIN} ..."
-wget -cq --show-progress ${URL}rpi4-5.4.y.tar.xz
+echo -e "${RED}Fetching rpi4-5.10.y${FIN} ..."
+wget -cq --show-progress ${URL}rpi4-5.10.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi4-5.4.y.tar.xz
-rm -f rpi4-5.4.y.tar.xz
+tar xf rpi4-5.10.y.tar.xz
+rm -f rpi4-5.10.y.tar.xz
 echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
-cd rpi4-5.4.y
+cd rpi4-5.10.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
@@ -297,7 +297,7 @@ while getopts "1234hrus" OPTION; do
         case $OPTION in
 
                 1)
-                        ECHO="5.4"
+                        ECHO="5.10"
                         ;;
                 2)
                         ECHO="stable"
@@ -325,8 +325,8 @@ while getopts "1234hrus" OPTION; do
                         echo ""
                         list
                         echo ""
-                        echo -e "   -1        Linux 5.4.y LTS (2021-02-07)"
-                        echo -e "   -2        Linux Stable Branch (2021-02-09)"
+                        echo -e "   -1        Linux 5.10.y LTS (2021-02-16)"
+                        echo -e "   -2        Linux Stable Branch (2021-02-16)"
                         echo -e "   -3        Linux Mainline Branch ${YLW}(use at own risk!)${FIN}"
                         echo -e "   -4        Update Boot Binaries"
                         echo ""
@@ -345,15 +345,15 @@ if [ $ECHO = "5.4" ]
 then
         echo
 	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi-5.4.y;
+		then rpi-5.10.y;
         fi
 
 	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi3-5.4.y;
+		then rpi3-5.10.y;
         fi
 
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-5.4.y;
+		then rpi4-5.10.y;
         fi
 fi
 
