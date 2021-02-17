@@ -341,7 +341,7 @@ while getopts "1234hrus" OPTION; do
         esac
 done
 
-if [ $ECHO = "5.4" ]
+if [ $ECHO = "5.10" ]
 then
         echo
 	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
