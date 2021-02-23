@@ -204,6 +204,7 @@ fetch -u
 }
 
 rpi4_downbins(){
+echo -e "${RED}Fetching boot bins${FIN} ..."
 mkdir -p ~/.build
 sudo rm -fdr ~/.build/*
 cd ~/.build
@@ -215,9 +216,11 @@ wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4cd.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4db.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4x.elf
+echo -e "${RED}Done${FIN}."
 }
 
 rpi_downbins(){
+echo -e "${RED}Fetching boot bins${FIN} ..."
 mkdir -p ~/.build
 sudo rm -fdr ~/.build/*
 cd ~/.build
@@ -230,6 +233,7 @@ wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_cd.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_db.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_x.elf
+echo -e "${RED}Done${FIN}."
 }
 
 rpi4_cleanbins(){
