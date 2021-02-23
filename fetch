@@ -215,7 +215,6 @@ wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4cd.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4db.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start4x.elf
-echo
 }
 
 rpi_downbins(){
@@ -231,7 +230,6 @@ wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_cd.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_db.elf
 wget -cq --show-progress -P ~/.build https://github.com/raspberrypi/firmware/raw/master/boot/start_x.elf
-echo
 }
 
 rpi4_cleanbins(){
@@ -246,39 +244,37 @@ sudo rm -f /boot/start*.elf
 }
 
 rpi4_install(){
-echo -e -n "${SGRN}"
-sudo install -v -m 0644 ~/.build/fixup4*.dat /boot
-sudo install -v -m 0644 ~/.build/start4*.elf /boot
+echo
+echo -e "${RED}Installing boot bins${FIN} ..."
+sudo install -m 0644 ~/.build/fixup4*.dat /boot
+sudo install -m 0644 ~/.build/start4*.elf /boot
 cd ~
 sudo rm -fdr ~/.build/*
-echo -e -n "${FIN}"
-echo
 }
 
 rpi_install(){
-echo -e -n "${SGRN}"
-sudo install -v -m 0644 ~/.build/bootcode.bin /boot
-sudo install -v -m 0644 ~/.build/fixup*.dat /boot
-sudo install -v -m 0644 ~/.build/start*.elf /boot
+echo
+echo -e "${RED}Installing boot bins${FIN} ..."
+sudo install -m 0644 ~/.build/bootcode.bin /boot
+sudo install -m 0644 ~/.build/fixup*.dat /boot
+sudo install -m 0644 ~/.build/start*.elf /boot
 cd ~
 sudo rm -fdr ~/.build/*
-echo -e -n "${FIN}"
-echo
 }
 
 rpi4_check(){
 rpi4_downbins
 if ls ~/.build/{fixup4.dat,fixup4cd.dat,fixup4db.dat,fixup4x.dat,start4.elf,start4cd.elf,start4db.elf,start4x.elf} > /dev/null 2>&1;
-	then rpi4_cleanbins && rpi4_install && echo -e "Done." && echo;
-	else echo -e "${SRED}Install Failed${FIN}?" && echo;
+	then rpi4_cleanbins && rpi4_install && echo -e "${RED}Done${FIN}.";
+	else echo -e "${SRED}Install Failed${FIN}?";
 fi
 }
 
 rpi_check(){
 rpi_downbins
 if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,start.elf,start_cd.elf,start_db.elf,start_x.elf} > /dev/null 2>&1;
-	then rpi_cleanbins && rpi_install && echo -e "Done." && echo;
-	else echo -e "${SRED}Install Failed${FIN}?" && echo;
+	then rpi_cleanbins && rpi_install && echo -e "${RED}Done${FIN}.";
+	else echo -e "${SRED}Install Failed${FIN}?";
 fi
 }
 
@@ -345,15 +341,15 @@ if [ $ECHO = "5.10" ]
 then
         echo
 	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi-5.10.y;
+		then rpi-5.10.y && fetch -4;
         fi
 
 	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi3-5.10.y;
+		then rpi3-5.10.y && fetch -4;
         fi
 
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-5.10.y;
+		then rpi4-5.10.y && fetch -4;
         fi
 fi
 
@@ -361,15 +357,15 @@ if [ $ECHO = "stable" ]
 then
         echo
 	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi-stable;
+		then rpi-stable && fetch -4;
         fi
 
 	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi3-stable;
+		then rpi3-stable && fetch -4;
         fi
 
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-stable;
+		then rpi4-stable && fetch -4;
         fi
 fi
 
@@ -377,7 +373,7 @@ if [ $ECHO = "mainline" ]
 then
         echo
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-mainline;
+		then rpi4-mainline && fetch -4;
 		else echo -e "${RED}OOPS!${FIN} Your board is not supported."
 	fi
 fi
