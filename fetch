@@ -26,8 +26,24 @@ fi
 fetch -h
 }
 
+initrd_script(){
+sudo mkdir -p /etc/initramfs/post-update.d/
+sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/scripts/99-initrd -P /etc/initramfs/post-update.d/
+sudo chmod +x /etc/initramfs/post-update.d/99-initrd
+sudo chown root:root /etc/initramfs/post-update.d/99-initrd
+}
+
+initrd_check(){
+if ls /etc/initramfs/post-update.d/99-initrd > /dev/null 2>&1;
+   then : ;
+   else initrd_script > /dev/null 2>&1;
+fi
+}
+
+
 ### 
 rpi-5.10.y(){
+initrd_check
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-5.10.y${FIN} ..."
@@ -48,6 +64,7 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi3-5.10.y(){
+initrd_check
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-5.10.y${FIN} ..."
@@ -68,6 +85,7 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi4-5.10.y(){
+initrd_check
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-5.10.y${FIN} ..."
@@ -89,6 +107,7 @@ sudo rm -fdr ~/.build/*
 
 ###
 rpi-stable(){
+initrd_check
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-stable${FIN} ..."
@@ -109,6 +128,7 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi3-stable(){
+initrd_check
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-stable${FIN} ..."
@@ -129,6 +149,7 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi4-stable(){
+initrd_check
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-stable${FIN} ..."
@@ -150,6 +171,7 @@ sudo rm -fdr ~/.build/*
 
 ###
 rpi4-mainline(){
+initrd_check
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-mainline${FIN} ..."
@@ -325,8 +347,8 @@ while getopts "1234hrus" OPTION; do
                         echo ""
                         list
                         echo ""
-                        echo -e "   -1        Linux 5.10.y LTS (2021-02-22)"
-                        echo -e "   -2        Linux Stable Branch (2021-02-16)"
+                        echo -e "   -1        Linux 5.10.y LTS (2021-02-24)"
+                        echo -e "   -2        Linux Stable Branch (2021-02-24)"
                         echo -e "   -3        Linux Mainline Branch ${YLW}(use at own risk!)${FIN}"
                         echo -e "   -4        Update Boot Binaries"
                         echo ""
@@ -345,15 +367,15 @@ if [ $ECHO = "5.10" ]
 then
         echo
 	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi-5.10.y && fetch -4;
+		then rpi-5.10.y;
         fi
 
 	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi3-5.10.y && fetch -4;
+		then rpi3-5.10.y;
         fi
 
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-5.10.y && fetch -4;
+		then rpi4-5.10.y;
         fi
 fi
 
@@ -361,15 +383,15 @@ if [ $ECHO = "stable" ]
 then
         echo
 	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi-stable && fetch -4;
+		then rpi-stable;
         fi
 
 	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi3-stable && fetch -4;
+		then rpi3-stable;
         fi
 
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-stable && fetch -4;
+		then rpi4-stable;
         fi
 fi
 
@@ -377,7 +399,7 @@ if [ $ECHO = "mainline" ]
 then
         echo
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-mainline && fetch -4;
+		then rpi4-mainline;
 		else echo -e "${RED}OOPS!${FIN} Your board is not supported."
 	fi
 fi
