@@ -28,7 +28,16 @@ fetch -h
 
 initrd_script(){
 sudo mkdir -p /etc/initramfs/post-update.d/
-sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/scripts/99-initrd -P /etc/initramfs/post-update.d/
+sudo tee /etc/initramfs/post-update.d/99-initrd <<EOF
+#!/bin/bash
+
+initrd="/boot/initrd.gz"
+
+echo "Creating initrd.gz."
+rm -fdr /boot/{initrd.gz,initrd.img-*-bak} > /dev/null 2>&1
+cp -f /boot/initrd.img-* ${initrd}
+
+EOF
 sudo chmod +x /etc/initramfs/post-update.d/99-initrd
 sudo chown root:root /etc/initramfs/post-update.d/99-initrd
 }
