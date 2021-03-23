@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 source /home/$USER/.eeprom
+PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/"
+URL="https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/"
 RED="\e[1;31m"
 FIN="\e[0m"
 
@@ -9,7 +11,7 @@ version=$(curl --silent -L https://raw.githubusercontent.com/raspberrypi/rpi-eep
 echo "   rpi eeprom: $version)"
 }
 
-update () {
+update(){
 sudo mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
 sudo mv -f /usr/local/bin/write2usb /usr/local/bin/write2usb.orig
 sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
@@ -27,7 +29,12 @@ fi
 deb-eeprom -h
 }
 
-checking (){
+validate(){
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then :; else echo && echo -e "${RED}Package not yet available${FIN}." && exit; fi
+}
+
+checking(){
+validate
 echo Checking for updates.
 sudo apt update
 sudo apt upgrade -y
@@ -43,27 +50,27 @@ if ls /usr/local/bin/deb-eeprom-update > /dev/null 2>&1;
 fi
 }
 
-builddir (){
+builddir(){
 echo
 echo Setting up build dir.
 sleep 2s
 mkdir -p /home/$USER/.build/eeprom
 cd /home/$USER/.build/eeprom
-wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/rpi-eeprom-control.patch
-wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/rpi-eeprom-update.patch
+wget -cq --show-progress ${PATCHES}rpi-eeprom-control.patch
+wget -cq --show-progress ${PATCHES}rpi-eeprom-update.patch
 echo Done.
 echo
 }
 
-download_eeprom (){
+download_eeprom(){
 echo Downloading rpi-eeprom.
 sleep 1s
-wget -cq --show-progress https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
-wget -cq --show-progress https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
+wget -cq --show-progress ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
+wget -cq --show-progress ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
 echo Done.
 }
 
-build_eeprom (){
+build_eeprom(){
 echo
 echo Building and installing rpi-eeprom debs.
 tar xf rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
@@ -95,18 +102,18 @@ echo Update bootloader - sudo rpi-eeprom-update -a
 echo
 }
 
-rite2usb () {
+rite2usb(){
 sudo write2usb
 }
 
-upgrade_eeprom () {
+upgrade_eeprom(){
 checking
 builddir
 download_eeprom
 build_eeprom
 }
 
-eeprom_version () {
+eeprom_version(){
 nano ~/.eeprom
 }
 
