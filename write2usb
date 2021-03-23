@@ -75,7 +75,7 @@ done
 update_eeprom(){
 if ls /lib/firmware/raspberrypi/bootloader/stable/${PI_EEPROM}.bin > /dev/null 2>&1
 	then : ;
-	else echo -e "${YLW}Please update EEPROM to 11.12${FIN}." && exit;
+	else echo -e "${YLW}Please update EEPROM to latest version${FIN}." && exit;
 fi
 sed -i 's/FIRMWARE_RELEASE_STATUS="default"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
 sed -i 's/FIRMWARE_RELEASE_STATUS="critical"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
