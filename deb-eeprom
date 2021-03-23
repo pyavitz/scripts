@@ -5,7 +5,7 @@ RED="\e[1;31m"
 FIN="\e[0m"
 
 list(){
-version=$(curl --silent -L https://raw.githubusercontent.com/raspberrypi/rpi-eepr$
+version=$(curl --silent -L https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/buster/debian/changelog | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}')
 echo "   rpi eeprom: $version)"
 }
 
