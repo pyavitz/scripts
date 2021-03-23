@@ -4,6 +4,11 @@ source /home/$USER/.eeprom
 RED="\e[1;31m"
 FIN="\e[0m"
 
+list(){
+version=$(curl --silent -L https://raw.githubusercontent.com/raspberrypi/rpi-eepr$
+echo "   rpi eeprom: $version)"
+}
+
 update () {
 sudo mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
 sudo mv -f /usr/local/bin/write2usb /usr/local/bin/write2usb.orig
@@ -134,6 +139,8 @@ while getopts "vuUwh" OPTION; do
                 h)
                         echo -e "${RED}Raspberry Pi 4B EEPROM Helper Script${FIN}"
                         echo "Usage: deb-eeprom -opt"
+                        echo ""
+                        list
                         echo ""
                         echo "   -v       Edit version variable"
                         echo "   -U       Upgrade eeprom package"
