@@ -269,7 +269,6 @@ tmpfs	/tmp		tmpfs	defaults,nosuid 0 0
 EOF
 }
 
-
 ### EXECUTION
 run_ext4(){
 run_as_root
