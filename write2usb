@@ -84,11 +84,11 @@ sudo rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/${PI_EE
 }
 
 ### PARTITION DRIVE
-partition_usb(){
+partition_ext4(){
 partprobe ${USB}
 sleep 4s
 dd if=/dev/zero of=${USB} bs=512 count=1
-truncate -s 2300MB ${USB}
+truncate -s 2200MB ${USB}
 fdisk ${USB} <<EOF
 o
 n
@@ -121,6 +121,45 @@ mount -o defaults,noatime ${USB}2 /mnt/p2
 bash growpart ${USB} 2 > /dev/null 2>&1
 sleep 1s
 resize2fs ${USB}2 > /dev/null 2>&1
+sleep 1s
+}
+
+### PARTITION DRIVE
+partition_f2fs(){
+partprobe ${USB}
+sleep 4s
+dd if=/dev/zero of=${USB} bs=512 count=1
+truncate -s 2200MB ${USB}
+fdisk ${USB} <<EOF
+o
+n
+p
+1
+2048
+524287
+a
+c
+t
+b
+n
+p
+2
+524288
+
+p
+w
+
+EOF
+partprobe ${USB}
+echo 'y' | mkfs.vfat -n BOOT ${USB}1
+echo 'y' | mkfs.f2fs -f -l ROOTFS ${USB}2
+mkdir -p /mnt/p1 /mnt/p2
+mount ${USB}1 /mnt/p1
+mount ${USB}2 /mnt/p2
+sync
+umount /mnt/p2
+bash resize.f2fs ${USB}2 > /dev/null 2>&1
+mount -o rw,acl,active_logs=6,background_gc=on,user_xattr ${USB}2 /mnt/p2
 sleep 1s
 }
 
@@ -170,7 +209,7 @@ rm -f root1 root2 root3
 }
 
 ### CMDLINE
-create_cmdline(){
+ext4_cmdline(){
 source /etc/opt/root-pid.txt
 rm -f /mnt/p1/cmdline.txt
 tee /mnt/p1/cmdline.txt <<EOF
@@ -178,8 +217,16 @@ console=serial0,115200 console=tty1 root=PARTUUID=${ROOT_PARTUUID} rootfstype=ex
 EOF
 }
 
+f2fs_cmdline(){
+source /etc/opt/root-pid.txt
+rm -f /mnt/p1/cmdline.txt
+tee /mnt/p1/cmdline.txt <<EOF
+console=serial0,115200 console=tty1 root=PARTUUID=${ROOT_PARTUUID} rootfstype=f2fs elevator=deadline fsck.repair=yes logo.nologo net.ifnames=0 rootwait
+EOF
+}
+
 ### EXTLINUX
-create_extlinux(){
+ext4_extlinux(){
 source /etc/opt/root-pid.txt
 rm -f /mnt/p1/extlinux/extlinux.conf
 tee /mnt/p1/extlinux/extlinux.conf <<EOF
@@ -189,8 +236,18 @@ label kernel
 EOF
 }
 
+f2fs_extlinux(){
+source /etc/opt/root-pid.txt
+rm -f /mnt/p1/extlinux/extlinux.conf
+tee /mnt/p1/extlinux/extlinux.conf <<EOF
+label kernel
+    kernel /Image
+    append earlyprintk initrd=/uInitrd console=serial0,115200 console=tty1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=f2fs fsck.repair=yes logo.nologo net.ifnames=0 rootwait
+EOF
+}
+
 ### FSTAB
-create_fstab(){
+ext4_fstab(){
 source /etc/opt/boot-id.txt
 source /etc/opt/root-id.txt
 rm -f /mnt/p2/etc/fstab
@@ -201,7 +258,20 @@ tmpfs	/tmp		tmpfs	defaults,nosuid 0 0
 EOF
 }
 
+f2fs_fstab(){
+source /etc/opt/boot-id.txt
+source /etc/opt/root-id.txt
+rm -f /mnt/p2/etc/fstab
+tee /mnt/p2/etc/fstab <<EOF
+UUID=${BOOT_UUID}	/boot		vfat    defaults 0 2
+UUID=${ROOT_UUID}	/		f2fs	rw,acl,active_logs=6,background_gc=on,user_xattr 0 0
+tmpfs	/tmp		tmpfs	defaults,nosuid 0 0
+EOF
+}
+
+
 ### EXECUTION
+run_ext4(){
 run_as_root
 check_progressbar
 
@@ -220,7 +290,7 @@ echo -e "${RED}Done${FIN}."
 
 echo
 echo -e "${RED}Partitioning USB${FIN} ..."
-partition_usb > /dev/null 2>&1
+partition_ext4 > /dev/null 2>&1
 echo -e "${RED}Done${FIN}."
 
 echo
@@ -239,17 +309,17 @@ echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Creating new cmdline${FIN} ..."
 if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-	then create_cmdline;
+	then ext4_cmdline;
 fi
 if `grep -Fx "bcm2711" "/etc/opt/board.txt" > /dev/null 2>&1;`
-	then create_extlinux;
+	then ext4_extlinux;
 fi
 sleep 1s
 echo -e "${RED}Done${FIN}."
 
 echo
 echo -e "${RED}Creating fstab${FIN} ..."
-create_fstab
+ext4_fstab
 sleep 1s
 echo -e "${RED}Done${FIN}."
 
@@ -265,3 +335,93 @@ rm -fdr /mnt/*
 echo -e "${RED}Done${FIN}."
 echo
 echo You may now power down and remove the sdcard.
+}
+
+run_f2fs(){
+run_as_root
+if ls /sbin/mkfs.f2fs > /dev/null 2>&1;
+	then :;
+	else apt update && apt install f2fs-tools -y
+fi
+check_progressbar
+
+if [ $ERROR ]; then
+    error_node;
+else 
+    correct
+fi
+
+echo
+confirm
+echo
+echo -e "${RED}Updating eeprom${FIN} ..."
+update_eeprom
+echo -e "${RED}Done${FIN}."
+
+echo
+echo -e "${RED}Partitioning USB${FIN} ..."
+partition_f2fs > /dev/null 2>&1
+echo -e "${RED}Done${FIN}."
+
+echo
+echo -e "${YLW}Please be patient as the boot and root filesystem${FIN}"
+echo -e "${YLW}are transferred over to the USB drive${FIN}."
+transfer_to_usb
+clear
+sleep 1s
+
+echo
+echo -e "${RED}Fetching UUID${FIN} ..."
+partition_uuid
+sleep 1s
+echo -e "${RED}Done${FIN}."
+
+echo
+echo -e "${RED}Creating new cmdline${FIN} ..."
+if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
+	then f2fs_cmdline;
+fi
+if `grep -Fx "bcm2711" "/etc/opt/board.txt" > /dev/null 2>&1;`
+	then f2fs_extlinux;
+fi
+sleep 1s
+echo -e "${RED}Done${FIN}."
+
+echo
+echo -e "${RED}Creating fstab${FIN} ..."
+f2fs_fstab
+sleep 1s
+echo -e "${RED}Done${FIN}."
+
+echo 
+echo -e "${RED}Unmounting USB${FIN} ..."
+rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt \
+/etc/opt/boot-id.txt
+rm -fdr /mnt/p2/mnt/*
+umount /mnt/p2/boot > /dev/null 2>&1
+umount /mnt/p2 > /dev/null 2>&1
+umount /mnt/p1 > /dev/null 2>&1
+rm -fdr /mnt/*
+echo -e "${RED}Done${FIN}."
+echo
+echo You may now power down and remove the sdcard.
+}
+
+options=("EXT4" "F2FS" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "EXT4")
+            run_ext4
+	    break
+            ;;
+        "F2FS")
+            run_f2fs
+	    break
+            ;;
+        "Quit")
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done

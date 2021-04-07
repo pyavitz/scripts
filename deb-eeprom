@@ -151,7 +151,7 @@ while getopts "vuUwh" OPTION; do
                         echo ""
                         echo "   -v       Edit version variable"
                         echo "   -U       Upgrade eeprom package"
-                        echo "   -w       Setup and install usb boot (ext4 only)"
+                        echo "   -w       Setup and install usb boot"
                         echo "   -u       Update script"
                         echo ""
                         exit 0
