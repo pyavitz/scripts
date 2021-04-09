@@ -347,7 +347,7 @@ while getopts "1234hrus" OPTION; do
                         echo ""
                         list
                         echo ""
-                        echo -e "   -1        Linux 5.10.y LTS (2021-04-07)"
+                        echo -e "   -1        Linux 5.10.y LTS (2021-04-09)"
                         echo -e "   -2        Linux Stable Branch (2021-04-07)"
                         echo -e "   -3        Linux Mainline Branch ${YLW}(use at own risk!)${FIN}"
                         echo -e "   -4        Update Boot Binaries"
