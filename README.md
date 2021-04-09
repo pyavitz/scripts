@@ -1,17 +1,5 @@
 ### Scripts
+
 ```sh
-fetch, downloads and installs the linux kernel
-       https://github.com/pyavitz/rpi-img-builder
-```
-```sh       
-wifidrv, compiles and installs modules: rtl88x2bu rtl8812au rtl8821cu
-```
-```sh
-sshot, takes screenshot of computer A and moves it to computer B
-```
-```sh
-swh, simple wifi helper
-```
-```sh
-write2usb, updates Raspberry Pi 4B eeprom and sets up usb boot
+These are my scripts. They do things! Feel free to use them.
 ```
