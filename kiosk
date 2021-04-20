@@ -1,0 +1,11 @@
+#!/bin/bash
+URL="http://10.0.0.233/"
+FILE="display.html"
+
+echo Restarting Chromium ...
+killall chromium > /dev/null 2>&1
+sleep 1s
+rm -fdr ~/.cache/chromium > /dev/null 2>&1
+rm -fdr ~/.config/chromium > /dev/null 2>&1
+DISPLAY=:0 chromium --noerrdialogs --incognito --kiosk --force-device-scale-factor=1 --disk-cache-dir=/tmp/null ${URL}${FILE} > /dev/null 2>&1 &
+echo Done.
