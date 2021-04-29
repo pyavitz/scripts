@@ -5,7 +5,7 @@ FIN="\e[0m"
 
 firmware(){
 FWURL="https://github.com/pyavitz/firmware.git"
-FWDEST="/lib/firmware/raspberrypi"
+FWDEST="/lib/firmware/updates/brcm"
 RBFALSE="sudo git config pull.rebase false"
 echo -e "${RED}Checking firmware${FIN}" ...
 if ls /usr/bin/git > /dev/null 2>&1;
@@ -16,7 +16,6 @@ if ls ${FWDEST}/.git > /dev/null 2>&1;
 	then cd ${FWDEST} && ${RBFALSE} && sudo git pull;
 	else sudo git clone ${FWURL} ${FWDEST}
 fi
-sudo ln -srf /lib/firmware/raspberrypi/* /lib/firmware/brcm/
 echo -e "${RED}Done${FIN}".
 cd ~
 }
