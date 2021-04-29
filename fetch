@@ -485,5 +485,5 @@ fi
 
 if [ $ECHO = "firmware" ]
 then
-        firmware;
+        echo "Feature not yet available";
 fi
