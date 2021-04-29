@@ -324,6 +324,22 @@ if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,sta
 fi
 }
 
+firmware(){
+FWURL="https://github.com/pyavitz/firmware.git"
+FWDEST="/lib/firmware/raspberrypi"
+echo -e "${RED}Checking firmware${FIN}" ...
+if ls /usr/bin/git > /dev/null 2>&1;
+	then :;
+	else sudo apt install git -y;
+fi
+if ls ${FWDEST}/.git > /dev/null 2>&1;
+	then cd ${FWDEST} && sudo git pull;
+	else sudo git clone ${FWURL} ${FWDEST}
+fi
+sudo ln -srf /lib/firmware/raspberrypi/* /lib/firmware/brcm/
+echo -e "${RED}Done${FIN}".
+cd ~
+}
 
 if [ $# -eq 0 ]
 then
@@ -335,7 +351,7 @@ fi
 
 ECHO="false"
 
-while getopts "12brush" OPTION; do
+while getopts "12brushf" OPTION; do
         case $OPTION in
 
                 1)
@@ -346,6 +362,9 @@ while getopts "12brush" OPTION; do
                         ;;
                 b)
                         ECHO="binary"
+                        ;;
+                f)
+                        ECHO="firmware"
                         ;;
                 r)
                         ECHO="rev"
@@ -367,6 +386,7 @@ while getopts "12brush" OPTION; do
                         echo -e "   -1        Linux 5.10.y LTS"
                         echo -e "   -2        Linux Stable Branch"
                         echo -e "   -b        Update Boot Binaries"
+                        echo -e "   -f        Update Wifi/BT Firmware"
                         echo ""
                         echo -e "   -u        Update Fetch"
                         echo -e "   -s        Not working? Setup Fetch"
@@ -460,4 +480,9 @@ fi
 if [ $ECHO = "up" ]
 then
         update;
+fi
+
+if [ $ECHO = "firmware" ]
+then
+        firmware;
 fi
