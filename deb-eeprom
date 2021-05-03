@@ -49,7 +49,7 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt install help2man rsync pciutils -y
 if ls /home/$USER/.eeprom > /dev/null 2>&1;
-	then sudo rm -fdr /home/$USER/.eeprom;
+	then rm -f /home/$USER/.eeprom;
 fi
 if ls /home/$USER/.build/eeprom > /dev/null 2>&1;
 	then sudo rm -fdr /home/$USER/.build/eeprom;
