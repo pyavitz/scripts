@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-source /home/$USER/.eeprom
 PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/"
+CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/buster/debian/changelog"
 URL="https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/"
+ERROR=$(echo -e ${RED}Something went wrong${FIN}? ${RED}Please report error${FIN}.)
 RED="\e[1;31m"
 FIN="\e[0m"
 
-list(){
-version=$(curl --silent -L https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/buster/debian/changelog | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
-echo "   rpi eeprom: $version"
+current(){
+version=$(apt-cache show rpi-eeprom | grep -Po '(?<=Version:)[^;]+')
+echo "   CURRENT:$version"
+}
+
+latest(){
+version=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
+echo "   AVAILABLE: $version"
 }
 
 update(){
@@ -29,16 +35,19 @@ fi
 deb-eeprom -h
 }
 
-validate(){
-if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then :; else echo && echo -e "${RED}Package not yet available${FIN}." && exit; fi
+cleaning(){
+cd /home/$USER
+rm -fdr /home/$USER/.build/eeprom
 }
 
 checking(){
-validate
 echo Checking for updates.
 sudo apt update
 sudo apt upgrade -y
 sudo apt install help2man rsync pciutils -y
+if ls /home/$USER/.eeprom > /dev/null 2>&1;
+	then sudo rm -fdr /home/$USER/.eeprom;
+fi
 if ls /home/$USER/.build/eeprom > /dev/null 2>&1;
 	then sudo rm -fdr /home/$USER/.build/eeprom;
 fi
@@ -60,6 +69,20 @@ wget -cq --show-progress ${PATCHES}rpi-eeprom-control.patch
 wget -cq --show-progress ${PATCHES}rpi-eeprom-update.patch
 echo Done.
 echo
+}
+
+find_eeprom(){
+EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
+	then download_eeprom; else finding_eeprom;
+fi
+}
+
+finding_eeprom(){
+EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==10) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
+	then download_eeprom; else ${ERROR} && cleaning && exit;
+fi
 }
 
 download_eeprom(){
@@ -109,12 +132,8 @@ sudo write2usb
 upgrade_eeprom(){
 checking
 builddir
-download_eeprom
+find_eeprom
 build_eeprom
-}
-
-eeprom_version(){
-nano ~/.eeprom
 }
 
 # Commands
@@ -128,12 +147,9 @@ fi
 
 ECHO="false"
 
-while getopts "vuUwh" OPTION; do
+while getopts "uUwh" OPTION; do
         case $OPTION in
 
-                v)
-                        ECHO="version"
-                        ;;
                 U)
                         ECHO="upgrade"
                         ;;
@@ -147,9 +163,9 @@ while getopts "vuUwh" OPTION; do
                         echo -e "${RED}Raspberry Pi 4B EEPROM Helper Script${FIN}"
                         echo "Usage: deb-eeprom -opt"
                         echo ""
-                        list
+                        current
+                        latest
                         echo ""
-                        echo "   -v       Edit version variable"
                         echo "   -U       Upgrade eeprom package"
                         echo "   -w       Setup and install usb boot"
                         echo "   -u       Update script"
@@ -160,10 +176,6 @@ while getopts "vuUwh" OPTION; do
         esac
 done
 
-if [ $ECHO = "version" ]
-then
-        eeprom_version;
-fi
 if [ $ECHO = "upgrade" ]
 then
         upgrade_eeprom;
