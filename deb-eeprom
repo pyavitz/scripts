@@ -3,7 +3,6 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/"
 CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/buster/debian/changelog"
 URL="https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/"
-ERROR=$(echo -e ${RED}Something went wrong${FIN}? ${RED}Please report error${FIN}.)
 RED="\e[1;31m"
 FIN="\e[0m"
 
@@ -15,6 +14,10 @@ echo "   CURRENT:$version"
 latest(){
 version=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
 echo "   AVAILABLE: $version"
+}
+
+error(){
+echo -e ${RED}Something went wrong${FIN}? ${RED}Please report error${FIN}.
 }
 
 update(){
@@ -81,7 +84,7 @@ fi
 finding_eeprom(){
 EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==10) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
 if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
-	then download_eeprom; else ${ERROR} && cleaning && exit;
+	then download_eeprom; else error && cleaning && exit;
 fi
 }
 
