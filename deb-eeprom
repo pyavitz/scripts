@@ -121,14 +121,14 @@ dpkg-buildpackage -us -nc -uc
 cd ..
 sudo dpkg -i *.deb
 cd ..
-echo -e "${RED}Done{FIN}."
+echo -e "${RED}Done${FIN}."
 echo
 sleep 1s
 echo -e "${PNK}Cleaning up${FIN} ..."
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
 sleep 1s
-echo -e "${RED}Done{FIN}."
+echo -e "${RED}Done${FIN}."
 echo
 echo Check for update - sudo rpi-eeprom-update
 echo Update bootloader - sudo rpi-eeprom-update -a
