@@ -15,6 +15,14 @@ echo_bdone(){
 echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
 
+echo_nok(){
+echo -e -n "${PNK}[${FIN}${GRN}ok${FIN}${PNK}]${FIN}"
+}
+
+echo_fail(){
+echo -n -e "${PNK}[${FIN}${RED}failed${FIN}${PNK}]${FIN}"
+}
+
 current(){
 version=$(apt-cache show rpi-eeprom | grep -Po '(?<=Version:)[^;]+')
 echo "   CURRENT:$version"
@@ -53,7 +61,7 @@ rm -fdr /home/$USER/.build/eeprom
 }
 
 checking(){
-echo Checking for updates.
+echo -e "${WHT}Checking for updates${FIN} ..."
 sudo apt update
 sudo apt upgrade -y
 sudo apt install help2man rsync pciutils aria2 -y
@@ -72,15 +80,16 @@ fi
 }
 
 builddir(){
-echo
-echo Setting up build dir.
-sleep 2s
+echo && echo -n "Setup   "
+sleep 1s
 mkdir -p /home/$USER/.build/eeprom
-cd /home/$USER/.build/eeprom
-${DOWNLOAD} ${PATCHES}rpi-eeprom-control.patch
-${DOWNLOAD} ${PATCHES}rpi-eeprom-update.patch
-echo Done.
-echo
+cd /home/$USER/.build/eeprom && echo_nok
+echo && echo -n "Patches "
+wget -cq ${PATCHES}rpi-eeprom-control.patch
+wget -cq ${PATCHES}rpi-eeprom-update.patch
+if ls /home/$USER/.build/eeprom/{rpi-eeprom-control.patch,rpi-eeprom-update.patch} > /dev/null 2>&1;
+	then echo_nok; else echo_fail && exit;
+fi
 }
 
 find_eeprom(){
@@ -98,7 +107,7 @@ fi
 }
 
 download_eeprom(){
-echo Downloading rpi-eeprom.
+echo && echo -e -n "${WHT}Searching${FIN} ..."
 sleep 1s
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
@@ -106,7 +115,7 @@ ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
 
 build_eeprom(){
 echo
-echo Building and installing rpi-eeprom debs.
+echo -e "${RED}Installing rpi-eeprom${FIN} ..."
 tar xf rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
 tar xf rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 rm -f rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
@@ -122,14 +131,9 @@ dpkg-buildpackage -us -nc -uc
 cd ..
 sudo dpkg -i *.deb
 cd ..
-echo Done.
-echo
-sleep 1s
-echo Cleaning up.
+echo -e "${RED}Done${FIN}."
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
-sleep 1s
-echo Done.
 echo
 echo Check for update - sudo rpi-eeprom-update
 echo Update bootloader - sudo rpi-eeprom-update -a
