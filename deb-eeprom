@@ -73,12 +73,13 @@ fi
 
 builddir(){
 echo
-echo -e "${RED}Setting up build directory${FIN} ... "
-sleep 1s
+echo Setting up build dir.
+sleep 2s
 mkdir -p /home/$USER/.build/eeprom
 cd /home/$USER/.build/eeprom
 ${DOWNLOAD} ${PATCHES}rpi-eeprom-control.patch
-${DOWNLOAD} ${PATCHES}rpi-eeprom-update.patch && echo_bdone
+${DOWNLOAD} ${PATCHES}rpi-eeprom-update.patch
+echo Done.
 echo
 }
 
@@ -97,7 +98,7 @@ fi
 }
 
 download_eeprom(){
-echo -e "${RED}Downloading rpi-eeprom${FIN} ..."
+echo Downloading rpi-eeprom.
 sleep 1s
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
@@ -105,7 +106,7 @@ ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
 
 build_eeprom(){
 echo
-echo -e "${RED}Installing rpi-eeprom${FIN} ...
+echo Building and installing rpi-eeprom debs.
 tar xf rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
 tar xf rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 rm -f rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
@@ -121,14 +122,14 @@ dpkg-buildpackage -us -nc -uc
 cd ..
 sudo dpkg -i *.deb
 cd ..
-echo -e "${RED}Done${FIN}."
+echo Done.
 echo
 sleep 1s
-echo -e "${PNK}Cleaning up${FIN} ..."
+echo Cleaning up.
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo Done.
 echo
 echo Check for update - sudo rpi-eeprom-update
 echo Update bootloader - sudo rpi-eeprom-update -a
