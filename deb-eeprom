@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/"
 CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/buster/debian/changelog"
 URL="https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/"
 RED="\e[1;31m"
+GRN="\e[1;32m"
+PNK="\e[1;35m"
+WHT="\e[1;37m"
+YLW="\e[1;33m"
 FIN="\e[0m"
+
+echo_bdone(){
+echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
+}
 
 current(){
 version=$(apt-cache show rpi-eeprom | grep -Po '(?<=Version:)[^;]+')
@@ -23,8 +32,8 @@ echo -e ${RED}Something went wrong${FIN}? ${RED}Please report error${FIN}.
 update(){
 sudo mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
 sudo mv -f /usr/local/bin/write2usb /usr/local/bin/write2usb.orig
-sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
-sudo wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/write2usb -P /usr/local/bin
+sudo wget -cq https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
+sudo wget -cq https://github.com/pyavitz/scripts/raw/master/write2usb -P /usr/local/bin
 sudo chmod +x /usr/local/bin/deb-eeprom
 sudo chmod +x /usr/local/bin/write2usb
 if ls /usr/local/bin/deb-eeprom > /dev/null 2>&1;
@@ -47,7 +56,7 @@ checking(){
 echo Checking for updates.
 sudo apt update
 sudo apt upgrade -y
-sudo apt install help2man rsync pciutils -y
+sudo apt install help2man rsync pciutils aria2 -y
 if ls /home/$USER/.eeprom > /dev/null 2>&1;
 	then rm -f /home/$USER/.eeprom;
 fi
@@ -68,8 +77,8 @@ echo Setting up build dir.
 sleep 2s
 mkdir -p /home/$USER/.build/eeprom
 cd /home/$USER/.build/eeprom
-wget -cq --show-progress ${PATCHES}rpi-eeprom-control.patch
-wget -cq --show-progress ${PATCHES}rpi-eeprom-update.patch
+${DOWNLOAD} ${PATCHES}rpi-eeprom-control.patch
+${DOWNLOAD} ${PATCHES}rpi-eeprom-update.patch
 echo Done.
 echo
 }
@@ -91,9 +100,8 @@ fi
 download_eeprom(){
 echo Downloading rpi-eeprom.
 sleep 1s
-wget -cq --show-progress ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
-wget -cq --show-progress ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
-echo Done.
+${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
+${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
 }
 
 build_eeprom(){
