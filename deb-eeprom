@@ -182,7 +182,7 @@ while getopts "uUwh" OPTION; do
                         latest
                         echo ""
                         echo "   -U       Upgrade eeprom package"
-                        echo "   -w       Setup and install usb boot"
+                        echo "   -w       Transfer to USB"
                         echo "   -u       Update script"
                         echo ""
                         exit 0
