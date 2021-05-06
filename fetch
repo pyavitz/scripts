@@ -29,11 +29,11 @@ echo $version
 
 update(){
 sudo mv -f /usr/local/bin/fetch /usr/local/bin/fetch.orig
-sudo wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/fetch -P /usr/local/bin
+sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fetch -P /usr/local/bin
 sudo chmod +x /usr/local/bin/fetch
 if ls /usr/local/bin/fetch > /dev/null 2>&1;
-   then sudo rm -f /usr/local/bin/fetch.orig ;
-   else sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch
+   then sudo rm -f /usr/local/bin/fetch.orig;
+   else sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch;
 fi
 fetch -h
 }
@@ -47,14 +47,14 @@ sudo chown root:root /etc/initramfs/post-update.d/99-initrd
 
 initrd_check(){
 if ls /etc/initramfs/post-update.d/99-initrd > /dev/null 2>&1;
-   then : ;
+   then :;
    else initrd_script > /dev/null 2>&1;
 fi
 }
 
 aria2c_check(){
 if ls /usr/bin/aria2c > /dev/null 2>&1;
-   then : ;
+   then :;
    else sudo apt install aria2 -y
 fi
 }
