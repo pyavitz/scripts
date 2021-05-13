@@ -12,7 +12,7 @@ fi
 }
 
 confirm(){
-echo -e "${YLW}If you have no clue as to what Pi4 USB-C Gadget"
+echo -e "${YLW}If you have no clue as to what USB Gadget"
 echo -e "mode is, then please do not run this script${FIN}."
 echo -e ""
 read -p "Continue (y/n)?" choice
@@ -175,7 +175,7 @@ echo -e "Done."
 echo
 echo -e "Install complete!"
 echo
-echo -e "Your Pi4 will show up as a ethernet device with an IP address of 10.55.0.1"
+echo -e "Your Pi will show up as a ethernet device with an IP address of 10.55.0.1"
 echo -e "and should assign the device you plug it into an IP address via DHCP. This"
 echo -e "means you can just ssh to username@10.55.0.1 to start using it."
 echo
