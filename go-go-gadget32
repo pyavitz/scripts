@@ -139,7 +139,7 @@ echo
 confirm
 
 echo
-echo -e "Pi4 USB-C Gadget Setup"
+echo -e "Pi USB Gadget Setup"
 echo
 echo -e "Installing dnsmasq ..."
 install_dnsmasq
