@@ -2,7 +2,7 @@
 
 INTERFACE="wlan0"
 
-scan () {
+scan(){
 spinner() {
     local i sp n
     sp='|\-/'
@@ -23,7 +23,7 @@ kill "$!" # kill the spinner
 printf '\n'
 }
 
-ifup () {
+ifup(){
 echo
 echo Bringing up interface.
 sudo ifup ${INTERFACE}
@@ -31,7 +31,7 @@ echo Done.
 echo
 }
 
-ifdown () {
+ifdown(){
 echo
 echo Bringing down interface.
 sudo ifdown ${INTERFACE}
@@ -39,7 +39,7 @@ echo Done.
 echo
 }
 
-restart () {
+restart(){
 echo
 echo Restarting ...
 ifdown
@@ -47,11 +47,11 @@ ifup
 }
 
 
-interfaces () {
+interfaces(){
 sudo nano /etc/network/interfaces
 }
 
-wpa () {
+wpa(){
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 }
 
@@ -89,7 +89,7 @@ while getopts "hsudrWI" OPTION; do
                         ;;
                 h)
                         echo "Simple wifi helper script"
-                        echo "Usage: swh -opt"
+                        echo "Usage: swh -h"
                         echo ""
                         echo "   -s       Scan for SSID's"
                         echo "   -u       Bring up interface"
