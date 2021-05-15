@@ -346,6 +346,31 @@ echo -e "${RED}Done${FIN}".
 cd ~
 }
 
+rpi_userland(){
+echo
+echo -e "${RED}Updating userland${FIN}."
+mkdir -p ~/.build
+cd ~/.build
+git clone https://github.com/raspberrypi/userland.git
+cd userland
+wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/userland-remove-hi-pi.patch
+patch -p1 < userland-remove-hi-pi.patch
+rm -f userland-remove-hi-pi.patch
+if `grep -Fx "bcm2711" "/etc/opt/soc.txt" >/dev/null;`
+	then ./buildme --aarch64;
+fi
+if `grep -Fx "bcm2710" "/etc/opt/soc.txt" >/dev/null;`
+	then ./buildme --aarch64;
+fi
+if `grep -Fx "bcm2708" "/etc/opt/soc.txt" >/dev/null;`
+	then ./buildme;
+fi
+cd ~
+sudo rm -fdr ~/.build/userland
+sudo ldconfig
+echo -e "${RED}Done${FIN}."
+}
+
 if [ $# -eq 0 ]
 then
         echo -e "\e[0;31mMissing options!${FIN}"
@@ -356,7 +381,7 @@ fi
 
 ECHO="false"
 
-while getopts "12brushf" OPTION; do
+while getopts "12bruUshf" OPTION; do
         case $OPTION in
 
                 1)
@@ -370,6 +395,9 @@ while getopts "12brushf" OPTION; do
                         ;;
                 f)
                         ECHO="firmware"
+                        ;;
+                U)
+                        ECHO="userland"
                         ;;
                 r)
                         ECHO="rev"
@@ -392,6 +420,7 @@ while getopts "12brushf" OPTION; do
                         echo -e "   -2        Linux Stable Branch"
                         echo -e "   -b        Update Boot Binaries"
                         echo -e "   -f        Update Wifi/BT Firmware"
+                        echo -e "   -U        Update Raspberry Pi Userland"
                         echo ""
                         echo -e "   -u        Update Fetch"
                         echo -e "   -s        Not working? Setup Fetch"
@@ -490,4 +519,12 @@ fi
 if [ $ECHO = "firmware" ]
 then
         firmware;
+fi
+
+if [ $ECHO = "userland" ]
+then
+	if ls /etc/opt/soc.txt > /dev/null 2>&1;
+		then rpi_userland;
+		else echo && echo -e "${RED}Please setup Fetch${FIN}.";
+	fi
 fi
