@@ -426,7 +426,7 @@ while getopts "12bruUshf" OPTION; do
                         echo -e "   -s        Not working? Setup Fetch"
                         echo ""
                         echo "Should you come across any bugs, either open an issue on GitHub or talk"
-                        echo "with us directly by joining our channel on Freenode; #debianarm-port"
+                        echo "with us directly by joining our channel on Libera; #arm-img-builder"
                         exit 0
                         ;;
 
