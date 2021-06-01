@@ -373,6 +373,12 @@ sudo ldconfig
 echo -e "${RED}Done${FIN}."
 }
 
+internet_check(){
+if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
+}
+
+internet_check
+# Commands
 if [ $# -eq 0 ]
 then
         echo -e "\e[0;31mMissing options!${FIN}"
