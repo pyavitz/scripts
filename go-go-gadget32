@@ -11,6 +11,10 @@ if [ "$USER" != "root" ]; then
 fi
 }
 
+internet_check(){
+if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
+}
+
 confirm(){
 echo -e "${YLW}If you have no clue as to what USB Gadget"
 echo -e "mode is, then please do not run this script${FIN}."
@@ -134,6 +138,7 @@ fi
 }
 
 # The Magic
+internet_check
 run_as_root
 echo
 confirm
