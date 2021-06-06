@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+WHT="\e[1;37m"
+FIN="\e[0m"
+
 INTERFACE="wlan0"
 
 scan(){
@@ -12,7 +15,7 @@ spinner() {
         printf "%s\b" "${sp:i++%n:1}"
     done
 }
-echo
+echo -e -n ${WHT}
 printf 'Scanning: '
 spinner &
 
@@ -21,6 +24,7 @@ sudo iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption k
 
 kill "$!" # kill the spinner
 printf '\n'
+echo -e -n ${FIN}
 }
 
 ifup(){
@@ -88,7 +92,7 @@ while getopts "hsudrWI" OPTION; do
                         ECHO="I"
                         ;;
                 h)
-                        echo "Simple wifi helper script"
+                        echo -e "${WHT}Simple wifi helper script${FIN}"
                         echo "Usage: swh -h"
                         echo ""
                         echo "   -s       Scan for SSID's"
