@@ -347,11 +347,11 @@ if wget -q --spider http://github.com; then :; else echo -e "This script require
 }
 
 depends_check(){
-if ls $(which "aria2c") > /dev/null 2>&1;
+if ls /usr/bin/aria2c > /dev/null 2>&1;
    then :;
    else sudo apt install aria2 -y
 fi
-if ls $(which "pv") > /dev/null 2>&1;
+if ls /usr/bin/pv > /dev/null 2>&1;
    then :;
    else sudo apt install pv -y
 fi
