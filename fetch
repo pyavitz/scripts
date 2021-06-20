@@ -54,16 +54,8 @@ if ls /etc/initramfs/post-update.d/99-initrd > /dev/null 2>&1;
 fi
 }
 
-aria2c_check(){
-if ls /usr/bin/aria2c > /dev/null 2>&1;
-   then :;
-   else sudo apt install aria2 -y
-fi
-}
-
 ### 
 rpi-5.10.y(){
-aria2c_check
 initrd_check
 mkdir -p ~/.build
 cd ~/.build
@@ -71,9 +63,10 @@ echo -e "${RED}Fetching rpi-5.10.y${FIN} ..."
 ${DOWNLOAD} ${URL}rpi-5.10.y.tar.xz && echo_bdone
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi-5.10.y.tar.xz
+echo -e -n "${WHT}"
+pv rpi-5.10.y.tar.xz | tar -xJ rpi-5.10.y
+echo -e -n "${FIN}"
 rm -f rpi-5.10.y.tar.xz
-echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi-5.10.y
@@ -84,7 +77,6 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi3-5.10.y(){
-aria2c_check
 initrd_check
 mkdir -p ~/.build
 cd ~/.build
@@ -92,9 +84,10 @@ echo -e "${RED}Fetching rpi3-5.10.y${FIN} ..."
 ${DOWNLOAD} ${URL}rpi3-5.10.y.tar.xz && echo_bdone
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi3-5.10.y.tar.xz
+echo -e -n "${WHT}"
+pv rpi3-5.10.y.tar.xz | tar -xJ rpi3-5.10.y
+echo -e -n "${FIN}"
 rm -f rpi3-5.10.y.tar.xz
-echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi3-5.10.y
@@ -105,7 +98,6 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi4-5.10.y(){
-aria2c_check
 initrd_check
 mkdir -p ~/.build
 cd ~/.build
@@ -113,9 +105,10 @@ echo -e "${RED}Fetching rpi4-5.10.y${FIN} ..."
 ${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz && echo_bdone
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi4-5.10.y.tar.xz
+echo -e -n "${WHT}"
+pv rpi4-5.10.y.tar.xz | tar -xJ rpi4-5.10.y
+echo -e -n "${FIN}"
 rm -f rpi4-5.10.y.tar.xz
-echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi4-5.10.y
@@ -127,7 +120,6 @@ sudo rm -fdr ~/.build/*
 
 ###
 rpi-stable(){
-aria2c_check
 initrd_check
 mkdir -p ~/.build
 cd ~/.build
@@ -135,9 +127,10 @@ echo -e "${RED}Fetching rpi-stable${FIN} ..."
 ${DOWNLOAD} ${URL}rpi-stable.tar.xz && echo_bdone
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi-stable.tar.xz
+echo -e -n "${WHT}"
+pv rpi-stable.tar.xz | tar -xJ rpi-stable
+echo -e -n "${FIN}"
 rm -f rpi-stable.tar.xz
-echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi-stable
@@ -148,7 +141,6 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi3-stable(){
-aria2c_check
 initrd_check
 mkdir -p ~/.build
 cd ~/.build
@@ -156,9 +148,10 @@ echo -e "${RED}Fetching rpi3-stable${FIN} ..."
 ${DOWNLOAD} ${URL}rpi3-stable.tar.xz && echo_bdone
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi3-stable.tar.xz
+echo -e -n "${WHT}"
+pv rpi3-stable.tar.xz | tar -xJ rpi3-stable
+echo -e -n "${FIN}"
 rm -f rpi3-stable.tar.xz
-echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi3-stable
@@ -169,7 +162,6 @@ sudo rm -fdr ~/.build/*
 }
 
 rpi4-stable(){
-aria2c_check
 initrd_check
 mkdir -p ~/.build
 cd ~/.build
@@ -177,34 +169,13 @@ echo -e "${RED}Fetching rpi4-stable${FIN} ..."
 ${DOWNLOAD} ${URL}rpi4-stable.tar.xz && echo_bdone
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi4-stable.tar.xz
+echo -e -n "${WHT}"
+pv rpi4-stable.tar.xz | tar -xJ rpi4-stable
+echo -e -n "${FIN}"
 rm -f rpi4-stable.tar.xz
-echo -e "${RED}Done${FIN}."
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi4-stable
-sudo dpkg -i *.deb
-cd ~
-echo -e "${RED}Done${FIN}."
-sudo rm -fdr ~/.build/*
-}
-
-###
-rpi4-mainline(){
-aria2c_check
-initrd_check
-mkdir -p ~/.build
-cd ~/.build
-echo -e "${RED}Fetching rpi4-mainline${FIN} ..."
-${DOWNLOAD} ${URL}rpi4-mainline.tar.xz && echo_bdone
-echo
-echo -e "${RED}Extracting archive${FIN} ..."
-tar xf rpi4-mainline.tar.xz
-rm -f rpi4-mainline.tar.xz
-echo -e "${RED}Done${FIN}."
-echo
-echo -e "${RED}Starting install${FIN} ..."
-cd rpi4-mainline
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
@@ -246,7 +217,6 @@ fetch -u
 }
 
 rpi4_downbins(){
-aria2c_check
 mkdir -p ~/.build
 sudo rm -fdr ~/.build/*
 cd ~/.build
@@ -263,7 +233,6 @@ echo_bdone
 }
 
 rpi_downbins(){
-aria2c_check
 mkdir -p ~/.build
 sudo rm -fdr ~/.build/*
 cd ~/.build
@@ -377,7 +346,19 @@ internet_check(){
 if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
 }
 
+depends_check(){
+if ls $(which "aria2c") > /dev/null 2>&1;
+   then :;
+   else sudo apt install aria2 -y
+fi
+if ls $(which "pv") > /dev/null 2>&1;
+   then :;
+   else sudo apt install pv -y
+fi
+}
+
 internet_check
+depends_check
 # Commands
 if [ $# -eq 0 ]
 then
@@ -471,15 +452,6 @@ then
 	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
 		then rpi4-stable;
         fi
-fi
-
-if [ $ECHO = "mainline" ]
-then
-        echo
-	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-mainline;
-		else echo -e "${RED}OOPS!${FIN} Your board is not supported."
-	fi
 fi
 
 if [ $ECHO = "setup" ]
