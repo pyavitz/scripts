@@ -1,0 +1,35 @@
+### Raspberry Pi Config
+Make sure the camera port is enabled in the /boot/config.txt
+
+start_x=1
+gpu_mem=128
+
+### Module
+The bcm2835-v4l2 module should load at boot, but if not.
+
+sudo modprobe bcm2835-v4l2
+
+--or--
+
+cat /etc/modules
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file contains the names of kernel modules that should be loaded
+# at boot time, one per line. Lines beginning with "#" are ignored.
+bcm2835-v4l2
+
+### After install
+The motionEye server should be running on your system and listening on port 8765.
+
+http://[your_ip]:8765/
+
+Use admin with empty password when prompted for credentials.
+
+### Web Interface
+You should see the following: You have not configured any camera yet. Click here to add one...
+
+Select --> Camera: mmal service 16.1 (and hit OK)
+
+### Source
+https://github.com/ccrisan/motioneye/wiki/Installation
+https://github.com/ccrisan/motioneye/wiki/Install-On-Debian

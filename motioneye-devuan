@@ -1,0 +1,36 @@
+#!/bin/bash
+##### https://github.com/ccrisan/motioneye/wiki/Install-On-Debian
+echo Starting install as $USER
+echo
+echo Installing needed packages and dependencies.
+sleep 1s
+sudo apt update
+sudo apt upgrade -y 
+sudo apt install -y \
+	apache2 motion ffmpeg v4l-utils python-pip python-pil python-dev python-setuptools \
+	python-pycurl python-tornado curl libssl-dev libcurl4-openssl-dev libjpeg-dev libz-dev
+echo Done.
+sleep 1s
+echo
+echo Installing motionEye.
+sudo pip install motioneye
+echo Done.
+sleep 1s
+echo
+echo Setting up configuration and media directory.
+sudo mkdir -p /etc/motioneye
+sudo cp /usr/local/share/motioneye/extra/motioneye.conf.sample /etc/motioneye/motioneye.conf
+sudo mkdir -p /var/lib/motioneye
+sudo cp /usr/local/share/motioneye/extra/motioneye.init-debian /etc/init.d/motioneye
+sudo chmod +x /etc/init.d/motioneye
+echo Done.
+sleep 1s
+echo
+echo Enabling services
+sudo update-rc.d motioneye defaults 2
+sudo service apache2 start
+sudo service motioneye start
+echo Done.
+echo
+sleep 1s
+echo Please look over the instructions and wiki for further information.
