@@ -1,0 +1,80 @@
+#!/bin/bash
+### Depends: imagemagick and ffmpeg
+WHT="\e[1;37m"
+FIN="\e[0m"
+FRAMES="10"
+
+gray_scale(){
+echo -e "${WHT}Converting jpg to png.${FIN}"
+mogrify -format png *.jpg
+rm -f *.jpg
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Converting png to gray scale.${FIN}"
+mogrify -colorspace gray *.png
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Creating time lapse video.${FIN}"
+ffmpeg -r $FRAMES -f image2 -pattern_type glob -i '*.png' -s 1280x720 -vcodec libx264 timelapse_gray.mp4
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Results:${FIN}"
+ls *.mp4
+}
+
+color_scale(){
+echo -e "${WHT}Converting jpg to png.${FIN}"
+mogrify -format png *.jpg
+rm -f *.jpg
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Creating time lapse video.${FIN}"
+ffmpeg -r $FRAMES -f image2 -pattern_type glob -i '*.png' -s 1280x720 -vcodec libx264 timelapse_color.mp4
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Results:${FIN}"
+ls *.mp4
+}
+
+# Commands
+if [ $# -eq 0 ]
+then
+        echo -e "\e[0;31mMissing options!${FIN}"
+        echo "(run $0 -h for help)"
+        echo ""
+        exit 0
+fi
+
+ECHO="false"
+
+while getopts "cgh" OPTION; do
+        case $OPTION in
+
+                c)
+                        ECHO="color"
+                        ;;
+                g)
+                        ECHO="gray"
+                        ;;
+                h)                       
+                        echo -e "${WHT}Create a time lapse video${FIN}"
+                        echo "Usage: Place script inside image directory"
+                        echo ""
+                        echo -e "   -c        Color Scale Video"
+                        echo -e "   -g        Gray Scale Video"
+                        echo ""
+                        exit 0
+                        ;;
+
+        esac
+done
+
+if [ $ECHO = "color" ]
+then
+	color_scale
+fi
+
+if [ $ECHO = "gray" ]
+then
+	gray_scale
+fi
