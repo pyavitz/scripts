@@ -7,10 +7,11 @@ ADDR="10.0.0.1"
 FOLDER="Name"
 MNT="/your/location"
 USER="user"
+USERID="user"
 PASSWD="password"
 
 smount(){
-sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,password=$PASSWD,rw,uid=$USER
+sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,password=$PASSWD,rw,uid=$USERID
 }
 
 sumount(){
