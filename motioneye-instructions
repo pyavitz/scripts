@@ -9,19 +9,14 @@ The bcm2835-v4l2 module should load at boot, but if not.
 
 sudo modprobe bcm2835-v4l2
 
---or--
+-- or --
 
-cat /etc/modules
-# /etc/modules: kernel modules to load at boot time.
-#
-# This file contains the names of kernel modules that should be loaded
-# at boot time, one per line. Lines beginning with "#" are ignored.
-bcm2835-v4l2
+sudo echo bcm2835-v4l2 >> /etc/modules
 
 ### After install
 The motionEye server should be running on your system and listening on port 8765.
 
-http://[your_ip]:8765/
+http://ipaddress:8765/
 
 Use admin with empty password when prompted for credentials.
 
