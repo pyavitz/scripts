@@ -5,6 +5,28 @@ FIN="\e[0m"
 FRAMES="10"
 
 gray_scale(){
+echo -e "${WHT}Converting jpg to gray scale.${FIN}"
+mogrify -colorspace gray *.jpg
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Creating time lapse video.${FIN}"
+ffmpeg -r $FRAMES -f image2 -pattern_type glob -i '*.jpg' -s 1280x720 -vcodec libx264 timelapse_gray.mp4
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Results:${FIN}"
+ls *.mp4
+}
+
+color_scale(){
+echo -e "${WHT}Creating time lapse video.${FIN}"
+ffmpeg -r $FRAMES -f image2 -pattern_type glob -i '*.jpg' -s 1280x720 -vcodec libx264 timelapse_color.mp4
+echo -e "${WHT}Done.${FIN}"
+echo
+echo -e "${WHT}Results:${FIN}"
+ls *.mp4
+}
+
+gray_scale_convert(){
 echo -e "${WHT}Converting jpg to png.${FIN}"
 mogrify -format png *.jpg
 rm -f *.jpg
@@ -22,7 +44,7 @@ echo -e "${WHT}Results:${FIN}"
 ls *.mp4
 }
 
-color_scale(){
+color_scale_convert(){
 echo -e "${WHT}Converting jpg to png.${FIN}"
 mogrify -format png *.jpg
 rm -f *.jpg
@@ -47,7 +69,7 @@ fi
 
 ECHO="false"
 
-while getopts "cgh" OPTION; do
+while getopts "cgCGh" OPTION; do
         case $OPTION in
 
                 c)
@@ -56,12 +78,20 @@ while getopts "cgh" OPTION; do
                 g)
                         ECHO="gray"
                         ;;
+                C)
+                        ECHO="color_convert"
+                        ;;
+                G)
+                        ECHO="gray_convert"
+                        ;;
                 h)                       
                         echo -e "${WHT}Create a time lapse video${FIN}"
                         echo "Usage: Place script inside image directory"
                         echo ""
                         echo -e "   -c        Color Scale Video"
                         echo -e "   -g        Gray Scale Video"
+                        echo -e "   -C        Color Scale Video (JPG to PNG)"
+                        echo -e "   -G        Gray Scale Video (JPG to PNG)"
                         echo ""
                         exit 0
                         ;;
@@ -77,4 +107,14 @@ fi
 if [ $ECHO = "gray" ]
 then
 	gray_scale
+fi
+
+if [ $ECHO = "color_convert" ]
+then
+	color_scale_convert
+fi
+
+if [ $ECHO = "gray_convert" ]
+then
+	gray_scale_convert
 fi
