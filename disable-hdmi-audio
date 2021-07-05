@@ -1,0 +1,43 @@
+#!/bin/bash
+
+internet_check(){
+if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
+}
+
+dtc_check(){
+if ls /usr/bin/dtc > /dev/null 2>&1;
+   then :;
+   else sudo apt update && sudo apt install device-tree-compiler -y
+fi
+}
+
+disable_hdmi_audio_overlay(){
+if ls /boot/overlays/disable-hdmi-audio.dtbo > /dev/null 2>&1;
+	then sudo rm -f /boot/overlays/disable-hdmi-audio.dtbo;
+	else :;
+fi
+cat << '_EOF_' > disable-hdmi-audio.dts
+/dts-v1/;
+/plugin/;
+/ {
+  compatible = "brcm,bcm2835";
+  fragment@0 {
+    target = <&audio>;
+    __overlay__ {
+      brcm,disable-hdmi = <1>;
+    };
+  };
+};
+_EOF_
+sudo dtc -I dts -O dtb -o /boot/overlays/disable-hdmi-audio.dtbo disable-hdmi-audio.dts
+rm -f disable-hdmi-audio.dts
+}
+
+internet_check
+dtc_check
+disable_hdmi_audio_overlay
+echo
+if ls /boot/overlays/disable-hdmi-audio.dtbo > /dev/null 2>&1;
+	then echo -e "Results:" && ls /boot/overlays/disable-hdmi-audio.dtbo ;
+	else :;
+fi
