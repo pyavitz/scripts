@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+POINT="65000"
+
+35000(){
+sudo sed -i "2s/.*/POINT="'"35000"'"/" /usr/local/bin/fan-ctrl
+fan-ctrl -r
+}
+
+45000(){
+sudo sed -i "2s/.*/POINT="'"45000"'"/" /usr/local/bin/fan-ctrl
+fan-ctrl -r
+}
+
+55000(){
+sudo sed -i "2s/.*/POINT="'"55000"'"/" /usr/local/bin/fan-ctrl
+fan-ctrl -r
+}
+
+65000(){
+sudo sed -i "2s/.*/POINT="'"65000"'"/" /usr/local/bin/fan-ctrl
+fan-ctrl -r
+}
+
+run(){
+echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
+}
+
+update(){
+sudo mv -f /usr/local/bin/fan-ctrl /usr/local/bin/fan-ctrl.orig
+sudo wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl  -P /usr/local/bin/
+sudo chmod +x /usr/local/bin/fan-ctrl
+if ls /usr/local/bin/fan-ctrl > /dev/null 2>&1;
+   then sudo rm -f /usr/local/bin/fan-ctrl.orig ;
+   else sudo mv -f /usr/local/bin/fan-ctrl.orig /usr/local/bin/fan-ctrl
+fi
+fan-ctrl -h
+}
+
+# Commands
+if [ $# -eq 0 ]
+then
+        echo "Missing options!"
+        echo "(run $0 -h for help)"
+        echo ""
+        exit 0
+fi
+
+ECHO="false"
+
+while getopts "1234ruh" OPTION; do
+        case $OPTION in
+
+                1)
+                        ECHO="65"
+                        ;;
+                2)
+                        ECHO="55"
+                        ;;
+                3)
+                        ECHO="45"
+                        ;;
+                4)
+                        ECHO="35"
+                        ;;
+                r)
+                        ECHO="run"
+                        ;;
+                u)
+                        ECHO="update"
+                        ;;
+                h)
+                        echo "Odroid N2 Trip Point"
+                        echo "Usage: fan-ctrl -h"
+                        echo ""
+                        echo "   -1       65°C"
+                        echo "   -2       55°C"
+                        echo "   -3       45°C"
+                        echo "   -4       35°C"
+                        echo ""
+                        echo "   -r       Run"
+                        echo "   -u       Update"
+                        echo ""
+                        exit 0
+                        ;;
+
+        esac
+done
+
+if [ $ECHO = "65" ]
+then
+        65000;
+fi
+if [ $ECHO = "55" ]
+then
+        55000;
+fi
+if [ $ECHO = "45" ]
+then
+        45000;
+fi
+if [ $ECHO = "35" ]
+then
+        35000;
+fi
+if [ $ECHO = "run" ]
+then
+        run;
+fi
+if [ $ECHO = "update" ]
+then
+        update;
+fi
