@@ -44,14 +44,8 @@ sudo wget -cq https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/l
 sudo wget -cq https://github.com/pyavitz/scripts/raw/master/write2usb -P /usr/local/bin
 sudo chmod +x /usr/local/bin/deb-eeprom
 sudo chmod +x /usr/local/bin/write2usb
-if ls /usr/local/bin/deb-eeprom > /dev/null 2>&1;
-   then sudo rm -f /usr/local/bin/deb-eeprom.orig ;
-   else sudo mv -f /usr/local/bin/deb-eeprom.orig /usr/local/bin/deb-eeprom
-fi
-if ls /usr/local/bin/write2usb > /dev/null 2>&1;
-   then sudo rm -f /usr/local/bin/write2usb.orig ;
-   else sudo mv -f /usr/local/bin/write2usb.orig /usr/local/bin/write2usb
-fi
+if [ -e /usr/local/bin/deb-eeprom ]; then sudo rm -f /usr/local/bin/deb-eeprom.orig; else sudo mv -f /usr/local/bin/deb-eeprom.orig /usr/local/bin/deb-eeprom; fi
+if [ -e /usr/local/bin/write2usb ]; then sudo rm -f /usr/local/bin/write2usb.orig; else sudo mv -f /usr/local/bin/write2usb.orig /usr/local/bin/write2usb; fi
 deb-eeprom -h
 }
 
@@ -65,18 +59,10 @@ echo -e "${WHT}Checking for updates${FIN} ..."
 sudo apt update
 sudo apt upgrade -y
 sudo apt install help2man rsync pciutils aria2 -y
-if ls /home/$USER/.eeprom > /dev/null 2>&1;
-	then rm -f /home/$USER/.eeprom;
-fi
-if ls /home/$USER/.build/eeprom > /dev/null 2>&1;
-	then sudo rm -fdr /home/$USER/.build/eeprom;
-fi
-if ls /usr/local/src/*.patch > /dev/null 2>&1;
-	then sudo rm -f /usr/local/src/*.patch;
-fi
-if ls /usr/local/bin/deb-eeprom-update > /dev/null 2>&1;
-	then sudo rm -f /usr/local/bin/deb-eeprom-update;
-fi
+if [ -e /home/$USER/.eeprom ]; then rm -f /home/$USER/.eeprom; fi
+if ls /home/$USER/.build/eeprom > /dev/null 2>&1; then sudo rm -fdr /home/$USER/.build/eeprom; fi
+if ls /usr/local/src/*.patch > /dev/null 2>&1; then sudo rm -f /usr/local/src/*.patch; fi
+if [ -e /usr/local/bin/deb-eeprom-update ]; then sudo rm -f /usr/local/bin/deb-eeprom-update; fi
 }
 
 builddir(){
@@ -87,9 +73,7 @@ cd /home/$USER/.build/eeprom && echo_nok
 echo && echo -n "Patches "
 wget -cq ${PATCHES}rpi-eeprom-control.patch
 wget -cq ${PATCHES}rpi-eeprom-update.patch
-if ls /home/$USER/.build/eeprom/{rpi-eeprom-control.patch,rpi-eeprom-update.patch} > /dev/null 2>&1;
-	then echo_nok; else echo_fail && exit;
-fi
+if ls /home/$USER/.build/eeprom/{rpi-eeprom-control.patch,rpi-eeprom-update.patch} > /dev/null 2>&1; then echo_nok; else echo_fail && exit; fi
 }
 
 find_eeprom(){
