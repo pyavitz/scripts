@@ -1,6 +1,5 @@
 #!/bin/bash
 
-URL="https://github.com/pyavitz/rpi-img-builder/releases/download/linux/"
 BINURL="https://github.com/raspberrypi/firmware/raw/master/boot/"
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 RED="\e[1;31m"
@@ -13,6 +12,16 @@ SGRN="\e[0;32m"
 SYLW="\e[0;33m"
 FIN="\e[0m"
 
+os_release(){
+if grep -w "buster" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; else :; fi
+if grep -w "beowulf" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; else :; fi
+if grep -w "bullseye" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
+if grep -w "chimaera" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
+if grep -w "focal" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
+if grep -w "hirsute" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
+if grep -w "impish" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
+}
+
 echo_bdone(){
 echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
@@ -21,8 +30,8 @@ echo_bins(){
 echo -e "${RED}Downloading binaries${FIN} ..."
 }
 
-###
 list(){
+os_release
 version=$(curl --silent -L ${URL}version)
 echo $version
 }
@@ -30,13 +39,8 @@ echo $version
 update(){
 sudo mv -f /usr/local/bin/fetch /usr/local/bin/fetch.orig
 sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fetch -P /usr/local/bin
-if ls /usr/local/bin/fetch > /dev/null 2>&1;
-   then sudo chmod +x /usr/local/bin/fetch;
-fi
-if ls /usr/local/bin/fetch > /dev/null 2>&1;
-   then sudo rm -f /usr/local/bin/fetch.orig;
-   else sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch;
-fi
+if [ -e /usr/local/bin/fetch ]; then sudo chmod +x /usr/local/bin/fetch; fi
+if [ -e /usr/local/bin/fetch ]; then sudo rm -f /usr/local/bin/fetch.orig; else sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch; fi
 fetch -h
 }
 
@@ -48,15 +52,13 @@ sudo chown root:root /etc/initramfs/post-update.d/99-initrd
 }
 
 initrd_check(){
-if ls /etc/initramfs/post-update.d/99-initrd > /dev/null 2>&1;
-   then :;
-   else initrd_script > /dev/null 2>&1;
-fi
+if [ -e /etc/initramfs/post-update.d/99-initrd ]; then :; else initrd_script > /dev/null 2>&1; fi
 }
 
 ### 
 rpi-5.10.y(){
 initrd_check
+os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-5.10.y${FIN} ..."
@@ -78,6 +80,7 @@ sudo rm -fdr ~/.build/*
 
 rpi3-5.10.y(){
 initrd_check
+os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-5.10.y${FIN} ..."
@@ -99,6 +102,7 @@ sudo rm -fdr ~/.build/*
 
 rpi4-5.10.y(){
 initrd_check
+os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-5.10.y${FIN} ..."
@@ -121,6 +125,7 @@ sudo rm -fdr ~/.build/*
 ###
 rpi-stable(){
 initrd_check
+os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-stable${FIN} ..."
@@ -142,6 +147,7 @@ sudo rm -fdr ~/.build/*
 
 rpi3-stable(){
 initrd_check
+os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-stable${FIN} ..."
@@ -163,6 +169,7 @@ sudo rm -fdr ~/.build/*
 
 rpi4-stable(){
 initrd_check
+os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-stable${FIN} ..."
@@ -301,18 +308,9 @@ FWDEST="/lib/firmware/updates/brcm"
 RBFALSE="sudo git config pull.rebase false"
 echo -e "${RED}Checking firmware${FIN}" ...
 sudo mkdir -p /lib/firmware/updates
-if ls /etc/firmware > /dev/null 2>&1;
-	then :;
-	else sudo ln -sr /lib/firmware /etc/firmware;
-fi
-if ls /usr/bin/git > /dev/null 2>&1;
-	then :;
-	else sudo apt install git -y;
-fi
-if ls ${FWDEST}/.git > /dev/null 2>&1;
-	then cd ${FWDEST} && ${RBFALSE} && sudo git pull;
-	else sudo git clone ${FWURL} ${FWDEST};
-fi
+if ls /etc/firmware > /dev/null 2>&1; then :; else sudo ln -sr /lib/firmware /etc/firmware; fi
+if [ -e /usr/bin/git ]; then :; else sudo apt install git -y; fi
+if [ -e ${FWDEST}/.git ]; then cd ${FWDEST} && ${RBFALSE} && sudo git pull; else sudo git clone ${FWURL} ${FWDEST}; fi
 echo -e "${RED}Done${FIN}".
 cd ~
 }
@@ -347,14 +345,8 @@ if wget -q --spider http://github.com; then :; else echo -e "This script require
 }
 
 depends_check(){
-if ls /usr/bin/aria2c > /dev/null 2>&1;
-   then :;
-   else sudo apt install aria2 -y
-fi
-if ls /usr/bin/pv > /dev/null 2>&1;
-   then :;
-   else sudo apt install pv -y
-fi
+if [ -e /usr/bin/aria2c ]; then :; else sudo apt install aria2 -y; fi
+if [ -e /usr/bin/pv ]; then :; else sudo apt install pv -y; fi
 }
 
 internet_check
