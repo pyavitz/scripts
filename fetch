@@ -62,7 +62,9 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-5.10.y${FIN} ..."
-${DOWNLOAD} ${URL}rpi-5.10.y.tar.xz && echo_bdone
+if [[ `wget -S --spider ${URL}rpi-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi-5.10.y.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
@@ -84,7 +86,9 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-5.10.y${FIN} ..."
-${DOWNLOAD} ${URL}rpi3-5.10.y.tar.xz && echo_bdone
+if [[ `wget -S --spider ${URL}rpi3-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi3-5.10.y.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
@@ -106,7 +110,9 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-5.10.y${FIN} ..."
-${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz && echo_bdone
+if [[ `wget -S --spider ${URL}rpi4-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
@@ -129,7 +135,9 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-stable${FIN} ..."
-${DOWNLOAD} ${URL}rpi-stable.tar.xz && echo_bdone
+if [[ `wget -S --spider ${URL}rpi-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi-stable.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
@@ -151,7 +159,9 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-stable${FIN} ..."
-${DOWNLOAD} ${URL}rpi3-stable.tar.xz && echo_bdone
+if [[ `wget -S --spider ${URL}rpi3-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi3-stable.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
@@ -173,7 +183,9 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-stable${FIN} ..."
-${DOWNLOAD} ${URL}rpi4-stable.tar.xz && echo_bdone
+if [[ `wget -S --spider ${URL}rpi4-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi4-stable.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
@@ -346,6 +358,7 @@ if wget -q --spider http://github.com; then :; else echo -e "This script require
 
 depends_check(){
 if [ -e /usr/bin/aria2c ]; then :; else sudo apt install aria2 -y; fi
+if [ -e /usr/bin/wget ]; then :; else sudo apt install wget -y; fi
 if [ -e /usr/bin/pv ]; then :; else sudo apt install pv -y; fi
 }
 
