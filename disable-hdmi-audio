@@ -5,17 +5,11 @@ if wget -q --spider http://github.com; then :; else echo -e "This script require
 }
 
 dtc_check(){
-if ls /usr/bin/dtc > /dev/null 2>&1;
-   then :;
-   else sudo apt update && sudo apt install device-tree-compiler -y
-fi
+if [ -e /usr/bin/dtc ]; then :; else sudo apt update && sudo apt install device-tree-compiler -y; fi
 }
 
 disable_hdmi_audio_overlay(){
-if ls /boot/overlays/disable-hdmi-audio.dtbo > /dev/null 2>&1;
-	then sudo rm -f /boot/overlays/disable-hdmi-audio.dtbo;
-	else :;
-fi
+if [ -e /boot/overlays/disable-hdmi-audio.dtbo ]; then sudo rm -f /boot/overlays/disable-hdmi-audio.dtbo; else :; fi
 cat << '_EOF_' > disable-hdmi-audio.dts
 /dts-v1/;
 /plugin/;
@@ -37,7 +31,4 @@ internet_check
 dtc_check
 disable_hdmi_audio_overlay
 echo
-if ls /boot/overlays/disable-hdmi-audio.dtbo > /dev/null 2>&1;
-	then echo -e "Results:" && ls /boot/overlays/disable-hdmi-audio.dtbo ;
-	else :;
-fi
+if [ -e /boot/overlays/disable-hdmi-audio.dtbo ]; then echo -e "Results:" && ls /boot/overlays/disable-hdmi-audio.dtbo; else :; fi
