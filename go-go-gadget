@@ -117,11 +117,11 @@ systemctl enable gadget
 
 add_gadget_init(){
 wget -cq --show-progress https://github.com/pyavitz/scripts/raw/master/gadget.init -P /etc/init.d/
-if ls /etc/init.d/gadget.init > /dev/null 2>&1;
-   then mv -f /etc/init.d/gadget.init /etc/init.d/gadget ;
+if [ -e /etc/init.d/gadget.init ];
+   then mv -f /etc/init.d/gadget.init /etc/init.d/gadget;
    else echo -e "Gadget init install failed!" && exit 0;
 fi
-if ls /etc/init.d/gadget > /dev/null 2>&1;
+if [ -e /etc/init.d/gadget ];
    then chmod +x /etc/init.d/gadget && update-rc.d gadget defaults 2
 fi
 }
@@ -159,7 +159,7 @@ echo -e "Done."
 
 echo
 echo -e "Creating gadget service ..."
-if ls /etc/devuan_version > /dev/null 2>&1;
+if [ -e /etc/devuan_version ];
    then add_gadget_init;
    else create_gadget_service > /dev/null 2>&1;
 fi
