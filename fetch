@@ -462,15 +462,15 @@ fi
 if [ $ECHO = "setup" ]
 then
         echo
-	if ls /boot/{bcm2708-rpi-zero.dtb,bcm2708-rpi-zero-w.dtb} > /dev/null 2>&1
+	if ls /boot/{bcm2708-rpi-zero.dtb,bcm2708-rpi-zero-w.dtb} > /dev/null 2>&1;
 		then bcm2708_setup;
 	fi
 
-	if ls /boot/{bcm2710-rpi-3-b-plus.dtb,bcm2710-rpi-3-b.dtb} > /dev/null 2>&1
+	if ls /boot/{bcm2710-rpi-3-b-plus.dtb,bcm2710-rpi-3-b.dtb} > /dev/null 2>&1;
 		then bcm2710_setup;
 	fi
 
-	if ls /boot/bcm2711-rpi-4-b.dtb > /dev/null 2>&1
+	if [ -e /boot/bcm2711-rpi-4-b.dtb ];
 		then bcm2711_setup;
 	fi
 fi
@@ -508,7 +508,7 @@ fi
 
 if [ $ECHO = "userland" ]
 then
-	if ls /etc/opt/soc.txt > /dev/null 2>&1;
+	if [ -e /etc/opt/soc.txt ];
 		then rpi_userland;
 		else echo && echo -e "${RED}Please setup Fetch${FIN}.";
 	fi
