@@ -13,13 +13,13 @@ SYLW="\e[0;33m"
 FIN="\e[0m"
 
 os_release(){
-if grep -w "buster" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; else :; fi
-if grep -w "beowulf" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; else :; fi
-if grep -w "bullseye" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
-if grep -w "chimaera" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
-if grep -w "focal" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
-if grep -w "hirsute" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
-if grep -w "impish" "/etc/os-release" > /dev/null 2>&1; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; else :; fi
+if [[ `grep -w "buster" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; fi
+if [[ `grep -w "beowulf" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; fi
+if [[ `grep -w "bullseye" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "chimaera" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "hirsute" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "impish" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 }
 
 echo_bdone(){
@@ -55,7 +55,9 @@ initrd_check(){
 if [ -e /etc/initramfs/post-update.d/99-initrd ]; then :; else initrd_script > /dev/null 2>&1; fi
 }
 
-### 
+### LINUX KERNELS
+
+## LATEST LTS
 rpi-5.10.y(){
 initrd_check
 os_release
@@ -74,6 +76,30 @@ rm -f rpi-5.10.y.tar.xz
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi-5.10.y
+sudo dpkg -i *.deb
+cd ~
+echo -e "${RED}Done${FIN}."
+sudo rm -fdr ~/.build/*
+}
+
+rpi2-5.10.y(){
+initrd_check
+os_release
+mkdir -p ~/.build
+cd ~/.build
+echo -e "${RED}Fetching rpi2-5.10.y${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi2-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi2-5.10.y.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
+echo
+echo -e "${RED}Extracting archive${FIN} ..."
+echo -e -n "${WHT}"
+pv rpi2-5.10.y.tar.xz | tar -xJ rpi2-5.10.y
+echo -e -n "${FIN}"
+rm -f rpi2-5.10.y.tar.xz
+echo
+echo -e "${RED}Starting install${FIN} ..."
+cd rpi2-5.10.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
@@ -128,7 +154,7 @@ echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-###
+## LASTEST STABLE
 rpi-stable(){
 initrd_check
 os_release
@@ -147,6 +173,30 @@ rm -f rpi-stable.tar.xz
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi-stable
+sudo dpkg -i *.deb
+cd ~
+echo -e "${RED}Done${FIN}."
+sudo rm -fdr ~/.build/*
+}
+
+rpi2-stable(){
+initrd_check
+os_release
+mkdir -p ~/.build
+cd ~/.build
+echo -e "${RED}Fetching rpi2-stable${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi2-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi2-stable.tar.xz && echo_bdone;
+	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+fi
+echo
+echo -e "${RED}Extracting archive${FIN} ..."
+echo -e -n "${WHT}"
+pv rpi2-stable.tar.xz | tar -xJ rpi2-stable
+echo -e -n "${FIN}"
+rm -f rpi2-stable.tar.xz
+echo
+echo -e "${RED}Starting install${FIN} ..."
+cd rpi2-stable
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
@@ -201,40 +251,7 @@ echo -e "${RED}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-###
-bcm2708_setup(){
-echo -e "${RED}bcm2708 found${FIN}! Adding needed file."
-sudo rm -f /etc/opt/soc.txt
-sudo mkdir -p /etc/opt
-sudo sh -c 'echo "bcm2708" > /etc/opt/soc.txt'
-echo -e "${RED}Done${FIN}. Restarting fetch."
-sleep 2s
-clear
-fetch -u
-}
-
-bcm2710_setup(){
-echo -e "${RED}bcm2710 found${FIN}! Adding needed file."
-sudo rm -f /etc/opt/soc.txt
-sudo mkdir -p /etc/opt
-sudo sh -c 'echo "bcm2710" > /etc/opt/soc.txt'
-echo -e "${RED}Done${FIN}. Restarting fetch."
-sleep 2s
-clear
-fetch -u
-}
-
-bcm2711_setup(){
-echo -e "${RED}bcm2711 found${FIN}! Adding needed file."
-sudo rm -f /etc/opt/soc.txt
-sudo mkdir -p /etc/opt
-sudo sh -c 'echo "bcm2711" > /etc/opt/soc.txt'
-echo -e "${RED}Done${FIN}. Restarting fetch."
-sleep 2s
-clear
-fetch -u
-}
-
+### BOOT BINARIES
 rpi4_downbins(){
 mkdir -p ~/.build
 sudo rm -fdr ~/.build/*
@@ -314,6 +331,7 @@ if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,sta
 fi
 }
 
+### FIRMWARE
 firmware(){
 FWURL="https://github.com/pyavitz/firmware.git"
 FWDEST="/lib/firmware/updates/brcm"
@@ -327,6 +345,7 @@ echo -e "${RED}Done${FIN}".
 cd ~
 }
 
+### USERLAND
 rpi_userland(){
 echo
 echo -e "${RED}Updating userland${FIN}."
@@ -343,6 +362,9 @@ fi
 if `grep -Fx "bcm2710" "/etc/opt/soc.txt" >/dev/null;`
 	then ./buildme --aarch64;
 fi
+if `grep -Fx "bcm2709" "/etc/opt/soc.txt" >/dev/null;`
+	then ./buildme;
+fi
 if `grep -Fx "bcm2708" "/etc/opt/soc.txt" >/dev/null;`
 	then ./buildme;
 fi
@@ -352,6 +374,7 @@ sudo ldconfig
 echo -e "${RED}Done${FIN}."
 }
 
+### CHECKS
 internet_check(){
 if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
 }
@@ -375,7 +398,7 @@ fi
 
 ECHO="false"
 
-while getopts "12bruUshf" OPTION; do
+while getopts "12bruUhf" OPTION; do
         case $OPTION in
 
                 1)
@@ -399,10 +422,6 @@ while getopts "12bruUshf" OPTION; do
                 u)
                         ECHO="up"
                         ;;
-                s)
-                        ECHO="setup"
-                        ;;
-
                 h)                       
                         echo -e "${RED}Fetch, Linux kernel installer for the Raspberry Pi Image Builder${FIN}"
                         echo "https://github.com/pyavitz/rpi-img-builder"
@@ -417,7 +436,6 @@ while getopts "12bruUshf" OPTION; do
                         echo -e "   -U        Update Raspberry Pi Userland"
                         echo ""
                         echo -e "   -u        Update Fetch"
-                        echo -e "   -s        Not working? Setup Fetch"
                         echo ""
                         echo "Should you come across any bugs, either open an issue on GitHub or talk"
                         echo "with us directly by joining our channel on Libera; #arm-img-builder"
@@ -429,65 +447,61 @@ done
 
 if [ $ECHO = "5.10" ]
 then
-        echo
-	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi-5.10.y;
-        fi
+	echo
+	if [[ `grep -w "bcm2708" "/etc/opt/soc.txt"` ]]; then
+		rpi-5.10.y;
+	fi
+	
+	if [[ `grep -w "bcm2709" "/etc/opt/soc.txt"` ]]; then
+		rpi2-5.10.y;
+	fi
 
-	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi3-5.10.y;
-        fi
+	if [[ `grep -w "bcm2710" "/etc/opt/soc.txt"` ]]; then
+		rpi3-5.10.y;
+	fi
 
-	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-5.10.y;
-        fi
+	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+		rpi4-5.10.y;
+	fi
 fi
 
 if [ $ECHO = "stable" ]
 then
         echo
-	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi-stable;
-        fi
-
-	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi3-stable;
-        fi
-
-	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-		then rpi4-stable;
-        fi
-fi
-
-if [ $ECHO = "setup" ]
-then
-        echo
-	if ls /boot/{bcm2708-rpi-zero.dtb,bcm2708-rpi-zero-w.dtb} > /dev/null 2>&1;
-		then bcm2708_setup;
+	if [[ `grep -w "bcm2708" "/etc/opt/soc.txt"` ]]; then
+		rpi-stable;
 	fi
 
-	if ls /boot/{bcm2710-rpi-3-b-plus.dtb,bcm2710-rpi-3-b.dtb} > /dev/null 2>&1;
-		then bcm2710_setup;
+	if [[ `grep -w "bcm2709" "/etc/opt/soc.txt"` ]]; then
+		rpi2-stable;
 	fi
 
-	if [ -e /boot/bcm2711-rpi-4-b.dtb ];
-		then bcm2711_setup;
+	if [[ `grep -w "bcm2710" "/etc/opt/soc.txt"` ]]; then
+		rpi3-stable;
+	fi
+
+	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+		rpi4-stable;
 	fi
 fi
 
 if [ $ECHO = "binary" ]
 then
         echo
-	if `grep -Fx "bcm2711" "/etc/opt/soc.txt" >/dev/null;`
-		then rpi4_check;
+	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+		rpi4_check;
 	fi
 
-	if `grep -Fx "bcm2710" "/etc/opt/soc.txt" >/dev/null;`
-		then rpi_check;
+	if [[ `grep -w "bcm2710" "/etc/opt/soc.txt"` ]]; then
+		rpi_check;
+	fi
+	
+	if [[ `grep -w "bcm2709" "/etc/opt/soc.txt"` ]]; then
+		rpi_check;
 	fi
 
-	if `grep -Fx "bcm2708" "/etc/opt/soc.txt" >/dev/null;`
-		then rpi_check;
+	if [[ `grep -w "bcm2708" "/etc/opt/soc.txt"` ]]; then
+		rpi_check;
 	fi
 fi
 
