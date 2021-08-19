@@ -24,7 +24,7 @@ echo -n -e "${PNK}[${FIN}${RED}failed${FIN}${PNK}]${FIN}"
 }
 
 current(){
-version=$(apt-cache show rpi-eeprom | grep -Po '(?<=Version:)[^;]+')
+version=$(apt-cache show rpi-eeprom | grep -Po '(?<=Version:)[^;]+' | head -1)
 echo "   CURRENT:$version"
 }
 
