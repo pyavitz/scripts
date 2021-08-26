@@ -73,25 +73,37 @@ cd /home/$USER/.build/eeprom && echo_nok
 echo && echo -n "Patches "
 wget -cq ${PATCHES}rpi-eeprom-control.patch
 wget -cq ${PATCHES}rpi-eeprom-update.patch
-if ls /home/$USER/.build/eeprom/{rpi-eeprom-control.patch,rpi-eeprom-update.patch} > /dev/null 2>&1; then echo_nok; else echo_fail && exit; fi
+if ls /home/$USER/.build/eeprom/{rpi-eeprom-control.patch,rpi-eeprom-update.patch} > /dev/null 2>&1; then
+	echo_nok;
+else
+	echo_fail
+	exit;
+fi
 }
 
 find_eeprom(){
 EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
-if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
-	then download_eeprom; else finding_eeprom;
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	download_eeprom;
+else
+	finding_eeprom;
 fi
 }
 
 finding_eeprom(){
 EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==10) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
-if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
-	then download_eeprom; else error && cleaning && exit;
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	download_eeprom;
+else
+	error
+	cleaning
+	exit;
 fi
 }
 
 download_eeprom(){
-echo && echo -e -n "${WHT}Searching${FIN} ..."
+echo
+echo -e -n "${WHT}Searching${FIN} ..."
 sleep 1s
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
@@ -119,8 +131,8 @@ echo -e "${RED}Done${FIN}."
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
 echo
-echo Check for update - sudo rpi-eeprom-update
-echo Update bootloader - sudo rpi-eeprom-update -a
+echo "Check for update - sudo rpi-eeprom-update"
+echo "Update bootloader - sudo rpi-eeprom-update -a"
 echo
 }
 
@@ -136,7 +148,12 @@ build_eeprom
 }
 
 internet_check(){
-if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
+if wget -q --spider http://github.com; then
+	:;
+else
+	echo -e "This script requires an internet connection."
+	exit;
+fi
 }
 
 internet_check
