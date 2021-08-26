@@ -338,9 +338,23 @@ FWDEST="/lib/firmware/updates/brcm"
 RBFALSE="sudo git config pull.rebase false"
 echo -e "${RED}Checking firmware${FIN}" ...
 sudo mkdir -p /lib/firmware/updates
-if ls /etc/firmware > /dev/null 2>&1; then :; else sudo ln -sr /lib/firmware /etc/firmware; fi
-if [ -e /usr/bin/git ]; then :; else sudo apt install git -y; fi
-if [ -e ${FWDEST}/.git ]; then cd ${FWDEST} && ${RBFALSE} && sudo git pull; else sudo git clone ${FWURL} ${FWDEST}; fi
+if [ -e /etc/firmware ]; then
+	:;
+else
+	sudo ln -sr /lib/firmware /etc/firmware;
+fi
+if [ -e /usr/bin/git ]; then
+	:;
+else
+	sudo apt install git -y;
+fi
+if [ -e ${FWDEST}/.git ]; then
+	cd ${FWDEST}
+	${RBFALSE}
+	sudo git pull;
+else
+	sudo git clone ${FWURL} ${FWDEST};
+fi
 echo -e "${RED}Done${FIN}".
 cd ~
 }
@@ -376,7 +390,12 @@ echo -e "${RED}Done${FIN}."
 
 ### CHECKS
 internet_check(){
-if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
+if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	:;
+else
+	echo -e "This script requires an internet connection."
+	exit;
+fi
 }
 
 depends_check(){
