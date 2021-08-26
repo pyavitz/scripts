@@ -356,17 +356,17 @@ cd userland
 wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/userland-remove-hi-pi.patch
 patch -p1 < userland-remove-hi-pi.patch
 rm -f userland-remove-hi-pi.patch
-if `grep -Fx "bcm2711" "/etc/opt/soc.txt" >/dev/null;`
-	then ./buildme --aarch64;
+if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+	./buildme --aarch64;
 fi
-if `grep -Fx "bcm2710" "/etc/opt/soc.txt" >/dev/null;`
-	then ./buildme --aarch64;
+if [[ `grep -Fx "bcm2710" "/etc/opt/soc.txt"` ]]; then
+	./buildme --aarch64;
 fi
-if `grep -Fx "bcm2709" "/etc/opt/soc.txt" >/dev/null;`
-	then ./buildme;
+if [[ `grep -Fx "bcm2709" "/etc/opt/soc.txt"` ]]; then
+	./buildme;
 fi
-if `grep -Fx "bcm2708" "/etc/opt/soc.txt" >/dev/null;`
-	then ./buildme;
+if [[ `grep -Fx "bcm2708" "/etc/opt/soc.txt"` ]]; then
+	./buildme;
 fi
 cd ~
 sudo rm -fdr ~/.build/userland
@@ -522,8 +522,11 @@ fi
 
 if [ $ECHO = "userland" ]
 then
-	if [ -e /etc/opt/soc.txt ];
-		then rpi_userland;
-		else echo && echo -e "${RED}Please setup Fetch${FIN}.";
+	if [ -e /etc/opt/soc.txt ]; then
+		rpi_userland;
+	else
+		echo
+		echo -e "${RED}Something went wrong${FIN}?"
+		exit;
 	fi
 fi
