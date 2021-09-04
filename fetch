@@ -20,6 +20,7 @@ if [[ `grep -w "chimaera" "/etc/os-release"` ]]; then URL="https://github.com/py
 if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "hirsute" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "impish" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "unstable" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 }
 
 echo_bdone(){
