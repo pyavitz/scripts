@@ -22,15 +22,22 @@ fan-ctrl -r
 }
 
 run(){
-echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
+if [ -e /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp ]; then
+	echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
+fi
 }
 
 update(){
-sudo mv -f /usr/local/bin/fan-ctrl /usr/local/bin/fan-ctrl.orig
-sudo wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl  -P /usr/local/bin/
-sudo chmod +x /usr/local/bin/fan-ctrl
-if [ -e /usr/local/bin/fan-ctrl ]; then sudo rm -f /usr/local/bin/fan-ctrl.orig; else sudo mv -f /usr/local/bin/fan-ctrl.orig /usr/local/bin/fan-ctrl; fi
-fan-ctrl -h
+if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	sudo mv -f /usr/local/bin/fan-ctrl /usr/local/bin/fan-ctrl.orig
+	sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl  -P /usr/local/bin/
+	sudo chmod +x /usr/local/bin/fan-ctrl
+	if [ -e /usr/local/bin/fan-ctrl ]; then sudo rm -f /usr/local/bin/fan-ctrl.orig; else sudo mv -f /usr/local/bin/fan-ctrl.orig /usr/local/bin/fan-ctrl; fi
+	fan-ctrl -h;
+else
+	echo -e "This script requires an internet connection to update."
+	exit;
+fi
 }
 
 # Commands
@@ -83,27 +90,21 @@ while getopts "1234ruh" OPTION; do
         esac
 done
 
-if [ $ECHO = "65" ]
-then
+if [ $ECHO = "65" ]; then
         65000;
 fi
-if [ $ECHO = "55" ]
-then
+if [ $ECHO = "55" ]; then
         55000;
 fi
-if [ $ECHO = "45" ]
-then
+if [ $ECHO = "45" ]; then
         45000;
 fi
-if [ $ECHO = "35" ]
-then
+if [ $ECHO = "35" ]; then
         35000;
 fi
-if [ $ECHO = "run" ]
-then
+if [ $ECHO = "run" ]; then
         run;
 fi
-if [ $ECHO = "update" ]
-then
+if [ $ECHO = "update" ]; then
         update;
 fi
