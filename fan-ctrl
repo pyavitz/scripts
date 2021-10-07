@@ -30,7 +30,7 @@ fi
 update(){
 if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	sudo mv -f /usr/local/bin/fan-ctrl /usr/local/bin/fan-ctrl.orig
-	sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl  -P /usr/local/bin/
+	sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl -P /usr/local/bin/
 	sudo chmod +x /usr/local/bin/fan-ctrl
 	if [ -e /usr/local/bin/fan-ctrl ]; then sudo rm -f /usr/local/bin/fan-ctrl.orig; else sudo mv -f /usr/local/bin/fan-ctrl.orig /usr/local/bin/fan-ctrl; fi
 	fan-ctrl -h;
