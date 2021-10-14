@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 GOVERNOR="performance"
 
-performance(){
-sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/bin/governor
+conservative(){
+sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/bin/governor
 governor -r
 }
 
@@ -11,8 +11,13 @@ sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" /usr/local/bin/governor
 governor -r
 }
 
-conservative(){
-sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/bin/governor
+performance(){
+sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/bin/governor
+governor -r
+}
+
+schedutil(){
+sudo sed -i "2s/.*/GOVERNOR="'"schedutil"'"/" /usr/local/bin/governor
 governor -r
 }
 
@@ -22,11 +27,12 @@ echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
 update(){
 sudo mv -f /usr/local/bin/governor /usr/local/bin/governor.orig
-sudo wget -cq --show-progress https://raw.githubusercontent.com/pyavitz/scripts/master/governor  -P /usr/local/bin/
+sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor  -P /usr/local/bin/
 sudo chmod +x /usr/local/bin/governor
-if [ -e /usr/local/bin/governor ];
-   then sudo rm -f /usr/local/bin/governor.orig;
-   else sudo mv -f /usr/local/bin/governor.orig /usr/local/bin/governor;
+if [ -e /usr/local/bin/governor ]; then
+	sudo rm -f /usr/local/bin/governor.orig;
+else
+	sudo mv -f /usr/local/bin/governor.orig /usr/local/bin/governor;
 fi
 governor -h
 }
@@ -42,7 +48,7 @@ fi
 
 ECHO="false"
 
-while getopts "copruh" OPTION; do
+while getopts "copsruh" OPTION; do
         case $OPTION in
 
                 c)
@@ -53,6 +59,9 @@ while getopts "copruh" OPTION; do
                         ;;
                 p)
                         ECHO="performance"
+                        ;;
+                s)
+                        ECHO="schedutil"
                         ;;
                 r)
                         ECHO="run"
@@ -67,6 +76,7 @@ while getopts "copruh" OPTION; do
                         echo "   -c       Conservative"
                         echo "   -o       Ondemand"
                         echo "   -p       Performance"
+                        echo "   -s       Schedutil"
                         echo ""
                         echo "   -r       Run"
                         echo "   -u       Update"
@@ -77,23 +87,21 @@ while getopts "copruh" OPTION; do
         esac
 done
 
-if [ $ECHO = "conservative" ]
-then
-        conservative;
+if [ $ECHO = "conservative" ]; then
+	conservative;
 fi
-if [ $ECHO = "ondemand" ]
-then
-        ondemand;
+if [ $ECHO = "ondemand" ]; then
+	ondemand;
 fi
-if [ $ECHO = "performance" ]
-then
-        performance;
+if [ $ECHO = "performance" ]; then
+	performance;
 fi
-if [ $ECHO = "run" ]
-then
-        run;
+if [ $ECHO = "schedutil" ]; then
+	schedutil;
 fi
-if [ $ECHO = "update" ]
-then
-        update;
+if [ $ECHO = "run" ]; then
+	run;
+fi
+if [ $ECHO = "update" ]; then
+	update;
 fi
