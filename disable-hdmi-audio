@@ -1,7 +1,12 @@
 #!/bin/bash
 
 internet_check(){
-if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
+if wget -q --spider http://github.com; then
+	:;
+else
+	echo -e "This script requires an internet connection."
+	exit 1;
+fi
 }
 
 dtc_check(){

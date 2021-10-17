@@ -1,7 +1,4 @@
 #!/bin/bash
-# Debian Bullseye: https://github.com/pyavitz/rpi-img-builder/releases/download/images/rpi-4-debian-bullseye-5.10.35-v8-ext4-2021-05-09.img.xz
-# Write img to sdcard, boot, run-setup and download script.
-# sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/install-de -P /usr/local/bin && sudo chmod +x /usr/local/bin/install-de
 # Execute: install-de
 
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
@@ -17,9 +14,12 @@ MESADEV="llvm-dev ninja-build meson libvdpau-dev libxvmc-dev libva-dev libomxil-
 
 ### CHECK ARIA2
 aria2c_check(){
-if ls /usr/bin/aria2c > /dev/null 2>&1;
-   then :;
-   else sudo apt update && sudo apt install -y aria2;
+if [ -e /usr/bin/aria2c ]; then
+	:;
+else
+	sudo apt update
+	sudo apt upgrade -y
+	sudo apt install -y aria2;
 fi
 }
 
@@ -47,43 +47,22 @@ sudo chown -R $USER:$USER /home/$USER
 echo Done.
 }
 
-### INSTALL KERNEL
-cacule_kernel(){
-URL="https://github.com/pyavitz/rpi-img-builder/releases/download/linux/"
-mkdir -p ~/.build
-cd ~/.build
-echo
-echo -e "Fetching rpi4-5.10.y ..."
-${DOWNLOAD} ${URL}rpi4-5.10.y-cacule.tar.xz
-echo && echo
-echo -e "Extracting archive ..."
-tar xf rpi4-5.10.y-cacule.tar.xz
-rm -f rpi4-5.10.y-cacule.tar.xz
-echo -e "Done."
-echo
-echo -e "Starting install ..."
-cd rpi4-5.10.y-cacule
-sudo dpkg -i *.deb
-cd ~
-echo -e "Done."
-sudo rm -fdr ~/.build/*
-}
-
-### THE MAGIC
+### RUN
 aria2c_check
-mesa_install
-echo
+#mesa_install
+echo ""
 sudo apt install -y ${XFCE}
 sudo apt purge -y light-locker
 sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/xfce/files/scripts/sleep-locker -P /usr/local/bin
 sudo chmod +x /usr/local/bin/sleep-locker
 sudo chown root:root /usr/local/bin/sleep-locker
-cacule_kernel
 sudo chown -R $USER:$USER /home/$USER
 sudo adduser $USER lightdm
 sudo usermod -a -G render $USER
 sudo sed -i "s/#autologin-user=/autologin-user=$USER/g" /etc/lightdm/lightdm.conf
 sudo sed -i "s/#dtoverlay=vc4-kms-v3d/dtoverlay=vc4-kms-v3d/g" /boot/config.txt
 sudo sed -i "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/g" /boot/config.txt
-echo
+mkdir -p ~/.local/share/applications
+echo "NoDisplay=true" | tee ~/.local/share/applications/xfburn.desktop > /dev/null 2>&1
+echo ""
 echo -e "You may now reboot ..."
