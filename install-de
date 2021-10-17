@@ -1,4 +1,5 @@
 #!/bin/bash
+# sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/install-de -P /usr/local/bin && sudo chmod +x /usr/local/bin/install-de
 # Execute: install-de
 
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
@@ -66,3 +67,4 @@ mkdir -p ~/.local/share/applications
 echo "NoDisplay=true" | tee ~/.local/share/applications/xfburn.desktop > /dev/null 2>&1
 echo ""
 echo -e "You may now reboot ..."
+sudo rm -f /usr/local/bin/install-de
