@@ -52,6 +52,8 @@ echo Done.
 aria2c_check
 #mesa_install
 echo ""
+sudo apt update
+sudo apt upgrade -y
 sudo apt install -y ${XFCE}
 sudo apt purge -y light-locker
 sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/xfce/files/scripts/sleep-locker -P /usr/local/bin
