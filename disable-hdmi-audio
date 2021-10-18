@@ -1,11 +1,11 @@
 #!/bin/bash
 
 internet_check(){
-if wget -q --spider http://github.com; then
+if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	:;
 else
 	echo -e "This script requires an internet connection."
-	exit 1;
+	exit;
 fi
 }
 
@@ -36,4 +36,9 @@ internet_check
 dtc_check
 disable_hdmi_audio_overlay
 echo
-if [ -e /boot/overlays/disable-hdmi-audio.dtbo ]; then echo -e "Results:" && ls /boot/overlays/disable-hdmi-audio.dtbo; else :; fi
+if [ -e /boot/overlays/disable-hdmi-audio.dtbo ]; then
+	echo -e "Results:"
+	ls /boot/overlays/disable-hdmi-audio.dtbo;
+else
+	:;
+fi

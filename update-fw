@@ -3,25 +3,30 @@
 RED="\e[1;31m"
 FIN="\e[0m"
 
-firmware(){
+update_firmware(){
 FWURL="https://github.com/pyavitz/firmware.git"
 FWDEST="/lib/firmware/updates/brcm"
-RBFALSE="sudo git config pull.rebase false"
 echo -e "${RED}Checking firmware${FIN}" ...
-if ls /etc/firmware > /dev/null 2>&1;
-	then :;
-	else sudo ln -sr /lib/firmware /etc/firmware;
+if [ -e /etc/firmware ]; then
+	:;
+else
+	sudo ln -sr /lib/firmware /etc/firmware;
 fi
-if ls /usr/bin/git > /dev/null 2>&1;
-	then :;
-	else sudo apt install git -y;
+if [ -e /usr/bin/git ]; then
+	:;
+else
+	sudo apt update
+	sudo apt install git -y;
 fi
-if ls ${FWDEST}/.git > /dev/null 2>&1;
-	then cd ${FWDEST} && ${RBFALSE} && sudo git pull;
-	else sudo git clone ${FWURL} ${FWDEST};
+if [ -e ${FWDEST}/.git ]; then
+	cd ${FWDEST}
+	sudo git config pull.rebase false
+	sudo git pull;
+else
+	sudo git clone ${FWURL} ${FWDEST};
 fi
 echo -e "${RED}Done${FIN}".
 cd ~
 }
 
-firmware
+update_firmware

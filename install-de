@@ -1,4 +1,5 @@
 #!/bin/bash
+# Debian Bullseye
 # sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/install-de -P /usr/local/bin && sudo chmod +x /usr/local/bin/install-de
 # Execute: install-de
 
@@ -18,8 +19,6 @@ aria2c_check(){
 if [ -e /usr/bin/aria2c ]; then
 	:;
 else
-	sudo apt update
-	sudo apt upgrade -y
 	sudo apt install -y aria2;
 fi
 }
@@ -28,7 +27,6 @@ fi
 mesa_install(){
 echo
 echo Installing Mesa 20.3
-sudo apt update
 sudo apt install -y ${MESADEV}
 
 cd ~
@@ -49,11 +47,11 @@ echo Done.
 }
 
 ### RUN
+sudo apt update
+sudo apt upgrade -y
 aria2c_check
 #mesa_install
 echo ""
-sudo apt update
-sudo apt upgrade -y
 sudo apt install -y ${XFCE}
 sudo apt purge -y light-locker
 sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/xfce/files/scripts/sleep-locker -P /usr/local/bin
