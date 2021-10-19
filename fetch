@@ -409,12 +409,11 @@ if [ -e /usr/bin/pv ]; then :; else sudo apt install pv -y; fi
 internet_check
 depends_check
 # Commands
-if [ $# -eq 0 ]
-then
-        echo -e "\e[0;31mMissing options!${FIN}"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
+if [ $# -eq 0 ]; then
+	echo -e "\e[0;31mMissing options!${FIN}"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 ECHO="false"
@@ -466,9 +465,8 @@ while getopts "12bruUhf" OPTION; do
         esac
 done
 
-if [ $ECHO = "5.10" ]
-then
-	echo
+if [ $ECHO = "5.10" ]; then
+	echo ""
 	if [[ `grep -w "bcm2708" "/etc/opt/soc.txt"` ]]; then
 		rpi-5.10.y;
 	fi
@@ -486,9 +484,8 @@ then
 	fi
 fi
 
-if [ $ECHO = "stable" ]
-then
-        echo
+if [ $ECHO = "stable" ]; then
+	echo ""
 	if [[ `grep -w "bcm2708" "/etc/opt/soc.txt"` ]]; then
 		rpi-stable;
 	fi
@@ -506,9 +503,8 @@ then
 	fi
 fi
 
-if [ $ECHO = "binary" ]
-then
-        echo
+if [ $ECHO = "binary" ]; then
+	echo ""
 	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
 		rpi4_check;
 	fi
@@ -526,23 +522,19 @@ then
 	fi
 fi
 
-if [ $ECHO = "rev" ]
-then
-        list;
+if [ $ECHO = "rev" ]; then
+	list;
 fi
 
-if [ $ECHO = "up" ]
-then
-        update;
+if [ $ECHO = "up" ]; then
+	update;
 fi
 
-if [ $ECHO = "firmware" ]
-then
-        firmware;
+if [ $ECHO = "firmware" ]; then
+	firmware;
 fi
 
-if [ $ECHO = "userland" ]
-then
+if [ $ECHO = "userland" ]; then
 	if [ -e /etc/opt/soc.txt ]; then
 		rpi_userland;
 	else
