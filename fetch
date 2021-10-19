@@ -89,7 +89,7 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi2-5.10.y${FIN} ..."
+echo -e "${RED}Fetching rpi2+3-5.10.y${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi2-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi2-5.10.y.tar.xz && echo_bdone;
 	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
 fi
@@ -186,7 +186,7 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi2-stable${FIN} ..."
+echo -e "${RED}Fetching rpi2+3-stable${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi2-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi2-stable.tar.xz && echo_bdone;
 	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
 fi
