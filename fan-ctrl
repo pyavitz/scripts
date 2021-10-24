@@ -24,6 +24,9 @@ fan-ctrl -r
 run(){
 if [ -e /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp ]; then
 	echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
+else
+	echo -e "You are missing trip_point_4_temp?"
+	exit;
 fi
 }
 
