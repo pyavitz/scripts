@@ -41,12 +41,11 @@ fi
 }
 
 # Commands
-if [ $# -eq 0 ]
-then
-        echo "Missing options!"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
+if [ $# -eq 0 ]; then
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 ECHO="false"
@@ -91,20 +90,20 @@ while getopts "1234ruh" OPTION; do
 done
 
 if [ $ECHO = "65" ]; then
-        65000;
+	65000;
 fi
 if [ $ECHO = "55" ]; then
-        55000;
+	55000;
 fi
 if [ $ECHO = "45" ]; then
-        45000;
+	45000;
 fi
 if [ $ECHO = "35" ]; then
-        35000;
+	35000;
 fi
 if [ $ECHO = "run" ]; then
-        run;
+	run;
 fi
 if [ $ECHO = "update" ]; then
-        update;
+	update;
 fi
