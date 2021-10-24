@@ -158,12 +158,11 @@ fi
 
 internet_check
 # Commands
-if [ $# -eq 0 ]
-then
-        echo "Missing options!"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
+if [ $# -eq 0 ]; then
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 ECHO="false"
@@ -197,15 +196,12 @@ while getopts "uUwh" OPTION; do
         esac
 done
 
-if [ $ECHO = "upgrade" ]
-then
-        upgrade_eeprom;
+if [ $ECHO = "upgrade" ]; then
+	upgrade_eeprom;
 fi
-if [ $ECHO = "rite2usb" ]
-then
-        rite2usb;
+if [ $ECHO = "rite2usb" ]; then
+	rite2usb;
 fi
-if [ $ECHO = "update" ]
-then
-        update;
+if [ $ECHO = "update" ]; then
+	update;
 fi

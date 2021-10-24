@@ -60,12 +60,11 @@ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 }
 
 # Commands
-if [ $# -eq 0 ]
-then
-        echo "Missing options!"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
+if [ $# -eq 0 ]; then
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 ECHO="false"
@@ -108,28 +107,22 @@ while getopts "hsudrWI" OPTION; do
         esac
 done
 
-if [ $ECHO = "scan" ]
-then
-        scan;
+if [ $ECHO = "scan" ]; then
+	scan;
 fi
-if [ $ECHO = "up" ]
-then
-        ifup;
+if [ $ECHO = "up" ]; then
+	ifup;
 fi
-if [ $ECHO = "down" ]
-then
-        ifdown;
+if [ $ECHO = "down" ]; then
+	ifdown;
 fi
-if [ $ECHO = "restart" ]
-then
-        restart;
+if [ $ECHO = "restart" ]; then
+	restart;
 fi
-if [ $ECHO = "I" ]
-then
-        interfaces;
+if [ $ECHO = "I" ]; then
+	interfaces;
 fi
-if [ $ECHO = "W" ]
-then
-        wpa;
+if [ $ECHO = "W" ]; then
+	wpa;
 fi
 

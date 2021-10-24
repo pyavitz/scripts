@@ -19,12 +19,11 @@ sudo umount $MNT
 }
 
 # Commands
-if [ $# -eq 0 ]
-then
-        echo "Missing options!"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
+if [ $# -eq 0 ]; then
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 ECHO="false"
@@ -54,11 +53,9 @@ while getopts "muh" OPTION; do
         esac
 done
 
-if [ $ECHO = "smount" ]
-then
-        smount;
+if [ $ECHO = "smount" ]; then
+	smount;
 fi
-if [ $ECHO = "sumount" ]
-then
-        sumount;
+if [ $ECHO = "sumount" ]; then
+	sumount;
 fi
