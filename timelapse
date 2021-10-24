@@ -59,12 +59,11 @@ ls *.mp4
 }
 
 # Commands
-if [ $# -eq 0 ]
-then
-        echo -e "\e[0;31mMissing options!${FIN}"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
+if [ $# -eq 0 ]; then
+	echo -e "\e[0;31mMissing options!${FIN}"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 ECHO="false"
@@ -99,22 +98,18 @@ while getopts "cgCGh" OPTION; do
         esac
 done
 
-if [ $ECHO = "color" ]
-then
-	color_scale
+if [ $ECHO = "color" ]; then
+	color_scale;
 fi
 
-if [ $ECHO = "gray" ]
-then
-	gray_scale
+if [ $ECHO = "gray" ]; then
+	gray_scale;
 fi
 
-if [ $ECHO = "color_convert" ]
-then
-	color_scale_convert
+if [ $ECHO = "color_convert" ]; then
+	color_scale_convert;
 fi
 
-if [ $ECHO = "gray_convert" ]
-then
-	gray_scale_convert
+if [ $ECHO = "gray_convert" ]; then
+	gray_scale_convert;
 fi
