@@ -13,16 +13,17 @@ SYLW="\e[0;33m"
 FIN="\e[0m"
 
 os_release(){
-if [[ `grep -w "buster" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; fi
-if [[ `grep -w "beowulf" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-8/"; fi
+if [[ `grep -w "buster" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
+if [[ `grep -w "beowulf" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
 if [[ `grep -w "bullseye" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "bookworm" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "chimaera" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "daedalus" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
 if [[ `grep -w "hirsute" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "impish" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
+if [[ `grep -w "jammy" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "unstable" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "daedalus" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 }
 
 echo_bdone(){
