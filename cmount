@@ -22,12 +22,12 @@ done
 while [ true ]; do
 	if [ -e /mnt/camera/check ]; then
 		mount_check;
-else
-	nmount -u > /dev/null 2>&1
-	sudo rm -fdr /mnt/camera/*
-	sleep 3s
-	mount_cam
-	sleep 12s
-	mount_check;
-fi
+	else
+		nmount -u > /dev/null 2>&1
+		sudo rm -fdr /mnt/camera/*
+		sleep 2s
+		mount_cam
+		sleep 10s
+		mount_check;
+	fi
 done
