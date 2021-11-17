@@ -1,0 +1,33 @@
+#!/bin/bash
+# Place in /etc/rc.local
+# if [ -e /usr/local/bin/cmount ]; then
+# 	sleep 20s
+# 	cmount;
+# fi
+
+mount_cam(){
+if [ -e /usr/local/bin/nmount ]; then
+	nmount -m;
+fi
+}
+
+mount_check(){
+while [ true ]; do
+	if [ -e /mnt/camera/check ]; then
+		sleep 1800s;
+	fi
+done
+}
+
+while [ true ]; do
+	if [ -e /mnt/camera/check ]; then
+		mount_check;
+else
+	nmount -u > /dev/null 2>&1
+	sudo rm -fdr /mnt/camera/*
+	sleep 3s
+	mount_cam
+	sleep 12s
+	mount_check;
+fi
+done
