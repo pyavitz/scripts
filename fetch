@@ -68,8 +68,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-5.10.y${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi-5.10.y.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi-5.10.y.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -92,8 +96,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi2+3-5.10.y${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi2-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi2-5.10.y.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi2-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi2-5.10.y.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -116,8 +124,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-5.10.y${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi3-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi3-5.10.y.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi3-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi3-5.10.y.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -140,8 +152,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-5.10.y${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi4-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi4-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -165,8 +181,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi-stable${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi-stable.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi-stable.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -189,8 +209,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi2+3-stable${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi2-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi2-stable.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi2-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi2-stable.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -213,8 +237,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi3-stable${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi3-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi3-stable.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi3-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi3-stable.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -237,8 +265,12 @@ os_release
 mkdir -p ~/.build
 cd ~/.build
 echo -e "${RED}Fetching rpi4-stable${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi4-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then ${DOWNLOAD} ${URL}rpi4-stable.tar.xz && echo_bdone;
-	else echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}" && exit 1;
+if [[ `wget -S --spider ${URL}rpi4-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi4-stable.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
 fi
 echo
 echo -e "${RED}Extracting archive${FIN} ..."
@@ -321,17 +353,27 @@ sudo rm -fdr ~/.build/*
 
 rpi4_check(){
 rpi4_downbins
-if ls ~/.build/{fixup4.dat,fixup4cd.dat,fixup4db.dat,fixup4x.dat,start4.elf,start4cd.elf,start4db.elf,start4x.elf} > /dev/null 2>&1;
-	then rpi4_cleanbins && rpi4_install && echo -e "${RED}Done${FIN}.";
-	else echo -e "${SRED}Install Failed${FIN}?";
+if ls ~/.build/{fixup4.dat,fixup4cd.dat,fixup4db.dat,fixup4x.dat,start4.elf,start4cd.elf,start4db.elf,start4x.elf} > /dev/null 2>&1; then
+	rpi4_cleanbins
+	rpi4_install
+	echo -e "${RED}Done${FIN}.";
+else
+	echo -e "${SRED}Install Failed${FIN}?"
+	sudo rm -fdr ~/.build/*
+	exit;
 fi
 }
 
 rpi_check(){
 rpi_downbins
-if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,start.elf,start_cd.elf,start_db.elf,start_x.elf} > /dev/null 2>&1;
-	then rpi_cleanbins && rpi_install && echo -e "${RED}Done${FIN}.";
-	else echo -e "${SRED}Install Failed${FIN}?";
+if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,start.elf,start_cd.elf,start_db.elf,start_x.elf} > /dev/null 2>&1; then
+	rpi_cleanbins
+	rpi_install
+	echo -e "${RED}Done${FIN}.";
+else
+	echo -e "${SRED}Install Failed${FIN}?"
+	sudo rm -fdr ~/.build/*
+	exit;
 fi
 }
 
@@ -347,10 +389,11 @@ if [ -e /etc/firmware ]; then
 else
 	sudo ln -sr /lib/firmware /etc/firmware;
 fi
-if [ -e /usr/bin/git ]; then
+if [[ `command -v git` ]]; then
 	:;
 else
-	sudo apt install git -y;
+	sudo apt update
+	sudo apt install -y git;
 fi
 if [ -e ${FWDEST}/.git ]; then
 	cd ${FWDEST}
