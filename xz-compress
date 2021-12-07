@@ -6,9 +6,9 @@ WHT="\e[1;37m"
 FIN="\e[0m"
 
 echo -e "${WHT}"
-echo -n "Select release: "
+echo -ne "Select release:${FIN} "
 read release
-echo ""
+echo -e "${WHT}"
 echo -en "Creating $release archives ... "
 if [ -e bcm2708 ]; then
 	mv -f bcm2708 rpi-$release;
