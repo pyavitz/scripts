@@ -394,33 +394,23 @@ echo -e "${RED}Done${FIN}."
 
 ### CHECKS
 internet_check(){
-if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	:;
+if [[ `command -v wget` ]]; then
+	[[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
 else
-	echo -e "This script requires an internet connection."
-	exit;
+	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+		echo -e "${WHT}Installing missing depends${FIN}."
+		sudo apt update
+		sudo apt upgrade -y
+		sudo apt install -y wget;
+	else
+		echo -e "This script requires an internet connection."
+		exit;
+	fi
 fi
 }
 
 depends_check(){
-if [ `command -v aria2c` ]; then
-	:;
-else
-	sudo apt update;
-	sudo apt install -y aria2;
-fi
-if [ `command -v wget` ]; then
-	:;
-else
-	sudo apt update;
-	sudo apt install -y wget;
-fi
-if [ `command -v pv` ]; then
-	:;
-else
-	sudo apt update;
-	sudo apt install -y pv;
-fi
+if [[ `command -v aria2c pv` ]]; then :; else sudo apt update; sudo apt upgrade -y; sudo apt install -y aria2 pv; fi
 }
 
 internet_check
