@@ -403,9 +403,24 @@ fi
 }
 
 depends_check(){
-if [ -e /usr/bin/aria2c ]; then :; else sudo apt install aria2 -y; fi
-if [ -e /usr/bin/wget ]; then :; else sudo apt install wget -y; fi
-if [ -e /usr/bin/pv ]; then :; else sudo apt install pv -y; fi
+if [ `command -v aria2c` ]; then
+	:;
+else
+	sudo apt update;
+	sudo apt install -y aria2;
+fi
+if [ `command -v wget` ]; then
+	:;
+else
+	sudo apt update;
+	sudo apt install -y wget;
+fi
+if [ `command -v pv` ]; then
+	:;
+else
+	sudo apt update;
+	sudo apt install -y pv;
+fi
 }
 
 internet_check
