@@ -1,8 +1,8 @@
 #!/bin/bash
 USB="/dev/sda"
 ERROR="$(ls {/dev/sdb,/dev/sdc,/dev/sdd} 2> /dev/null)"
-PI_EEPROM="pieeprom-2021-07-06"
-RED="\e[1;31m"
+PI_EEPROM="pieeprom-2021-11-22"
+WHT="\e[1;37m"
 YLW="\e[1;33m"
 FIN="\e[0m"
 
@@ -15,13 +15,25 @@ fi
 }
 
 internet_check(){
-if wget -q --spider http://github.com; then :; else echo -e "This script requires an internet connection." && exit 1; fi
+if [[ `command -v wget` ]]; then
+	[[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
+else
+	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+		echo -e "${WHT}Installing missing depends${FIN}."
+		sudo apt update
+		sudo apt upgrade -y
+		sudo apt install -y wget;
+	else
+		echo -e "This script requires an internet connection."
+		exit;
+	fi
+fi
 }
 
 correct(){
 if [ -e "$USB" ]; then
     echo ""
-    echo -e "${RED}$USB found${FIN}."
+    echo -e "${WHT}$USB found${FIN}."
 else 
     check_node
 fi
@@ -33,7 +45,7 @@ echo -e "then select no... or risk losing important data${FIN}."
 echo -e ""
 read -p "Continue (y/n)?" choice
 case "$choice" in 
-  y|Y ) echo && echo -e "${RED}Confirmed${FIN}!";;
+  y|Y ) echo && echo -e "${WHT}Confirmed${FIN}!";;
   n|N ) echo && echo -e "${YLW}You have chosen${FIN}... ${YLW}wisely${FIN}." && exit 0;;
   * ) echo && echo -e "${YLW}Invalid choice${FIN}." && exit 0;;
 esac
@@ -42,16 +54,18 @@ esac
 check_progressbar(){
 DPB="sudo wget -cq https://raw.githubusercontent.com/pyavitz/bash_progress_bar/master/progress_bar.sh -P /etc/opt/"
 MPB="sudo mv -f /etc/opt/progress_bar.sh /etc/opt/progressbar.txt"
-if [ -e /etc/opt/progressbar.txt ];
-	then :;
-	else $DPB && $MPB;
+if [ -e /etc/opt/progressbar.txt ]; then
+	:;
+else
+	$DPB;
+	$MPB;
 fi
 }
 
 ### CHECK FOR NODE
 check_node(){
 echo ""
-echo -e "You ${RED}don't${FIN} have a ${RED}USB storage device${FIN} connected."
+echo -e "You ${WHT}don't${FIN} have a ${WHT}USB storage device${FIN} connected."
 while [ true ] ; do
 read -t 3 -n 1
 if [ $? = 0 ] ; then
@@ -64,7 +78,7 @@ done
 
 error_node(){
 echo ""
-echo -e "You have one to many ${RED}USB storage devices${FIN} connected."
+echo -e "You have one to many ${WHT}USB storage devices${FIN} connected."
 while [ true ] ; do
 read -t 3 -n 1
 if [ $? = 0 ] ; then
@@ -77,9 +91,29 @@ done
 
 ### EEPROM
 update_eeprom(){
-if [ -e /lib/firmware/raspberrypi/bootloader/stable/${PI_EEPROM}.bin ]
-	then :;
-	else echo -e "${YLW}Please update EEPROM to latest version${FIN}." && exit;
+if [ -e /lib/firmware/raspberrypi/bootloader/stable/${PI_EEPROM}.bin ]; then
+	:;
+else
+	echo "";
+	echo -e "${YLW}Upgrading rpi-eeprom package${FIN}.";
+	if [[ `command -v deb-eeprom` ]]; then
+		deb-eeprom -u;
+		sleep 1s
+		deb-eeprom -U;
+		sleep 1s
+		${WHT}Done${FIN}.;
+	else
+		echo "";
+		echo -e "${YLW}Something went wrong${FIN}?";
+		exit;	
+	fi
+fi
+if [ -e /lib/firmware/raspberrypi/bootloader/stable/${PI_EEPROM}.bin ]; then
+	:;
+else
+	echo "";
+	echo -e "${YLW}Something went wrong${FIN}?";
+	exit;
 fi
 sed -i 's/FIRMWARE_RELEASE_STATUS="default"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
 sed -i 's/FIRMWARE_RELEASE_STATUS="critical"/FIRMWARE_RELEASE_STATUS="stable"/g' /etc/default/rpi-eeprom-update
@@ -359,14 +393,14 @@ fi
 echo
 confirm
 echo
-echo -e "${RED}Updating eeprom${FIN} ..."
+echo -e "${WHT}Updating eeprom${FIN} ..."
 update_eeprom
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Partitioning USB${FIN} ..."
+echo -e "${WHT}Partitioning USB${FIN} ..."
 partition_ext4 > /dev/null 2>&1
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
 echo -e "${YLW}Please be patient as the boot and root filesystem${FIN}"
@@ -376,30 +410,30 @@ clear
 sleep 1s
 
 echo
-echo -e "${RED}Fetching UUID${FIN} ..."
+echo -e "${WHT}Fetching UUID${FIN} ..."
 partition_uuid
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Creating new cmdline${FIN} ..."
-if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-	then ext4_cmdline;
+echo -e "${WHT}Creating new cmdline${FIN} ..."
+if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+	ext4_cmdline;
 fi
-if `grep -Fx "bcm2711" "/etc/opt/board.txt" > /dev/null 2>&1;`
-	then ext4_extlinux;
+if [[ `grep -w "bcm2711" "/etc/opt/board.txt"` ]]; then
+	ext4_extlinux;
 fi
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Creating fstab${FIN} ..."
+echo -e "${WHT}Creating fstab${FIN} ..."
 ext4_fstab
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo 
-echo -e "${RED}Unmounting USB${FIN} ..."
+echo -e "${WHT}Unmounting USB${FIN} ..."
 rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt \
 /etc/opt/boot-id.txt
 rm -fdr /mnt/p2/mnt/*
@@ -407,7 +441,7 @@ umount /mnt/p2/boot > /dev/null 2>&1
 umount /mnt/p2 > /dev/null 2>&1
 umount /mnt/p1 > /dev/null 2>&1
 rm -fdr /mnt/*
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 echo
 echo You may now power down and remove the sdcard.
 }
@@ -415,9 +449,11 @@ echo You may now power down and remove the sdcard.
 run_f2fs(){
 run_as_root
 internet_check
-if [ -e /sbin/mkfs.f2fs ];
-	then :;
-	else apt update && apt install f2fs-tools -y;
+if [[ `command -v mkfs.f2fs` ]]; then 
+	:;
+else
+	apt update;
+	apt install -y f2fs-tools;
 fi
 check_progressbar
 
@@ -430,14 +466,14 @@ fi
 echo
 confirm
 echo
-echo -e "${RED}Updating eeprom${FIN} ..."
+echo -e "${WHT}Updating eeprom${FIN} ..."
 update_eeprom
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Partitioning USB${FIN} ..."
+echo -e "${WHT}Partitioning USB${FIN} ..."
 partition_f2fs > /dev/null 2>&1
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
 echo -e "${YLW}Please be patient as the boot and root filesystem${FIN}"
@@ -447,30 +483,30 @@ clear
 sleep 1s
 
 echo
-echo -e "${RED}Fetching UUID${FIN} ..."
+echo -e "${WHT}Fetching UUID${FIN} ..."
 partition_uuid
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Creating new cmdline${FIN} ..."
-if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-	then f2fs_cmdline;
+echo -e "${WHT}Creating new cmdline${FIN} ..."
+if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+	f2fs_cmdline;
 fi
-if `grep -Fx "bcm2711" "/etc/opt/board.txt" > /dev/null 2>&1;`
-	then f2fs_extlinux;
+if [[ `grep -w "bcm2711" "/etc/opt/board.txt"` ]]; then
+	f2fs_extlinux;
 fi
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Creating fstab${FIN} ..."
+echo -e "${WHT}Creating fstab${FIN} ..."
 f2fs_fstab
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo 
-echo -e "${RED}Unmounting USB${FIN} ..."
+echo -e "${WHT}Unmounting USB${FIN} ..."
 rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt \
 /etc/opt/boot-id.txt
 rm -fdr /mnt/p2/mnt/*
@@ -478,7 +514,7 @@ umount /mnt/p2/boot > /dev/null 2>&1
 umount /mnt/p2 > /dev/null 2>&1
 umount /mnt/p1 > /dev/null 2>&1
 rm -fdr /mnt/*
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 echo
 echo You may now power down and remove the sdcard.
 }
@@ -486,9 +522,11 @@ echo You may now power down and remove the sdcard.
 run_btrfs(){
 run_as_root
 internet_check
-if [ -e /usr/bin/mkfs.btrfs ];
-	then :;
-	else apt update && apt install btrfs-progs -y;
+if [[ `command -v mkfs.btrfs` ]]; then
+	:;
+else
+	apt update;
+	apt install -y btrfs-progs;
 fi
 check_progressbar
 
@@ -501,14 +539,14 @@ fi
 echo
 confirm
 echo
-echo -e "${RED}Updating eeprom${FIN} ..."
+echo -e "${WHT}Updating eeprom${FIN} ..."
 update_eeprom
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Partitioning USB${FIN} ..."
+echo -e "${WHT}Partitioning USB${FIN} ..."
 partition_btrfs > /dev/null 2>&1
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
 echo -e "${YLW}Please be patient as the boot and root filesystem${FIN}"
@@ -518,30 +556,30 @@ clear
 sleep 1s
 
 echo
-echo -e "${RED}Fetching UUID${FIN} ..."
+echo -e "${WHT}Fetching UUID${FIN} ..."
 partition_uuid
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Creating new cmdline${FIN} ..."
-if `grep -Fx "bcm2711" "/etc/opt/soc.txt" > /dev/null 2>&1;`
-	then btrfs_cmdline;
+echo -e "${WHT}Creating new cmdline${FIN} ..."
+if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+	btrfs_cmdline;
 fi
-if `grep -Fx "bcm2711" "/etc/opt/board.txt" > /dev/null 2>&1;`
-	then btrfs_extlinux;
+if [[ `grep -w "bcm2711" "/etc/opt/board.txt"` ]]; then
+	btrfs_extlinux;
 fi
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo
-echo -e "${RED}Creating fstab${FIN} ..."
+echo -e "${WHT}Creating fstab${FIN} ..."
 btrfs_fstab
 sleep 1s
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 
 echo 
-echo -e "${RED}Unmounting USB${FIN} ..."
+echo -e "${WHT}Unmounting USB${FIN} ..."
 rm -fdr /etc/opt/root-pid.txt /etc/opt/root-id.txt \
 /etc/opt/boot-id.txt
 rm -fdr /mnt/p2/mnt/*
@@ -549,11 +587,12 @@ umount /mnt/p2/boot > /dev/null 2>&1
 umount /mnt/p2 > /dev/null 2>&1
 umount /mnt/p1 > /dev/null 2>&1
 rm -fdr /mnt/*
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 echo
 echo You may now power down and remove the sdcard.
 }
 
+echo -en "${WHT}"
 options=("EXT4" "BTRFS" "F2FS" "Quit")
 select opt in "${options[@]}"
 do
@@ -576,3 +615,4 @@ do
         *) echo "invalid option $REPLY";;
     esac
 done
+echo -en "${FIN}"
