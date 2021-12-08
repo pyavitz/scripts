@@ -15,14 +15,14 @@ fi
 }
 
 internet_check(){
-if [[ `command -v wget` ]]; then
+if [[ `command -v wget aria2c` ]]; then
 	[[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
 else
 	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 		echo -e "${WHT}Installing missing depends${FIN}."
 		sudo apt update
 		sudo apt upgrade -y
-		sudo apt install -y wget;
+		sudo apt install -y wget aria2;
 	else
 		echo -e "This script requires an internet connection."
 		exit;
@@ -94,14 +94,11 @@ update_eeprom(){
 if [ -e /lib/firmware/raspberrypi/bootloader/stable/${PI_EEPROM}.bin ]; then
 	:;
 else
-	echo "";
-	echo -e "${YLW}Upgrading rpi-eeprom package${FIN}.";
 	if [[ `command -v deb-eeprom` ]]; then
 		deb-eeprom -u;
-		sleep 1s
+		sleep 1s;
 		deb-eeprom -U;
-		sleep 1s
-		${WHT}Done${FIN}.;
+		sleep 1s;
 	else
 		echo "";
 		echo -e "${YLW}Something went wrong${FIN}?";
