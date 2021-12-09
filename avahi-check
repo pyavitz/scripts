@@ -1,10 +1,21 @@
 #!/bin/bash
-#Add to /etc/rc.local
-#if [ -e /usr/local/sbin/avahi-check ]; then
-#	sleep 20s
-#	avahi-check;
-#fi
+#Add systemd service
+#sudo tee /etc/systemd/system/avahi-check.service <<EOF
+#[Unit]
+#Description=Avahi Monitor
+#ConditionPathExists=/usr/local/sbin/avahi-check
+#
+#[Service]
+#ExecStart=/usr/local/sbin/avahi-check &>/dev/null
+#Type=oneshot
+#RemainAfterExit=yes
+#
+#[Install]
+#WantedBy=multi-user.target
+#EOF
+#sudo systemctl enable avahi-check
 
+avahi_check(){
 CHECK="hostname.local"
 
 while [ true ]; do
@@ -14,3 +25,9 @@ while [ true ]; do
 		systemctl restart avahi-daemon;
 	fi
 done
+}
+
+if [ -e /usr/local/sbin/avahi-check ]; then
+	sleep 20s
+	avahi_check;
+fi
