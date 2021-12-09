@@ -1,0 +1,16 @@
+#!/bin/bash
+#Add to /etc/rc.local
+#if [ -e /usr/local/sbin/avahi-check ]; then
+#	sleep 20s
+#	avahi-check;
+#fi
+
+CHECK="hostname.local"
+
+while [ true ]; do
+	if [[ `ping $CHECK -w 3` ]]; then
+		sleep 1800s;
+	else
+		systemctl restart avahi-daemon;
+	fi
+done
