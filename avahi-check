@@ -1,28 +1,13 @@
 #!/bin/bash
-#Add systemd service
-#sudo tee /etc/systemd/system/avahi-check.service <<EOF
-#[Unit]
-#Description=Avahi Monitor
-#ConditionPathExists=/usr/local/sbin/avahi-check
-#
-#[Service]
-#ExecStart=/usr/local/sbin/avahi-check &>/dev/null
-#Type=oneshot
-#RemainAfterExit=yes
-#
-#[Install]
-#WantedBy=multi-user.target
-#EOF
-#sudo systemctl enable avahi-check
+
+#HOST=$(hostnamectl | grep 'hostname' | awk '{if (NR==1) {print substr($3, 1, length($2)-1)}}')
 
 avahi_check(){
-CHECK="hostname.local"
-
 while [ true ]; do
-	if [[ `ping $CHECK -w 3` ]]; then
+	if [[ $(ping `hostname`.local -w 3) ]]; then
 		sleep 1800s;
 	else
-		systemctl restart avahi-daemon;
+		service avahi-daemon restart;
 	fi
 done
 }
