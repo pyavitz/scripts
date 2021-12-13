@@ -1,18 +1,11 @@
 #!/bin/bash
 
-#HOST=$(hostnamectl | grep 'hostname' | awk '{if (NR==1) {print substr($3, 1, length($2)-1)}}')
+CHECK=$(echo `date` > /tmp/avahi-log.txt && sleep 20s && ping `hostname`.local -w 3 >> /tmp/avahi-log.txt && sleep 1800s)
 
-avahi_check(){
 while [ true ]; do
-	if [[ $(ping `hostname`.local -w 3) ]]; then
-		sleep 1800s;
+	if [ -e /usr/local/sbin/avahi-check ]; then
+		$CHECK;
 	else
 		service avahi-daemon restart;
 	fi
 done
-}
-
-if [ -e /usr/local/sbin/avahi-check ]; then
-	sleep 20s
-	avahi_check;
-fi
