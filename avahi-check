@@ -1,10 +1,16 @@
 #!/bin/bash
 
-CHECK=$(echo `date` > /tmp/avahi-log.txt && sleep 20s && ping `hostname`.local -w 3 >> /tmp/avahi-log.txt && sleep 1800s)
-
 while [ true ]; do
-	if [ -e /usr/local/sbin/avahi-check ]; then
-		$CHECK;
+	if [[ $(ping -c 1 `hostname`.local) ]]; then
+		echo `date` > /tmp/avahi-log.txt
+		echo "GOOD" >> /tmp/avahi-log.txt
+	else
+		echo `date` > /tmp/avahi-log.txt
+		echo "FAIL" >> /tmp/avahi-log.txt
+	fi
+
+	if [[ `grep -w "GOOD" "/tmp/avahi-log.txt"` ]]; then
+		sleep 1800s;
 	else
 		service avahi-daemon restart;
 	fi
