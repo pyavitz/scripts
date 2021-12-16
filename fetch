@@ -151,7 +151,7 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-5.10.y${FIN} ..."
+echo -e "${RED}Fetching rpi4-5.10.y (ARM64)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz
 	echo_bdone;
@@ -168,6 +168,34 @@ rm -f rpi4-5.10.y.tar.xz
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi4-5.10.y
+sudo dpkg -i *.deb
+cd ~
+echo -e "${RED}Done${FIN}."
+sudo rm -fdr ~/.build/*
+}
+
+rpi4v7-5.10.y(){
+initrd_check
+os_release
+mkdir -p ~/.build
+cd ~/.build
+echo -e "${RED}Fetching rpi4-5.10.y (ARM)${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi4v7-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi4v7-5.10.y.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
+fi
+echo
+echo -e "${RED}Extracting archive${FIN} ..."
+echo -e -n "${WHT}"
+pv rpi4v7-5.10.y.tar.xz | tar -xJ rpi4v7-5.10.y
+echo -e -n "${FIN}"
+rm -f rpi4v7-5.10.y.tar.xz
+echo
+echo -e "${RED}Starting install${FIN} ..."
+cd rpi4v7-5.10.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
@@ -264,7 +292,7 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-stable${FIN} ..."
+echo -e "${RED}Fetching rpi4-stable (ARM64)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi4-stable.tar.xz
 	echo_bdone;
@@ -281,6 +309,34 @@ rm -f rpi4-stable.tar.xz
 echo
 echo -e "${RED}Starting install${FIN} ..."
 cd rpi4-stable
+sudo dpkg -i *.deb
+cd ~
+echo -e "${RED}Done${FIN}."
+sudo rm -fdr ~/.build/*
+}
+
+rpi4v7-stable(){
+initrd_check
+os_release
+mkdir -p ~/.build
+cd ~/.build
+echo -e "${RED}Fetching rpi4-stable (ARM)${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi4v7-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi4v7-stable.tar.xz
+	echo_bdone;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	exit 1;
+fi
+echo
+echo -e "${RED}Extracting archive${FIN} ..."
+echo -e -n "${WHT}"
+pv rpi4v7-stable.tar.xz | tar -xJ rpi4v7-stable
+echo -e -n "${FIN}"
+rm -f rpi4v7-stable.tar.xz
+echo
+echo -e "${RED}Starting install${FIN} ..."
+cd rpi4v7-stable
 sudo dpkg -i *.deb
 cd ~
 echo -e "${RED}Done${FIN}."
@@ -530,7 +586,11 @@ if [ $ECHO = "5.10" ]; then
 	fi
 
 	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
-		rpi4-5.10.y;
+		if [[ `grep -w "arm64" "/etc/opt/soc.txt"` ]]; then
+			rpi4-5.10.y;
+		else
+			rpi4v7-5.10.y;
+		fi
 	fi
 fi
 
@@ -549,7 +609,11 @@ if [ $ECHO = "stable" ]; then
 	fi
 
 	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
-		rpi4-stable;
+		if [[ `grep -w "arm64" "/etc/opt/soc.txt"` ]]; then
+			rpi4-stable;
+		else
+			rpi4v7-stable;
+		fi
 	fi
 fi
 
