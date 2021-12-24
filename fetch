@@ -648,7 +648,7 @@ if [ $ECHO = "firmware" ]; then
 fi
 
 if [ $ECHO = "userland" ]; then
-	if [ -e /usr/src/linux-headers-`uname -r`/.config ]; then
+	if ls /usr/src/linux-headers-`uname -r`/.config > /dev/null 2>&1; then
 		rpi_userland;
 	else
 		echo
