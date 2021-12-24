@@ -473,12 +473,12 @@ cd userland
 wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/userland-remove-hi-pi.patch
 patch -p1 < userland-remove-hi-pi.patch
 rm -f userland-remove-hi-pi.patch
-if grep -w "Linux/arm64" "/usr/src/linux-headers-`uname -r`/.config"`; then
+if grep -w "Linux/arm64" "/usr/src/linux-headers-`uname -r`/.config"; then
 	echo -e "\e[1;37m== ARM64\e[0m"
 	sleep 1s
 	./buildme --aarch64;
 else
-	if `grep -w "Linux/arm" "/usr/src/linux-headers-`uname -r`/.config"`; then
+	if grep -w "Linux/arm" "/usr/src/linux-headers-`uname -r`/.config"; then
 		echo -e "\e[1;37m== ARM\e[0m"
 		sleep 1s
 		./buildme;
@@ -648,7 +648,7 @@ if [ $ECHO = "firmware" ]; then
 fi
 
 if [ $ECHO = "userland" ]; then
-	if ls /usr/src/linux-headers-`uname -r`/.config > /dev/null 2>&1; then
+	if [ -e /usr/src/linux-headers-`uname -r`/.config ]; then
 		rpi_userland;
 	else
 		echo
