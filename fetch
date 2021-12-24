@@ -473,17 +473,16 @@ cd userland
 wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/userland-remove-hi-pi.patch
 patch -p1 < userland-remove-hi-pi.patch
 rm -f userland-remove-hi-pi.patch
-if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
+if grep -w "Linux/arm64" "/usr/src/linux-headers-`uname -r`/.config"`; then
+	echo -e "\e[1;37m== ARM64\e[0m"
+	sleep 1s
 	./buildme --aarch64;
-fi
-if [[ `grep -Fx "bcm2710" "/etc/opt/soc.txt"` ]]; then
-	./buildme --aarch64;
-fi
-if [[ `grep -Fx "bcm2709" "/etc/opt/soc.txt"` ]]; then
-	./buildme;
-fi
-if [[ `grep -Fx "bcm2708" "/etc/opt/soc.txt"` ]]; then
-	./buildme;
+else
+	if `grep -w "Linux/arm" "/usr/src/linux-headers-`uname -r`/.config"`; then
+		echo -e "\e[1;37m== ARM\e[0m"
+		sleep 1s
+		./buildme;
+	fi
 fi
 cd ~
 sudo rm -fdr ~/.build/userland
@@ -649,7 +648,7 @@ if [ $ECHO = "firmware" ]; then
 fi
 
 if [ $ECHO = "userland" ]; then
-	if [ -e /etc/opt/soc.txt ]; then
+	if [ -e /usr/src/linux-headers-`uname -r`/.config ]; then
 		rpi_userland;
 	else
 		echo
