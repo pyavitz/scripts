@@ -25,7 +25,7 @@ if [ command -v chromium ]; then
 		rm -fdr ~/.config/chromium;
 	fi
 	DISPLAY=:0 chromium --noerrdialogs --incognito --kiosk --force-device-scale-factor=1 --disk-cache-dir=/tmp/null ${URL}${FILE} > /dev/null 2>&1 &
-	echo "Done."
+	echo "Done.";
 else
 	echo ""
 	echo "You do not have Chromium installed."
