@@ -2,7 +2,7 @@
 # sshot, takes screenshot of computer A and moves it to computer B
 # depends: scrot, ssh
 
-USER="user@10.0.0.1"
+USER="user@ipaddress"
 DESC="Fetching Screenshot"
 SHOT='DISPLAY=:0 scrot -d 1'
 NAME="filename"
