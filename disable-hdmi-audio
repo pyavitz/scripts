@@ -1,5 +1,22 @@
 #!/bin/bash
 
+depends_check(){
+if [[ `command -v wget dtc` ]]; then
+	:;
+else
+	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+		echo -e "Installing missing depends."
+		sudo apt update
+		sudo apt upgrade -y
+		sudo apt install -y wget device-tree-compiler;
+	else
+		echo ""
+		echo -e "This script requires an internet connection."
+		exit;
+	fi
+fi
+}
+
 internet_check(){
 if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	:;
@@ -9,12 +26,12 @@ else
 fi
 }
 
-dtc_check(){
-if [ -e /usr/bin/dtc ]; then :; else sudo apt update && sudo apt install device-tree-compiler -y; fi
-}
-
 disable_hdmi_audio_overlay(){
-if [ -e /boot/overlays/disable-hdmi-audio.dtbo ]; then sudo rm -f /boot/overlays/disable-hdmi-audio.dtbo; else :; fi
+if [ -e /boot/overlays/disable-hdmi-audio.dtbo ]; then
+	sudo rm -f /boot/overlays/disable-hdmi-audio.dtbo;
+else
+	:;
+fi
 cat << '_EOF_' > disable-hdmi-audio.dts
 /dts-v1/;
 /plugin/;
@@ -32,8 +49,8 @@ sudo dtc -I dts -O dtb -o /boot/overlays/disable-hdmi-audio.dtbo disable-hdmi-au
 rm -f disable-hdmi-audio.dts
 }
 
+depends_check
 internet_check
-dtc_check
 disable_hdmi_audio_overlay
 echo
 if [ -e /boot/overlays/disable-hdmi-audio.dtbo ]; then
