@@ -10,9 +10,9 @@ else
 	exit > /dev/null 2>&1;
 fi
 
-if [ command -v chromium ]; then
+if [[ `command -v chromium` ]]; then
 	echo "Restarting Chromium ..."
-	if [ command -v killall ]; then
+	if [[ `command -v killall` ]]; then
 		killall chromium > /dev/null 2>&1;
 	else
 		pkill -o chromium > /dev/null 2>&1;
