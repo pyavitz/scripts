@@ -7,7 +7,7 @@ GRN="\e[1;32m"
 PNK="\e[1;35m"
 WHT="\e[1;37m"
 YLW="\e[1;33m"
-SRED="\e[0;31m"
+SWHT="\e[0;31m"
 SGRN="\e[0;32m"
 SYLW="\e[0;33m"
 FIN="\e[0m"
@@ -15,11 +15,11 @@ FIN="\e[0m"
 os_release(){
 if [[ `grep -w "buster" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
 if [[ `grep -w "beowulf" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
+if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
 if [[ `grep -w "bullseye" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "bookworm" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "chimaera" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "daedalus" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
 if [[ `grep -w "hirsute" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "impish" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 if [[ `grep -w "jammy" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
@@ -31,7 +31,7 @@ echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
 
 echo_bins(){
-echo -e "${RED}Downloading binaries${FIN} ..."
+echo -e "${WHT}Downloading binaries${FIN} ..."
 }
 
 list(){
@@ -43,8 +43,14 @@ echo $version
 update(){
 sudo mv -f /usr/local/bin/fetch /usr/local/bin/fetch.orig
 sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fetch -P /usr/local/bin
-if [ -e /usr/local/bin/fetch ]; then sudo chmod +x /usr/local/bin/fetch; fi
-if [ -e /usr/local/bin/fetch ]; then sudo rm -f /usr/local/bin/fetch.orig; else sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch; fi
+if [ -e /usr/local/bin/fetch ]; then
+	sudo chmod +x /usr/local/bin/fetch;
+fi
+if [ -e /usr/local/bin/fetch ]; then
+	sudo rm -f /usr/local/bin/fetch.orig;
+else
+	sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch;
+fi
 fetch -h
 }
 
@@ -56,7 +62,11 @@ sudo chown root:root /etc/initramfs/post-update.d/99-initrd
 }
 
 initrd_check(){
-if [ -e /etc/initramfs/post-update.d/99-initrd ]; then :; else initrd_script > /dev/null 2>&1; fi
+if [ -e /etc/initramfs/post-update.d/99-initrd ]; then
+	:;
+else
+	initrd_script > /dev/null 2>&1;
+fi
 }
 
 ### LINUX KERNELS
@@ -67,26 +77,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi-5.10.y${FIN} ..."
+echo -e "${WHT}Fetching rpi-5.10.y${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi-5.10.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi-5.10.y.tar.xz | tar -xJ rpi-5.10.y
 echo -e -n "${FIN}"
 rm -f rpi-5.10.y.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi-5.10.y
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -95,26 +105,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi2+3-5.10.y${FIN} ..."
+echo -e "${WHT}Fetching rpi2+3-5.10.y${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi2-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi2-5.10.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi2-5.10.y.tar.xz | tar -xJ rpi2-5.10.y
 echo -e -n "${FIN}"
 rm -f rpi2-5.10.y.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi2-5.10.y
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -123,26 +133,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi3-5.10.y${FIN} ..."
+echo -e "${WHT}Fetching rpi3-5.10.y${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi3-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi3-5.10.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi3-5.10.y.tar.xz | tar -xJ rpi3-5.10.y
 echo -e -n "${FIN}"
 rm -f rpi3-5.10.y.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi3-5.10.y
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -151,26 +161,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-5.10.y (ARM64)${FIN} ..."
+echo -e "${WHT}Fetching rpi4-5.10.y (ARM64)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi4-5.10.y.tar.xz | tar -xJ rpi4-5.10.y
 echo -e -n "${FIN}"
 rm -f rpi4-5.10.y.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi4-5.10.y
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -179,26 +189,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-5.10.y (ARM)${FIN} ..."
+echo -e "${WHT}Fetching rpi4-5.10.y (ARM)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4v7-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi4v7-5.10.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi4v7-5.10.y.tar.xz | tar -xJ rpi4v7-5.10.y
 echo -e -n "${FIN}"
 rm -f rpi4v7-5.10.y.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi4v7-5.10.y
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -208,26 +218,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi-stable${FIN} ..."
+echo -e "${WHT}Fetching rpi-stable${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi-stable.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi-stable.tar.xz | tar -xJ rpi-stable
 echo -e -n "${FIN}"
 rm -f rpi-stable.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi-stable
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -236,26 +246,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi2+3-stable${FIN} ..."
+echo -e "${WHT}Fetching rpi2+3-stable${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi2-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi2-stable.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi2-stable.tar.xz | tar -xJ rpi2-stable
 echo -e -n "${FIN}"
 rm -f rpi2-stable.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi2-stable
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -264,26 +274,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi3-stable${FIN} ..."
+echo -e "${WHT}Fetching rpi3-stable${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi3-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi3-stable.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi3-stable.tar.xz | tar -xJ rpi3-stable
 echo -e -n "${FIN}"
 rm -f rpi3-stable.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi3-stable
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -292,26 +302,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-stable (ARM64)${FIN} ..."
+echo -e "${WHT}Fetching rpi4-stable (ARM64)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi4-stable.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi4-stable.tar.xz | tar -xJ rpi4-stable
 echo -e -n "${FIN}"
 rm -f rpi4-stable.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi4-stable
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -320,26 +330,26 @@ initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${RED}Fetching rpi4-stable (ARM)${FIN} ..."
+echo -e "${WHT}Fetching rpi4-stable (ARM)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4v7-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	${DOWNLOAD} ${URL}rpi4v7-stable.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
-	exit 1;
+	exit > /dev/null 2>&1;
 fi
 echo
-echo -e "${RED}Extracting archive${FIN} ..."
+echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
 pv rpi4v7-stable.tar.xz | tar -xJ rpi4v7-stable
 echo -e -n "${FIN}"
 rm -f rpi4v7-stable.tar.xz
 echo
-echo -e "${RED}Starting install${FIN} ..."
+echo -e "${WHT}Starting install${FIN} ..."
 cd rpi4v7-stable
 sudo dpkg -i *.deb
 cd ~
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
@@ -390,7 +400,7 @@ sudo rm -f /boot/start*.elf
 
 rpi4_install(){
 echo
-echo -e "${RED}Installing boot binaries${FIN} ..."
+echo -e "${WHT}Installing boot binaries${FIN} ..."
 sudo install -m 0644 ~/.build/fixup4*.dat /boot
 sudo install -m 0644 ~/.build/start4*.elf /boot
 cd ~
@@ -399,7 +409,7 @@ sudo rm -fdr ~/.build/*
 
 rpi_install(){
 echo
-echo -e "${RED}Installing boot binaries${FIN} ..."
+echo -e "${WHT}Installing boot binaries${FIN} ..."
 sudo install -m 0644 ~/.build/bootcode.bin /boot
 sudo install -m 0644 ~/.build/fixup*.dat /boot
 sudo install -m 0644 ~/.build/start*.elf /boot
@@ -412,11 +422,11 @@ rpi4_downbins
 if ls ~/.build/{fixup4.dat,fixup4cd.dat,fixup4db.dat,fixup4x.dat,start4.elf,start4cd.elf,start4db.elf,start4x.elf} > /dev/null 2>&1; then
 	rpi4_cleanbins
 	rpi4_install
-	echo -e "${RED}Done${FIN}.";
+	echo -e "${WHT}Done${FIN}.";
 else
-	echo -e "${SRED}Install Failed${FIN}?"
+	echo -e "${SWHT}Install Failed${FIN}?"
 	sudo rm -fdr ~/.build/*
-	exit;
+	exit > /dev/null 2>&1;
 fi
 }
 
@@ -425,11 +435,11 @@ rpi_downbins
 if ls ~/.build/{bootcode.bin,fixup.dat,fixup_cd.dat,fixup_db.dat,fixup_x.dat,start.elf,start_cd.elf,start_db.elf,start_x.elf} > /dev/null 2>&1; then
 	rpi_cleanbins
 	rpi_install
-	echo -e "${RED}Done${FIN}.";
+	echo -e "${WHT}Done${FIN}.";
 else
-	echo -e "${SRED}Install Failed${FIN}?"
+	echo -e "${SWHT}Install Failed${FIN}?"
 	sudo rm -fdr ~/.build/*
-	exit;
+	exit > /dev/null 2>&1;
 fi
 }
 
@@ -438,7 +448,7 @@ firmware(){
 FWURL="https://github.com/pyavitz/firmware.git"
 FWDEST="/lib/firmware/updates/brcm"
 RBFALSE="sudo git config pull.rebase false"
-echo -e "${RED}Checking firmware${FIN}" ...
+echo -e "${WHT}Checking firmware${FIN}" ...
 sudo mkdir -p /lib/firmware/updates
 if [ -e /etc/firmware ]; then
 	:;
@@ -458,14 +468,14 @@ if [ -e ${FWDEST}/.git ]; then
 else
 	sudo git clone ${FWURL} ${FWDEST};
 fi
-echo -e "${RED}Done${FIN}".
+echo -e "${WHT}Done${FIN}".
 cd ~
 }
 
 ### USERLAND
 rpi_userland(){
 echo
-echo -e "${RED}Updating userland${FIN}."
+echo -e "${WHT}Updating userland${FIN}."
 mkdir -p ~/.build
 cd ~/.build
 git clone https://github.com/raspberrypi/userland.git
@@ -487,7 +497,7 @@ fi
 cd ~
 sudo rm -fdr ~/.build/userland
 sudo ldconfig
-echo -e "${RED}Done${FIN}."
+echo -e "${WHT}Done${FIN}."
 }
 
 ### CHECKS
@@ -508,7 +518,13 @@ fi
 }
 
 depends_check(){
-if [[ `command -v aria2c pv` ]]; then :; else sudo apt update; sudo apt upgrade -y; sudo apt install -y aria2 pv; fi
+if [[ `command -v aria2c pv` ]]; then
+	:;
+else
+	sudo apt update;
+	sudo apt upgrade -y;
+	sudo apt install -y aria2 pv;
+fi
 }
 
 internet_check
@@ -652,7 +668,7 @@ if [ $ECHO = "userland" ]; then
 		rpi_userland;
 	else
 		echo
-		echo -e "${RED}Something went wrong${FIN}?"
-		exit;
+		echo -e "${WHT}Something went wrong${FIN}?"
+		exit > /dev/null 2>&1;
 	fi
 fi
