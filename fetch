@@ -518,7 +518,7 @@ fi
 }
 
 depends_check(){
-if [[ `command -v aria2c pv` ]]; then
+if [[ `command -v aria2c` ]]; [[ `command -v pv` ]]; then
 	:;
 else
 	sudo apt update;

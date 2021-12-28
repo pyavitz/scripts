@@ -1,7 +1,7 @@
 #!/bin/bash
 
 depends_check(){
-if [[ `command -v wget dtc` ]]; then
+if [[ `command -v wget` ]]; [[ `command -v dtc` ]]; then
 	:;
 else
 	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
