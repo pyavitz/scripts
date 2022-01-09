@@ -12,10 +12,11 @@ if [ -e /etc/firmware ]; then
 else
 	sudo ln -sr /lib/firmware /etc/firmware;
 fi
-if [ -e /usr/bin/git ]; then
+if [[ `command -v git` ]]; then
 	:;
 else
 	sudo apt update
+	sudo apt upgrade -y
 	sudo apt install git -y;
 fi
 if [ -e ${FWDEST}/.git ]; then
