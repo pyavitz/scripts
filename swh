@@ -46,8 +46,8 @@ echo
 restart(){
 echo
 echo Restarting ...
-ifdown
-ifup
+sudo ifdown ${INTERFACE}
+sudo ifup ${INTERFACE}
 }
 
 interfaces(){
