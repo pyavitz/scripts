@@ -72,14 +72,14 @@ fi
 ### LINUX KERNELS
 
 ## LATEST LTS
-rpi-5.10.y(){
+rpi-5.15.y(){
 initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${WHT}Fetching rpi-5.10.y${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi-5.10.y.tar.xz
+echo -e "${WHT}Fetching rpi-5.15.y${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi-5.15.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
@@ -88,26 +88,26 @@ fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
-pv rpi-5.10.y.tar.xz | tar -xJ rpi-5.10.y
+pv rpi-5.15.y.tar.xz | tar -xJ rpi-5.15.y
 echo -e -n "${FIN}"
-rm -f rpi-5.10.y.tar.xz
+rm -f rpi-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
-cd rpi-5.10.y
+cd rpi-5.15.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi2-5.10.y(){
+rpi2-5.15.y(){
 initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${WHT}Fetching rpi2+3-5.10.y${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi2-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi2-5.10.y.tar.xz
+echo -e "${WHT}Fetching rpi2+3-5.15.y${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi2-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi2-5.15.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
@@ -116,26 +116,26 @@ fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
-pv rpi2-5.10.y.tar.xz | tar -xJ rpi2-5.10.y
+pv rpi2-5.15.y.tar.xz | tar -xJ rpi2-5.15.y
 echo -e -n "${FIN}"
-rm -f rpi2-5.10.y.tar.xz
+rm -f rpi2-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
-cd rpi2-5.10.y
+cd rpi2-5.15.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi3-5.10.y(){
+rpi3-5.15.y(){
 initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${WHT}Fetching rpi3-5.10.y${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi3-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi3-5.10.y.tar.xz
+echo -e "${WHT}Fetching rpi3-5.15.y${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi3-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi3-5.15.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
@@ -144,26 +144,26 @@ fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
-pv rpi3-5.10.y.tar.xz | tar -xJ rpi3-5.10.y
+pv rpi3-5.15.y.tar.xz | tar -xJ rpi3-5.15.y
 echo -e -n "${FIN}"
-rm -f rpi3-5.10.y.tar.xz
+rm -f rpi3-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
-cd rpi3-5.10.y
+cd rpi3-5.15.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi4-5.10.y(){
+rpi4-5.15.y(){
 initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${WHT}Fetching rpi4-5.10.y (ARM64)${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi4-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi4-5.10.y.tar.xz
+echo -e "${WHT}Fetching rpi4-5.15.y (ARM64)${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi4-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi4-5.15.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
@@ -172,26 +172,26 @@ fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
-pv rpi4-5.10.y.tar.xz | tar -xJ rpi4-5.10.y
+pv rpi4-5.15.y.tar.xz | tar -xJ rpi4-5.15.y
 echo -e -n "${FIN}"
-rm -f rpi4-5.10.y.tar.xz
+rm -f rpi4-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
-cd rpi4-5.10.y
+cd rpi4-5.15.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${WHT}Done${FIN}."
 sudo rm -fdr ~/.build/*
 }
 
-rpi4v7-5.10.y(){
+rpi4v7-5.15.y(){
 initrd_check
 os_release
 mkdir -p ~/.build
 cd ~/.build
-echo -e "${WHT}Fetching rpi4-5.10.y (ARM)${FIN} ..."
-if [[ `wget -S --spider ${URL}rpi4v7-5.10.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi4v7-5.10.y.tar.xz
+echo -e "${WHT}Fetching rpi4-5.15.y (ARM)${FIN} ..."
+if [[ `wget -S --spider ${URL}rpi4v7-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	${DOWNLOAD} ${URL}rpi4v7-5.15.y.tar.xz
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
@@ -200,12 +200,12 @@ fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
 echo -e -n "${WHT}"
-pv rpi4v7-5.10.y.tar.xz | tar -xJ rpi4v7-5.10.y
+pv rpi4v7-5.15.y.tar.xz | tar -xJ rpi4v7-5.15.y
 echo -e -n "${FIN}"
-rm -f rpi4v7-5.10.y.tar.xz
+rm -f rpi4v7-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
-cd rpi4v7-5.10.y
+cd rpi4v7-5.15.y
 sudo dpkg -i *.deb
 cd ~
 echo -e "${WHT}Done${FIN}."
@@ -543,7 +543,7 @@ while getopts "12bruUhf" OPTION; do
         case $OPTION in
 
                 1)
-                        ECHO="5.10"
+                        ECHO="5.15"
                         ;;
                 2)
                         ECHO="stable"
@@ -570,7 +570,7 @@ while getopts "12bruUhf" OPTION; do
                         echo ""
                         list
                         echo ""
-                        echo -e "   -1        Linux 5.10.y LTS"
+                        echo -e "   -1        Linux 5.15.y LTS"
                         echo -e "   -2        Linux Stable Branch"
                         echo -e "   -b        Update Boot Binaries"
                         echo -e "   -f        Update Wifi/BT Firmware"
@@ -586,25 +586,25 @@ while getopts "12bruUhf" OPTION; do
         esac
 done
 
-if [ $ECHO = "5.10" ]; then
+if [ $ECHO = "5.15" ]; then
 	echo ""
 	if [[ `grep -w "bcm2708" "/etc/opt/soc.txt"` ]]; then
-		rpi-5.10.y;
+		rpi-5.15.y;
 	fi
 	
 	if [[ `grep -w "bcm2709" "/etc/opt/soc.txt"` ]]; then
-		rpi2-5.10.y;
+		rpi2-5.15.y;
 	fi
 
 	if [[ `grep -w "bcm2710" "/etc/opt/soc.txt"` ]]; then
-		rpi3-5.10.y;
+		rpi3-5.15.y;
 	fi
 
 	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
 		if [[ `grep -w "arm64" "/etc/opt/soc.txt"` ]]; then
-			rpi4-5.10.y;
+			rpi4-5.15.y;
 		else
-			rpi4v7-5.10.y;
+			rpi4v7-5.15.y;
 		fi
 	fi
 fi
