@@ -34,7 +34,8 @@ echo "   AVAILABLE: $version"
 }
 
 error(){
-echo -e ${RED}Something went wrong${FIN}? ${RED}Please report error${FIN}.
+echo ""
+echo -e ${WHT}Something went wrong${FIN}? ${YLW}Please report error${FIN}.
 }
 
 update(){
