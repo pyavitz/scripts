@@ -43,6 +43,9 @@ else
 fi
 }
 
+WHT="\e[1;37m"
+FIN="\e[0m"
+
 # Commands
 if [ $# -eq 0 ]; then
 	echo "Missing options!"
@@ -75,7 +78,7 @@ while getopts "1234ruh" OPTION; do
                         ECHO="update"
                         ;;
                 h)
-                        echo "Odroid N2 Trip Point"
+                        echo -e "${WHT}Odroid N2 Trip Point${FIN}"
                         echo "Usage: "
                         echo ""
                         echo "   -1       65°C"
