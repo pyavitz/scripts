@@ -566,7 +566,7 @@ while getopts "12bruUhf" OPTION; do
                 h)                       
                         echo -e "${RED}Fetch, Linux kernel installer for the Raspberry Pi Image Builder${FIN}"
                         echo "https://github.com/pyavitz/rpi-img-builder"
-                        echo "Usage: fetch -h"
+                        echo "Usage: "
                         echo ""
                         list
                         echo ""

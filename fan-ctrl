@@ -76,7 +76,7 @@ while getopts "1234ruh" OPTION; do
                         ;;
                 h)
                         echo "Odroid N2 Trip Point"
-                        echo "Usage: fan-ctrl -h"
+                        echo "Usage: "
                         echo ""
                         echo "   -1       65°C"
                         echo "   -2       55°C"

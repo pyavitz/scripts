@@ -74,7 +74,7 @@ while getopts "copsruh" OPTION; do
                         ;;
                 h)
                         echo -e "${WHT}CPU frequency scaling${FIN}"
-                        echo "Usage: governor -h"
+                        echo "Usage: "
                         echo ""
                         echo "   -c       Conservative"
                         echo "   -o       Ondemand"

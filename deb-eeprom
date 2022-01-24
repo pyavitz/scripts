@@ -195,7 +195,7 @@ while getopts "uUwh" OPTION; do
                         ;;
                 h)
                         echo -e "${RED}Raspberry Pi 4B EEPROM Helper Script${FIN}"
-                        echo "Usage: deb-eeprom -h"
+                        echo "Usage: "
                         echo ""
                         current
                         latest
