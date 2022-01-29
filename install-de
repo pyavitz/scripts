@@ -1,6 +1,6 @@
 #!/bin/bash
 # Debian Bullseye
-# sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/install-de -P /usr/local/bin && sudo chmod +x /usr/local/bin/install-de
+# sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/install-de -P /usr/local/bin; sudo chmod +x /usr/local/bin/install-de
 # Execute: install-de
 
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
@@ -16,7 +16,7 @@ MESADEV="llvm-dev ninja-build meson libvdpau-dev libxvmc-dev libva-dev libomxil-
 
 ### CHECK ARIA2
 aria2c_check(){
-if [ -e /usr/bin/aria2c ]; then
+if [ `command -v aria2c` ]; then
 	:;
 else
 	sudo apt install -y aria2;
