@@ -518,12 +518,19 @@ fi
 }
 
 depends_check(){
-if [[ `command -v aria2c` ]]; [[ `command -v pv` ]]; then
+if [[ `command -v aria2c` ]]; then
 	:;
 else
 	sudo apt update;
 	sudo apt upgrade -y;
-	sudo apt install -y aria2 pv;
+	sudo apt install -y aria2;
+fi
+if [[ `command -v pv` ]]; then
+	:;
+else
+	sudo apt update;
+	sudo apt upgrade -y;
+	sudo apt install -y pv;
 fi
 }
 
