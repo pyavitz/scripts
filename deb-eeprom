@@ -67,11 +67,11 @@ if [ -e /usr/local/bin/deb-eeprom-update ]; then sudo rm -f /usr/local/bin/deb-e
 }
 
 builddir(){
-echo && echo -n "Setup   "
+echo ""
+echo -en "${PNK}[${FIN}${WHT}Setup${FIN}${PNK}]${FIN}"
 sleep 1s
 mkdir -p /home/$USER/.build/eeprom
-cd /home/$USER/.build/eeprom && echo_nok
-echo && echo -n "Patches "
+cd /home/$USER/.build/eeprom
 wget -cq ${PATCHES}rpi-eeprom-control.patch
 wget -cq ${PATCHES}rpi-eeprom-update.patch
 if ls /home/$USER/.build/eeprom/{rpi-eeprom-control.patch,rpi-eeprom-update.patch} > /dev/null 2>&1; then
@@ -103,15 +103,15 @@ fi
 }
 
 download_eeprom(){
-echo
-echo -e -n "${WHT}Searching${FIN} ..."
+echo ""
+echo -en "${WHT}Searching${FIN} ..."
 sleep 1s
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
 }
 
 build_eeprom(){
-echo
+echo ""
 echo -e "${RED}Installing rpi-eeprom${FIN} ..."
 tar xf rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
 tar xf rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
