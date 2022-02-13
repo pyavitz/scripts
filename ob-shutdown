@@ -1,0 +1,16 @@
+#!/bin/bash
+# depends: gxmessage
+
+gmessage "" -center -borderless -title "" -font "Noto Sans 10" \
+	-default "Cancel" -buttons "_Cancel":1,"_Log out":2,"_Reboot":3,"_Shut down":4 >/dev/null
+
+case $? in
+	1)
+	echo "Cancel";;
+	2)
+	killall openbox;;
+	3)
+	sudo shutdown -r now;;
+	4)
+	sudo shutdown -h now;;
+esac
