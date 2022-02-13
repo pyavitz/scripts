@@ -87,9 +87,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi-5.15.y.tar.xz | tar -xJ rpi-5.15.y
-echo -e -n "${FIN}"
 rm -f rpi-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -115,9 +113,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi2-5.15.y.tar.xz | tar -xJ rpi2-5.15.y
-echo -e -n "${FIN}"
 rm -f rpi2-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -143,9 +139,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi3-5.15.y.tar.xz | tar -xJ rpi3-5.15.y
-echo -e -n "${FIN}"
 rm -f rpi3-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -171,9 +165,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi4-5.15.y.tar.xz | tar -xJ rpi4-5.15.y
-echo -e -n "${FIN}"
 rm -f rpi4-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -199,9 +191,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi4v7-5.15.y.tar.xz | tar -xJ rpi4v7-5.15.y
-echo -e -n "${FIN}"
 rm -f rpi4v7-5.15.y.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -228,9 +218,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi-stable.tar.xz | tar -xJ rpi-stable
-echo -e -n "${FIN}"
 rm -f rpi-stable.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -256,9 +244,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi2-stable.tar.xz | tar -xJ rpi2-stable
-echo -e -n "${FIN}"
 rm -f rpi2-stable.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -284,9 +270,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi3-stable.tar.xz | tar -xJ rpi3-stable
-echo -e -n "${FIN}"
 rm -f rpi3-stable.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -312,9 +296,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi4-stable.tar.xz | tar -xJ rpi4-stable
-echo -e -n "${FIN}"
 rm -f rpi4-stable.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
@@ -340,9 +322,7 @@ else
 fi
 echo
 echo -e "${WHT}Extracting archive${FIN} ..."
-echo -e -n "${WHT}"
 pv rpi4v7-stable.tar.xz | tar -xJ rpi4v7-stable
-echo -e -n "${FIN}"
 rm -f rpi4v7-stable.tar.xz
 echo
 echo -e "${WHT}Starting install${FIN} ..."
