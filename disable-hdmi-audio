@@ -3,17 +3,18 @@
 depends_check(){
 if [[ `command -v wget` ]]; then
 	if [[ `command -v dtc` ]]; then
-	:;
-else
-	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
-		echo -e "Installing missing depends."
-		sudo apt update
-		sudo apt upgrade -y
-		sudo apt install -y wget device-tree-compiler;
+		:;
 	else
-		echo ""
-		echo -e "This script requires an internet connection."
-		exit;
+		if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+			echo -e "Installing missing depends."
+			sudo apt update
+			sudo apt upgrade -y
+			sudo apt install -y wget device-tree-compiler;
+		else
+			echo ""
+			echo -e "This script requires an internet connection."
+			exit;
+		fi
 	fi
 fi
 }
