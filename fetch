@@ -13,6 +13,13 @@ SYLW="\e[0;33m"
 FIN="\e[0m"
 
 os_release(){
+if [ -e ~/.build ]; then
+	sudo rm -fdr ~/.build/*;
+	cd ~/.build;
+else
+	mkdir -p ~/.build;
+	cd ~/.build;
+fi
 if [[ `grep -w "buster" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
 if [[ `grep -w "beowulf" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
 if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-9/"; fi
@@ -75,262 +82,302 @@ fi
 rpi-5.15.y(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi-5.15.y${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi-5.15.y.tar.xz
+	${DOWNLOAD} ${URL}rpi-5.15.y.sha256;
+	${DOWNLOAD} ${URL}rpi-5.15.y.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi-5.15.y.tar.xz | tar -xJ rpi-5.15.y
-rm -f rpi-5.15.y.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi-5.15.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi-5.15.y.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi-5.15.y.tar.xz | tar -xJ rpi-5.15.y;
+	rm -f rpi-5.15.y.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi-5.15.y;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi2-5.15.y(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi2+3-5.15.y${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi2-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi2-5.15.y.tar.xz
+	${DOWNLOAD} ${URL}rpi2-5.15.y.sha256;
+	${DOWNLOAD} ${URL}rpi2-5.15.y.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi2-5.15.y.tar.xz | tar -xJ rpi2-5.15.y
-rm -f rpi2-5.15.y.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi2-5.15.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi2-5.15.y.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi2-5.15.y.tar.xz | tar -xJ rpi2-5.15.y;
+	rm -f rpi2-5.15.y.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi2-5.15.y;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi3-5.15.y(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi3-5.15.y${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi3-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi3-5.15.y.tar.xz
+	${DOWNLOAD} ${URL}rpi3-5.15.y.sha256;
+	${DOWNLOAD} ${URL}rpi3-5.15.y.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi3-5.15.y.tar.xz | tar -xJ rpi3-5.15.y
-rm -f rpi3-5.15.y.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi3-5.15.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi3-5.15.y.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi3-5.15.y.tar.xz | tar -xJ rpi3-5.15.y;
+	rm -f rpi3-5.15.y.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi3-5.15.y;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi4-5.15.y(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi4-5.15.y (ARM64)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi4-5.15.y.tar.xz
+	${DOWNLOAD} ${URL}rpi4-5.15.y.sha256;
+	${DOWNLOAD} ${URL}rpi4-5.15.y.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi4-5.15.y.tar.xz | tar -xJ rpi4-5.15.y
-rm -f rpi4-5.15.y.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi4-5.15.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi4-5.15.y.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi4-5.15.y.tar.xz | tar -xJ rpi4-5.15.y;
+	rm -f rpi4-5.15.y.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi4-5.15.y;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi4v7-5.15.y(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi4-5.15.y (ARM)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4v7-5.15.y.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi4v7-5.15.y.tar.xz
+	${DOWNLOAD} ${URL}rpi4v7-5.15.y.sha256;
+	${DOWNLOAD} ${URL}rpi4v7-5.15.y.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi4v7-5.15.y.tar.xz | tar -xJ rpi4v7-5.15.y
-rm -f rpi4v7-5.15.y.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi4v7-5.15.y
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi4v7-5.15.y.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi4v7-5.15.y.tar.xz | tar -xJ rpi4v7-5.15.y;
+	rm -f rpi4v7-5.15.y.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi4v7-5.15.y;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 ## LASTEST STABLE
 rpi-stable(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi-stable${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi-stable.tar.xz
+	${DOWNLOAD} ${URL}rpi-stable.sha256;
+	${DOWNLOAD} ${URL}rpi-stable.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi-stable.tar.xz | tar -xJ rpi-stable
-rm -f rpi-stable.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi-stable
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi-stable.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi-stable.tar.xz | tar -xJ rpi-stable;
+	rm -f rpi-stable.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi-stable;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi2-stable(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi2+3-stable${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi2-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi2-stable.tar.xz
+	${DOWNLOAD} ${URL}rpi2-stable.sha256;
+	${DOWNLOAD} ${URL}rpi2-stable.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi2-stable.tar.xz | tar -xJ rpi2-stable
-rm -f rpi2-stable.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi2-stable
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi2-stable.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi2-stable.tar.xz | tar -xJ rpi2-stable;
+	rm -f rpi2-stable.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi2-stable;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi3-stable(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi3-stable${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi3-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi3-stable.tar.xz
+	${DOWNLOAD} ${URL}rpi3-stable.sha256;
+	${DOWNLOAD} ${URL}rpi3-stable.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi3-stable.tar.xz | tar -xJ rpi3-stable
-rm -f rpi3-stable.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi3-stable
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi3-stable.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi3-stable.tar.xz | tar -xJ rpi3-stable;
+	rm -f rpi3-stable.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi3-stable;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi4-stable(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi4-stable (ARM64)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi4-stable.tar.xz
+	${DOWNLOAD} ${URL}rpi4-stable.sha256;
+	${DOWNLOAD} ${URL}rpi4-stable.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi4-stable.tar.xz | tar -xJ rpi4-stable
-rm -f rpi4-stable.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi4-stable
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi4-stable.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi4-stable.tar.xz | tar -xJ rpi4-stable;
+	rm -f rpi4-stable.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi4-stable;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 rpi4v7-stable(){
 initrd_check
 os_release
-mkdir -p ~/.build
-cd ~/.build
 echo -e "${WHT}Fetching rpi4-stable (ARM)${FIN} ..."
 if [[ `wget -S --spider ${URL}rpi4v7-stable.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	${DOWNLOAD} ${URL}rpi4v7-stable.tar.xz
+	${DOWNLOAD} ${URL}rpi4v7-stable.sha256;
+	${DOWNLOAD} ${URL}rpi4v7-stable.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}"
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit > /dev/null 2>&1;
 fi
-echo
-echo -e "${WHT}Extracting archive${FIN} ..."
-pv rpi4v7-stable.tar.xz | tar -xJ rpi4v7-stable
-rm -f rpi4v7-stable.tar.xz
-echo
-echo -e "${WHT}Starting install${FIN} ..."
-cd rpi4v7-stable
-sudo dpkg -i *.deb
-cd ~
-echo -e "${WHT}Done${FIN}."
-sudo rm -fdr ~/.build/*
+echo ""
+if [[ `sha256sum --check rpi4v7-stable.sha256 | grep "OK"` ]]; then
+	echo -e "${WHT}Extracting archive${FIN} ...";
+	pv rpi4v7-stable.tar.xz | tar -xJ rpi4v7-stable;
+	rm -f rpi4v7-stable.tar.xz;
+	echo "";
+	echo -e "${WHT}Starting install${FIN} ...";
+	cd rpi4v7-stable;
+	sudo dpkg -i *.deb;
+	cd ~;
+	echo -e "${WHT}Done${FIN}.";
+	sudo rm -fdr ~/.build/*;
+else
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	exit > /dev/null 2>&1;
+fi
 }
 
 ### BOOT BINARIES
