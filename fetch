@@ -12,7 +12,6 @@ SGRN="\e[0;32m"
 SYLW="\e[0;33m"
 FIN="\e[0m"
 
-
 prep(){
 if [ -e ~/.build ]; then
 	sudo rm -fdr ~/.build/*;
