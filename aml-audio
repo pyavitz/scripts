@@ -1,0 +1,111 @@
+#!/bin/bash
+# amlogic audio setup
+
+SOUNDCONFIG="https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/master/packages/audio/alsa-utils/scripts/soundconfig"
+ALSARESTORE="https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/master/packages/audio/alsa-utils/udev.d/90-alsa-restore.rules"
+DTHELPER="https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/master/packages/sysutils/busybox/scripts/dthelper"
+WHT="\e[1;37m"
+FIN="\e[0m"
+
+# functions
+run_install(){
+echo -en "Running install:"
+mkdir -p /usr/bin
+mkdir -p /lib/udev/rules.d/
+wget -cq $SOUNDCONFIG -P /lib/udev/
+wget -cq $ALSARESTORE -P /lib/udev/rules.d/
+wget -cq $DTHELPER -P /usr/bin
+chmod +x /lib/udev/soundconfig
+chmod +x /usr/bin/dthelper
+sed -i -e 's+progress "Setting up sound card"+echo "Setting up sound card" | cat+g' /lib/udev/soundconfig
+sed -i -e "s+cat /proc/device-tree/compatible | cut -f1,2 -d','+tr '\\\0' '\\\n' < /proc/device-tree/compatible+g" /usr/bin/dthelper
+if [ -e /usr/bin/dthelper ]; then
+	ln -sf /usr/bin/dthelper /usr/bin/dtfile;
+	ln -sf /usr/bin/dthelper /usr/bin/dtflag;
+	ln -sf /usr/bin/dthelper /usr/bin/dtname;
+	ln -sf /usr/bin/dthelper /usr/bin/dtsoc;
+fi
+echo " [done]"
+}
+
+
+run_remove(){
+if [ -e /lib/udev/soundconfig ]; then
+	echo -en "Removing soundconfig:";
+	rm -f /lib/udev/soundconfig;
+	sleep 1s;
+	echo -e " [done]";
+fi
+if [ -e /lib/udev/rules.d/90-alsa-restore.rules ]; then
+	echo -en "Removing udev rule:";
+	rm -f /lib/udev/rules.d/90-alsa-restore.rules;
+	sleep 1s;
+	echo -e " [done]";
+fi
+if [ -e /usr/bin/dthelper ]; then
+	echo -en "Removing dthelper:";
+	rm -f /usr/bin/{dthelper,dtfile,dtflag,dtname,dtsoc};
+	sleep 1s;
+	echo -e " [done]";
+fi
+}
+
+# run
+if [ "$USER" != "root" ]; then
+        echo "Please run this as root or with sudo privileges.";
+        exit 1;
+fi
+if [[ `command -v wget` ]]; then
+	[[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
+else
+	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+		echo -e "${WHT}Installing missing depends${FIN} ..."
+		apt update
+		apt upgrade -y
+		apt install -y wget;
+	else
+		echo -e "This script requires an internet connection."
+		exit;
+	fi
+fi
+if [ $# -eq 0 ]; then
+	echo -e "\e[0;31mMissing options!${FIN}"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
+fi
+
+ECHO="false"
+
+while getopts "irh" OPTION; do
+	case $OPTION in
+
+		i)
+			ECHO="install"
+			;;
+		r)
+			ECHO="remove"
+			;;
+		h)                       
+			echo -e "${WHT}Amlogic Audio Setup${FIN}"
+                        echo "Usage: "
+                        echo ""
+                        echo -e "   -i        Install"
+                        echo -e "   -r        Remove"
+                        echo ""
+                        exit 0
+                        ;;
+	esac
+done
+
+if [ $ECHO = "install" ]; then
+	echo "";
+	run_install;
+	echo "";
+fi
+
+if [ $ECHO = "remove" ]; then
+	echo "";
+	run_remove;
+	echo "";
+fi
