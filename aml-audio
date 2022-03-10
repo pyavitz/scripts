@@ -9,7 +9,7 @@ FIN="\e[0m"
 
 # functions
 run_install(){
-echo -en "Running install:"
+echo -en "Running Amlogic Audio Setup:"
 mkdir -p /usr/bin
 mkdir -p /lib/udev/rules.d/
 wget -cq $SOUNDCONFIG -P /lib/udev/
