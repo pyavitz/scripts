@@ -28,7 +28,6 @@ fi
 echo " [done]"
 }
 
-
 run_remove(){
 if [ -e /lib/udev/soundconfig ]; then
 	echo -en "Removing soundconfig:";
@@ -48,6 +47,20 @@ if [ -e /usr/bin/dthelper ]; then
 	sleep 1s;
 	echo -e " [done]";
 fi
+}
+
+update(){
+mv -f /usr/local/bin/aml-audio /usr/local/bin/aml-audio.orig
+wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/aml-audio -P /usr/local/bin
+if [ -e /usr/local/bin/aml-audio ]; then
+	chmod +x /usr/local/bin/aml-audio;
+fi
+if [ -e /usr/local/bin/aml-audio ]; then
+	rm -f /usr/local/bin/aml-audio.orig;
+else
+	mv -f /usr/local/bin/aml-audio.orig /usr/local/bin/aml-audio;
+fi
+aml-audio -h
 }
 
 # run
@@ -86,15 +99,18 @@ while getopts "irh" OPTION; do
 		r)
 			ECHO="remove"
 			;;
+		u)
+			ECHO="update"
+			;;
 		h)                       
 			echo -e "${WHT}Amlogic Audio Setup${FIN}"
-                        echo "Usage: "
-                        echo ""
-                        echo -e "   -i        Install"
-                        echo -e "   -r        Remove"
-                        echo ""
-                        exit 0
-                        ;;
+			echo "Usage: "
+			echo ""
+			echo -e "   -i        Install"
+			echo -e "   -r        Remove"
+			echo ""
+			exit 0
+			;;
 	esac
 done
 
@@ -108,4 +124,8 @@ if [ $ECHO = "remove" ]; then
 	echo "";
 	run_remove;
 	echo "";
+fi
+
+if [ $ECHO = "update" ]; then
+	update;
 fi
