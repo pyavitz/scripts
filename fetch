@@ -82,8 +82,8 @@ fi
 # Linux
 rpi-linux(){
 initrd_check; os_release; prep;
-echo -e "${WHT}Fetching $BOARD-$RELEASE${FIN} ..."
 if [[ `wget -S --spider ${URL}$BOARD-$RELEASE.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	echo -e "${WHT}Fetching $BOARD-$RELEASE${FIN} ...";
 	${DOWNLOAD} ${URL}$BOARD-$RELEASE.sha256;
 	${DOWNLOAD} ${URL}$BOARD-$RELEASE.tar.xz;
 	echo_bdone;
