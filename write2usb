@@ -15,18 +15,24 @@ fi
 }
 
 internet_check(){
-if [[ `command -v wget` ]]; [[ `command -v aria2c` ]]; then
+if [[ `command -v wget` ]]; then
 	[[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
 else
 	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 		echo -e "${WHT}Installing missing depends${FIN}."
 		sudo apt update
 		sudo apt upgrade -y
-		sudo apt install -y wget aria2;
+		sudo apt install -y wget;
 	else
 		echo -e "This script requires an internet connection."
 		exit;
 	fi
+fi
+if [[ `command -v aria2c` ]]; then
+	echo -e "${WHT}Installing missing depends${FIN}."
+	sudo apt update
+	sudo apt upgrade -y
+	sudo apt install -y aria2;
 fi
 }
 
@@ -316,8 +322,8 @@ source /etc/opt/root-pid.txt
 rm -f /mnt/p1/extlinux/extlinux.conf
 tee /mnt/p1/extlinux/extlinux.conf <<EOF
 label default
-    kernel /Image
-    append initrd=/uInitrd console=serial0,115200 console=tty1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=ext4 fsck.repair=yes logo.nologo net.ifnames=0 cma=320M firmware_class.path=/lib/firmware/updates/brcm rootwait
+	kernel /Image
+	append console=tty1 console=ttyS0,115200 console=both 8250.nr_uarts=1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=ext4 fsck.repair=yes logo.nologo net.ifnames=0 cma=320M firmware_class.path=/lib/firmware/updates/brcm rootwait
 EOF
 }
 
@@ -326,8 +332,8 @@ source /etc/opt/root-pid.txt
 rm -f /mnt/p1/extlinux/extlinux.conf
 tee /mnt/p1/extlinux/extlinux.conf <<EOF
 label default
-    kernel /Image
-    append initrd=/uInitrd console=serial0,115200 console=tty1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=f2fs fsck.repair=yes logo.nologo net.ifnames=0 cma=320M firmware_class.path=/lib/firmware/updates/brcm rootwait
+	kernel /Image
+	append console=tty1 console=ttyS0,115200 console=both 8250.nr_uarts=1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=f2fs fsck.repair=yes logo.nologo net.ifnames=0 cma=320M firmware_class.path=/lib/firmware/updates/brcm rootwait
 EOF
 }
 
@@ -336,8 +342,8 @@ source /etc/opt/root-pid.txt
 rm -f /mnt/p1/extlinux/extlinux.conf
 tee /mnt/p1/extlinux/extlinux.conf <<EOF
 label default
-    kernel /Image
-    append initrd=/uInitrd console=serial0,115200 console=tty1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=btrfs rootflags=subvol=@ fsck.repair=yes logo.nologo net.ifnames=0 cma=320M firmware_class.path=/lib/firmware/updates/brcm rootwait
+	kernel /Image
+	append console=tty1 console=ttyS0,115200 console=both 8250.nr_uarts=1 rw root=PARTUUID=${ROOT_PARTUUID} rootfstype=btrfs rootflags=subvol=@ fsck.repair=yes logo.nologo net.ifnames=0 cma=320M firmware_class.path=/lib/firmware/updates/brcm rootwait
 EOF
 }
 
