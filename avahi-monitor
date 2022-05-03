@@ -3,7 +3,7 @@
 install(){
 sudo apt update; sudo apt upgrade -y; sudo apt install -y avahi-utils
 sudo wget https://raw.githubusercontent.com/pyavitz/scripts/master/avahi-monitor -P /usr/local/sbin/
-sudo chmod +x `command -v avahi-monitor`
+sudo chmod +x /usr/local/sbin/avahi-monitor
 
 sudo tee /etc/systemd/system/avahi-monitor.service <<EOF
 [Unit]
