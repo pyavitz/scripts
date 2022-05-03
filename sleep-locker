@@ -1,4 +1,7 @@
 #!/bin/bash
-gnome-screensaver-command --lock
-sleep 2s
-xset dpms force off
+
+if [[ `command -v gnome-screensaver-command` ]]; then
+	gnome-screensaver-command --lock;
+	sleep 2s;
+	xset dpms force off;
+fi
