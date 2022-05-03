@@ -19,8 +19,8 @@ Type=simple
 WantedBy=multi-user.target
 EOF
 
-sudo systemctl enable avahi-check
-sudo reboot
+sudo systemctl enable avahi-monitor
+sudo systemctl start avahi-monitor
 }
 
 while [ true ]; do
