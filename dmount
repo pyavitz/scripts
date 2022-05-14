@@ -1,0 +1,52 @@
+#!/bin/bash
+
+NODE="/dev/sda1"
+POINT="/mnt/external"
+
+# Commands
+if [ $# -eq 0 ]; then
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
+fi
+
+ECHO="false"
+
+while getopts "muh" OPTION; do
+        case $OPTION in
+
+                m)
+                        ECHO="mount"
+                        ;;
+                u)
+                        ECHO="umount"
+                        ;;
+                h)
+                        echo ""
+                        echo -e "${RED}Mount Drive${FIN}"
+                        echo -e "${WHT}Usage: ${FIN}"
+                        echo ""
+                        echo -e "${WHT}   -m${FIN}       Mount"
+                        echo -e "${WHT}   -u${FIN}       Unmount"
+                        echo ""
+                        echo -e "${WHT}   -h${FIN}       Help"
+                        echo ""
+                        exit 0
+                        ;;
+
+        esac
+done
+
+if [ $ECHO = "mount" ]; then
+	if [ -e ${POINT} ]; then
+		sudo mount ${NODE} ${POINT};
+	else
+		sudo mkdir -p ${POINT};
+		sleep 1s;
+		sudo mount ${NODE} ${POINT};
+	fi
+fi
+if [ $ECHO = "umount" ]; then
+	sudo umount ${POINT};
+fi
