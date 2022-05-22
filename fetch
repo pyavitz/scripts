@@ -300,7 +300,7 @@ if [ $ECHO = "stable" ]; then
 			rpi-linux;
 		else
 			BOARD="rpi4v7";
-			ri-linux;
+			rpi-linux;
 		fi
 	fi
 fi
