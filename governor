@@ -9,7 +9,7 @@ if [ $# -eq 0 ]; then
 	exit 0;
 fi
 
-while getopts "copsruh" OPTION; do
+while getopts "copsrumh" OPTION; do
 	case $OPTION in
 
 	c)
@@ -41,6 +41,45 @@ while getopts "copsruh" OPTION; do
 			sudo mv -f $FIND.orig $FIND;
 		fi
 		governor -h
+		;;
+	m)
+		while [ 1 ]
+		do
+		CHOICE=$(
+		whiptail --backtitle "Debian Image Builder" --title "Governor" --menu "" --nocancel --ok-button "Select" 0 0 0 \
+			"1)" "Conservative"   \
+			"2)" "Ondemand"  \
+			"3)" "Performance" \
+			"4)" "Schedutil" \
+			"5)" "Exit ..."  3>&2 2>&1 1>&3	
+		)
+		case $CHOICE in
+			"1)")
+				governor -c
+				sleep 1s
+				whiptail --msgbox "Governor set to Conservative" 0 0
+				;;
+			"2)")
+				governor -o
+				sleep 1s
+				whiptail --msgbox "Governor set to Ondemand" 0 0
+				;;
+			"3)")
+		        	governor -p
+				sleep 1s
+				whiptail --msgbox "Governor set to Performance" 0 0
+				;;
+			"4)")
+				governor -s
+				sleep 1s
+				whiptail --msgbox "Governor set to Schedutil" 0 0
+				;;
+			"5)")
+				clear -x
+				exit 0
+				;;
+		esac
+		done
 		;;
 	h)
 		echo -e "\e[1;37mCPU frequency scaling\e[0m"
