@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 GOVERNOR="performance"
-
+FIND=`command -v governor`
 if [ $# -eq 0 ]; then
 	echo "Missing options!";
 	echo "(run $0 -h for help)";
@@ -12,32 +12,32 @@ while getopts "copsruh" OPTION; do
 	case $OPTION in
 
 	c)
-		sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/bin/governor
+		sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" $FIND
 		governor -r
 		;;
 	o)
-		sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" /usr/local/bin/governor
+		sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" $FIND
 		governor -r
 		;;
 	p)
-		sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/bin/governor
+		sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" $FIND
 		governor -r
 		;;
 	s)
-		sudo sed -i "2s/.*/GOVERNOR="'"schedutil"'"/" /usr/local/bin/governor
+		sudo sed -i "2s/.*/GOVERNOR="'"schedutil"'"/" $FIND
 		governor -r
 		;;
 	r)
 		echo "$GOVERNOR" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 		;;
 	u)
-		sudo mv -f /usr/local/bin/governor /usr/local/bin/governor.orig
+		sudo mv -f $FIND $FIND.orig
 		sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P /usr/local/bin/
-		sudo chmod +x /usr/local/bin/governor
-		if [ -f /usr/local/bin/governor ]; then
-			sudo rm -f /usr/local/bin/governor.orig;
+		sudo chmod +x $FIND
+		if [ -f $FIND ]; then
+			sudo rm -f $FIND.orig;
 		else
-			sudo mv -f /usr/local/bin/governor.orig /usr/local/bin/governor;
+			sudo mv -f $FIND.orig $FIND;
 		fi
 		governor -h
 		;;
