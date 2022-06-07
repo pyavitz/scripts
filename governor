@@ -1,110 +1,59 @@
 #!/usr/bin/env bash
 GOVERNOR="performance"
 
-WHT="\e[1;37m"
-FIN="\e[0m"
-
-conservative(){
-sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/bin/governor
-governor -r
-}
-
-ondemand(){
-sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" /usr/local/bin/governor
-governor -r
-}
-
-performance(){
-sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/bin/governor
-governor -r
-}
-
-schedutil(){
-sudo sed -i "2s/.*/GOVERNOR="'"schedutil"'"/" /usr/local/bin/governor
-governor -r
-}
-
-run(){
-echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-}
-
-update(){
-sudo mv -f /usr/local/bin/governor /usr/local/bin/governor.orig
-sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P /usr/local/bin/
-sudo chmod +x /usr/local/bin/governor
-if [ -e /usr/local/bin/governor ]; then
-	sudo rm -f /usr/local/bin/governor.orig;
-else
-	sudo mv -f /usr/local/bin/governor.orig /usr/local/bin/governor;
+if [ $# -eq 0 ]; then
+	echo "Missing options!";
+	echo "(run $0 -h for help)";
+	echo "";
+	exit 0;
 fi
-governor -h
-}
-
-# Commands
-if [ $# -eq 0 ]
-then
-        echo "Missing options!"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
-fi
-
-ECHO="false"
 
 while getopts "copsruh" OPTION; do
-        case $OPTION in
+	case $OPTION in
 
-                c)
-                        ECHO="conservative"
-                        ;;
-                o)
-                        ECHO="ondemand"
-                        ;;
-                p)
-                        ECHO="performance"
-                        ;;
-                s)
-                        ECHO="schedutil"
-                        ;;
-                r)
-                        ECHO="run"
-                        ;;
-                u)
-                        ECHO="update"
-                        ;;
-                h)
-                        echo -e "${WHT}CPU frequency scaling${FIN}"
-                        echo "Usage: "
-                        echo ""
-                        echo "   -c       Conservative"
-                        echo "   -o       Ondemand"
-                        echo "   -p       Performance"
-                        echo "   -s       Schedutil"
-                        echo ""
-                        echo "   -r       Run"
-                        echo "   -u       Update"
-                        echo ""
-                        exit 0
-                        ;;
-
-        esac
+	c)
+		sudo sed -i "2s/.*/GOVERNOR="'"conservative"'"/" /usr/local/bin/governor
+		governor -r
+		;;
+	o)
+		sudo sed -i "2s/.*/GOVERNOR="'"ondemand"'"/" /usr/local/bin/governor
+		governor -r
+		;;
+	p)
+		sudo sed -i "2s/.*/GOVERNOR="'"performance"'"/" /usr/local/bin/governor
+		governor -r
+		;;
+	s)
+		sudo sed -i "2s/.*/GOVERNOR="'"schedutil"'"/" /usr/local/bin/governor
+		governor -r
+		;;
+	r)
+		echo "$GOVERNOR" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+		;;
+	u)
+		sudo mv -f /usr/local/bin/governor /usr/local/bin/governor.orig
+		sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P /usr/local/bin/
+		sudo chmod +x /usr/local/bin/governor
+		if [ -f /usr/local/bin/governor ]; then
+			sudo rm -f /usr/local/bin/governor.orig;
+		else
+			sudo mv -f /usr/local/bin/governor.orig /usr/local/bin/governor;
+		fi
+		governor -h
+		;;
+	h)
+		echo -e "\e[1;37mCPU frequency scaling\e[0m"
+		echo "Usage: "
+		echo ""
+		echo "   -c       Conservative"
+		echo "   -o       Ondemand"
+		echo "   -p       Performance"
+		echo "   -s       Schedutil"
+		echo ""
+		echo "   -r       Run"
+		echo "   -u       Update"
+		echo ""
+		exit 0
+		;;
+	esac
 done
-
-if [ $ECHO = "conservative" ]; then
-	conservative;
-fi
-if [ $ECHO = "ondemand" ]; then
-	ondemand;
-fi
-if [ $ECHO = "performance" ]; then
-	performance;
-fi
-if [ $ECHO = "schedutil" ]; then
-	schedutil;
-fi
-if [ $ECHO = "run" ]; then
-	run;
-fi
-if [ $ECHO = "update" ]; then
-	update;
-fi
