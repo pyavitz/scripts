@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 GOVERNOR="performance"
 FIND=`command -v governor`
+DIR="/usr/local/bin/"
 if [ $# -eq 0 ]; then
 	echo "Missing options!";
 	echo "(run $0 -h for help)";
@@ -32,7 +33,7 @@ while getopts "copsruh" OPTION; do
 		;;
 	u)
 		sudo mv -f $FIND $FIND.orig
-		sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P /usr/local/bin/
+		sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P $DIR
 		sudo chmod +x $FIND
 		if [ -f $FIND ]; then
 			sudo rm -f $FIND.orig;
