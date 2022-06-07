@@ -47,15 +47,16 @@ while getopts "copsrumh" OPTION; do
 		do
 		CHOICE=$(
 		export NEWT_COLORS='
-		root=,
-		window=,lightgray
+		root=,black
+		window=lightgray
 		border=lightgray,lightgray
 		textbox=lightgray,lightgray
-		button=black,lightgray
+		button=lightgray,lightgray
+		compactbutton=lightgray,lightgray
 		shadow=black,
 		title=black,lightgray
 		'
-		whiptail --backtitle "Menu Interface: Governor" --title "Governor" --menu "" --nocancel --ok-button "Select" 0 0 0 \
+		whiptail --title "Governor" --menu "" --nocancel 0 0 0 \
 			"1)" "Conservative"   \
 			"2)" "Ondemand"  \
 			"3)" "Performance" \
@@ -66,21 +67,25 @@ while getopts "copsrumh" OPTION; do
 			"1)")
 				governor -c
 				sleep 1s
+				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "Governor set to Conservative" 0 0
 				;;
 			"2)")
 				governor -o
 				sleep 1s
+				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "Governor set to Ondemand" 0 0
 				;;
 			"3)")
 		        	governor -p
 				sleep 1s
+				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "Governor set to Performance" 0 0
 				;;
 			"4)")
 				governor -s
 				sleep 1s
+				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "Governor set to Schedutil" 0 0
 				;;
 			"5)")
