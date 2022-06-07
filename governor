@@ -46,7 +46,16 @@ while getopts "copsrumh" OPTION; do
 		while [ 1 ]
 		do
 		CHOICE=$(
-		whiptail --backtitle "Debian Image Builder" --title "Governor" --menu "" --nocancel --ok-button "Select" 0 0 0 \
+		export NEWT_COLORS='
+		root=,
+		window=,lightgray
+		border=lightgray,lightgray
+		textbox=lightgray,lightgray
+		button=black,lightgray
+		shadow=black,
+		title=black,lightgray
+		'
+		whiptail --backtitle "Menu Interface: Governor" --title "Governor" --menu "" --nocancel --ok-button "Select" 0 0 0 \
 			"1)" "Conservative"   \
 			"2)" "Ondemand"  \
 			"3)" "Performance" \
