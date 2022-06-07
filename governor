@@ -48,15 +48,10 @@ while getopts "copsrumh" OPTION; do
 		CHOICE=$(
 		export NEWT_COLORS='
 		root=,black
-		window=lightgray
-		border=lightgray,lightgray
-		textbox=lightgray,lightgray
-		button=lightgray,lightgray
-		compactbutton=lightgray,lightgray
-		shadow=black,
+		roottext=lightgray,black
 		title=black,lightgray
 		'
-		whiptail --title "Governor" --menu "" --nocancel 0 0 0 \
+		whiptail --backtitle "Menu Interface: Governor" --title "Governor" --menu "" --nocancel 0 0 0 \
 			"1)" "Conservative"   \
 			"2)" "Ondemand"  \
 			"3)" "Performance" \
