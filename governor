@@ -88,15 +88,15 @@ while getopts "copsrumh" OPTION; do
 		;;
 	h)
 		echo -e "\e[1;37mCPU frequency scaling\e[0m"
-		echo "Usage: "
+		echo -e "Usage: "
 		echo ""
-		echo "   -c       Conservative"
-		echo "   -o       Ondemand"
-		echo "   -p       Performance"
-		echo "   -s       Schedutil"
+		echo -e "\t-c\tConservative"
+		echo -e "\t-o\tOndemand"
+		echo -e "\t-p\tPerformance"
+		echo -e "\t-s\tSchedutil"
 		echo ""
-		echo "   -r       Run"
-		echo "   -u       Update"
+		echo -e "\t-r\tRun"
+		echo -e "\t-u\tUpdate"
 		echo ""
 		exit 0
 		;;

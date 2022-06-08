@@ -1,74 +1,17 @@
 #!/usr/bin/env bash
-
+INTERFACE="wlan0"
+FIND=`command -v governor`
+DIR="/usr/local/bin/"
 WHT="\e[1;37m"
 FIN="\e[0m"
 
-INTERFACE="wlan0"
-
-scan(){
-spinner() {
-    local i sp n
-    sp='|\-/'
-    n=${#sp}
-    printf ' '
-    while sleep 0.1; do
-        printf "%s\b" "${sp:i++%n:1}"
-    done
-}
-echo -e -n ${WHT}
-printf 'Scanning: '
-spinner &
-
-printf '\n'
-sudo iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption key:'
-
-kill "$!" # kill the spinner
-printf '\n'
-echo -e -n ${FIN}
-}
-
-ifup(){
-echo
-echo Bringing up interface.
-sudo ifup ${INTERFACE}
-echo Done.
-echo
-}
-
-ifdown(){
-echo
-echo Bringing down interface.
-sudo ifdown ${INTERFACE}
-echo Done.
-echo
-}
-
-restart(){
-echo
-echo Restarting ...
-sudo ifdown ${INTERFACE}
-sudo ifup ${INTERFACE}
-}
-
-interfaces(){
-sudo nano /etc/network/interfaces
-}
-
-wpa(){
-sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
-}
-
-update(){
-if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	sudo mv -f /usr/local/bin/swh /usr/local/bin/swh.orig
-	sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/swh -P /usr/local/bin/
-	sudo chmod +x /usr/local/bin/swh
-	if [ -e /usr/local/bin/swh ]; then sudo rm -f /usr/local/bin/swh.orig; else sudo mv -f /usr/local/bin/swh.orig /usr/local/bin/swh; fi
-	swh -h;
-else
-	echo -e "This script requires an internet connection to update."
-	exit;
-fi
+spinner(){
+local i sp n
+sp='|\-/'
+n=${#sp}
+while sleep 0.1; do
+	printf "%s\b" "${sp:i++%n:1}"
+done
 }
 
 # Commands
@@ -79,67 +22,74 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-ECHO="false"
-
 while getopts "hsudrWIU" OPTION; do
-        case $OPTION in
+	case $OPTION in
 
-                s)
-                        ECHO="scan"
-                        ;;
-                u)
-                        ECHO="up"
-                        ;;
-                d)
-                        ECHO="down"
-                        ;;
-                r)
-                        ECHO="restart"
-                        ;;
-                W)
-                        ECHO="W"
-                        ;;
-                I)
-                        ECHO="I"
-                        ;;
-                U)
-                        ECHO="update"
-                        ;;
-                h)
-                        echo -e "${WHT}Simple wifi helper script${FIN}"
-                        echo "Usage: "
-                        echo ""
-                        echo "   -s       Scan for SSID's"
-                        echo "   -u       Bring up interface"
-                        echo "   -d       Bring down interface"
-                        echo "   -r       Restart interface"
-                        echo "   -W       Edit wpa supplicant"
-                        echo "   -I       Edit interfaces"
-                        echo ""
-                        exit 0
-                        ;;
+	s)
+		echo -en "${WHT}"
+		echo -en "Scanning: "; spinner &
 
-        esac
+		printf '\n'
+		sudo iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption key:'
+
+		kill "$!" # kill the spinner
+		printf '\n'
+		echo -en "${FIN}"
+		;;
+	u)
+		echo ""
+		echo "Bringing up interface."
+		sudo ifup ${INTERFACE}
+		echo "Done."
+		echo ""
+		;;
+	d)
+		echo ""
+		echo "Bringing down interface."
+		sudo ifdown ${INTERFACE}
+		echo "Done."
+		echo ""
+		;;
+	r)
+		echo ""
+		echo "Restarting ..."
+		sudo ifdown ${INTERFACE}
+		sudo "ifup ${INTERFACE}"
+		;;
+	W)
+		sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+		;;
+	I)
+		sudo nano /etc/network/interfaces
+		;;
+	U)
+		if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+			sudo mv -f $FIND $FIND.orig
+			sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/swh -P $DIR
+			sudo chmod +x $FIND
+			if [ -f $FIND ]; then
+				sudo rm -f $FIND.orig;
+			else
+				sudo mv -f $FIND.orig $FIND;
+			fi
+			swh -h;
+		else
+			echo -e "This script requires an internet connection to update.";
+			exit 0;
+		fi
+		;;
+	h)
+		echo -e "${WHT}Simple wifi helper script${FIN}"
+		echo -e "Usage: "
+		echo ""
+		echo -e "\t-s\tScan for SSID's"
+		echo -e "\t-u\tBring up interface"
+		echo -e "\t-d\tBring down interface"
+		echo -e "\t-r\tRestart interface"
+		echo -e "\t-W\tEdit wpa supplicant"
+		echo -e "\t-I\tEdit interfaces"
+		echo ""
+		exit 0
+		;;
+	esac
 done
-
-if [ $ECHO = "scan" ]; then
-	scan;
-fi
-if [ $ECHO = "up" ]; then
-	ifup;
-fi
-if [ $ECHO = "down" ]; then
-	ifdown;
-fi
-if [ $ECHO = "restart" ]; then
-	restart;
-fi
-if [ $ECHO = "I" ]; then
-	interfaces;
-fi
-if [ $ECHO = "W" ]; then
-	wpa;
-fi
-if [ $ECHO = "update" ]; then
-	update;
-fi
