@@ -80,7 +80,7 @@ while getopts "hsudrWIU" OPTION; do
 		fi
 		;;
 	h)
-		echo -e "${WHT}Simple wifi helper script${FIN}"
+		echo -e "${WHT}Simple wifi helper${FIN}"
 		echo -e "Usage: "
 		echo ""
 		echo -e "\t-s\tScan for SSID's"
