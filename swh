@@ -54,7 +54,8 @@ while getopts "hsudrWIU" OPTION; do
 		echo ""
 		echo "Restarting ..."
 		sudo ifdown ${INTERFACE}
-		sudo "ifup ${INTERFACE}"
+		sleep 1s
+		sudo ifup ${INTERFACE}
 		;;
 	W)
 		sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
