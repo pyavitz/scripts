@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 INTERFACE="wlan0"
-FIND=`command -v governor`
+FIND=`command -v swh`
 DIR="/usr/local/bin/"
 WHT="\e[1;37m"
 FIN="\e[0m"
