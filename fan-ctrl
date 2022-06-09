@@ -57,15 +57,15 @@ while getopts "6543ruh" OPTION; do
 		;;
 	h)
 		echo -e "${WHT}Odroid N2 Trip Point${FIN}"
-		echo "Usage: "
+		echo -e "Usage: "
 		echo ""
-		echo "   -6       65°C"
-		echo "   -5       55°C"
-		echo "   -4       45°C"
-		echo "   -3       35°C"
+		echo -e "\t-6\t65°C"
+		echo -e "\t-5\t55°C"
+		echo -e "\t-4\t45°C"
+		echo -e "\t-3\t35°C"
 		echo ""
-		echo "   -r       Run"
-		echo "   -u       Update"
+		echo -e "\t-r\tRun"
+		echo -e "\t-u\tUpdate"
 		echo ""
 		exit 0
 		;;
