@@ -22,7 +22,7 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-while getopts "hsudrWIU" OPTION; do
+while getopts "hsudrWIUm" OPTION; do
 	case $OPTION in
 
 	s)
@@ -35,6 +35,7 @@ while getopts "hsudrWIU" OPTION; do
 		kill "$!" # kill the spinner
 		printf '\n'
 		echo -en "${FIN}"
+		read -p "Press enter to continue."
 		;;
 	u)
 		echo ""
@@ -78,6 +79,50 @@ while getopts "hsudrWIU" OPTION; do
 			echo -e "This script requires an internet connection to update.";
 			exit 0;
 		fi
+		;;
+	m)
+		while [ 1 ]
+		do
+		CHOICE=$(
+		export NEWT_COLORS='
+		root=,black
+		roottext=lightgray,black
+		title=black,lightgray
+		'
+		whiptail --backtitle "Menu Interface: Simple Wifi Helper" --title "Simple Wifi Helper" --menu "" --nocancel 0 0 0 \
+			"1)" "Scan for SSID's" \
+			"2)" "Bring up interface" \
+			"3)" "Bring down interface" \
+			"4)" "Restart interface" \
+			"5)" "Edit wpa supplicant" \
+			"6)" "Edit interface" \
+			"7)" "Exit ..." 3>&2 2>&1 1>&3
+		)
+		case $CHOICE in
+			"1)")
+				swh -s
+				;;
+			"2)")
+				swh -u
+				;;
+			"3)")
+				swh -d
+				;;
+			"4)")
+				swh -r
+				;;
+			"5)")
+				swh -W
+				;;
+			"6)")
+				swh -I
+				;;
+			"7)")
+				clear -x
+				exit 0
+				;;
+			esac
+		done
 		;;
 	h)
 		echo -e "${WHT}Simple wifi helper${FIN}"
