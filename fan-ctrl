@@ -1,56 +1,10 @@
 #!/usr/bin/env bash
-POINT="65000"
-
-35000(){
-sudo sed -i "2s/.*/POINT="'"35000"'"/" /usr/local/bin/fan-ctrl
-fan-ctrl -r
-}
-
-45000(){
-sudo sed -i "2s/.*/POINT="'"45000"'"/" /usr/local/bin/fan-ctrl
-fan-ctrl -r
-}
-
-55000(){
-sudo sed -i "2s/.*/POINT="'"55000"'"/" /usr/local/bin/fan-ctrl
-fan-ctrl -r
-}
-
-65000(){
-sudo sed -i "2s/.*/POINT="'"65000"'"/" /usr/local/bin/fan-ctrl
-fan-ctrl -r
-}
-
-run(){
-if [ -e /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp ]; then
-	echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
-else
-	echo -e "You are missing trip_point_4_temp?"
-	exit;
-fi
-}
-
-update(){
-if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	sudo mv -f /usr/local/bin/fan-ctrl /usr/local/bin/fan-ctrl.orig
-	sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl -P /usr/local/bin/
-	sudo chmod +x /usr/local/bin/fan-ctrl
-	if [ -e /usr/local/bin/fan-ctrl ]; then
-		sudo rm -f /usr/local/bin/fan-ctrl.orig;
-	else
-		sudo mv -f /usr/local/bin/fan-ctrl.orig /usr/local/bin/fan-ctrl;
-	fi
-	fan-ctrl -h;
-else
-	echo -e "This script requires an internet connection to update."
-	exit;
-fi
-}
-
+POINT="55000"
+FIND=`command -v fan-ctrl`
+DIR="/usr/local/bin/"
 WHT="\e[1;37m"
 FIN="\e[0m"
 
-# Commands
 if [ $# -eq 0 ]; then
 	echo "Missing options!"
 	echo "(run $0 -h for help)"
@@ -58,62 +12,63 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-ECHO="false"
+while getopts "6543ruh" OPTION; do
+	case $OPTION in
 
-while getopts "1234ruh" OPTION; do
-        case $OPTION in
+	6)
+		sudo sed -i "2s/.*/POINT="'"65000"'"/" /usr/local/bin/fan-ctrl
+		fan-ctrl -r
+		;;
+	5)
+		sudo sed -i "2s/.*/POINT="'"55000"'"/" /usr/local/bin/fan-ctrl
+		fan-ctrl -r
+		;;
+	4)
+		sudo sed -i "2s/.*/POINT="'"45000"'"/" /usr/local/bin/fan-ctrl
+		fan-ctrl -r
+		;;
+	3)
+		sudo sed -i "2s/.*/POINT="'"35000"'"/" /usr/local/bin/fan-ctrl
+		fan-ctrl -r
+		;;
+	r)
+		if [ -f /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp ]; then
+			echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp;
+		else
+			echo -e "You are missing trip_point_4_temp?";
+			exit 0;
+		fi
+		;;
+	u)
+		if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+			sudo mv -f $FIND $FIND.orig
+			sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl -P $DIR
+			sudo chmod +x $FIND
+			if [ -f $FIND ]; then
+				sudo rm -f $FIND.orig;
+			else
+				sudo mv -f $FIND.orig $FIND;
+			fi
+			fan-ctrl -h;
+		else
+			echo -e "This script requires an internet connection to update.";
+			exit 0;
+		fi
+		;;
+	h)
+		echo -e "${WHT}Odroid N2 Trip Point${FIN}"
+		echo "Usage: "
+		echo ""
+		echo "   -6       65°C"
+		echo "   -5       55°C"
+		echo "   -4       45°C"
+		echo "   -3       35°C"
+		echo ""
+		echo "   -r       Run"
+		echo "   -u       Update"
+		echo ""
+		exit 0
+		;;
 
-                1)
-                        ECHO="65"
-                        ;;
-                2)
-                        ECHO="55"
-                        ;;
-                3)
-                        ECHO="45"
-                        ;;
-                4)
-                        ECHO="35"
-                        ;;
-                r)
-                        ECHO="run"
-                        ;;
-                u)
-                        ECHO="update"
-                        ;;
-                h)
-                        echo -e "${WHT}Odroid N2 Trip Point${FIN}"
-                        echo "Usage: "
-                        echo ""
-                        echo "   -1       65°C"
-                        echo "   -2       55°C"
-                        echo "   -3       45°C"
-                        echo "   -4       35°C"
-                        echo ""
-                        echo "   -r       Run"
-                        echo "   -u       Update"
-                        echo ""
-                        exit 0
-                        ;;
-
-        esac
+	esac
 done
-
-if [ $ECHO = "65" ]; then
-	65000;
-fi
-if [ $ECHO = "55" ]; then
-	55000;
-fi
-if [ $ECHO = "45" ]; then
-	45000;
-fi
-if [ $ECHO = "35" ]; then
-	35000;
-fi
-if [ $ECHO = "run" ]; then
-	run;
-fi
-if [ $ECHO = "update" ]; then
-	update;
-fi
