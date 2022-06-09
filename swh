@@ -84,11 +84,7 @@ while getopts "hsudrWIUm" OPTION; do
 		while [ 1 ]
 		do
 		CHOICE=$(
-		export NEWT_COLORS='
-		root=,black
-		roottext=lightgray,black
-		title=black,lightgray
-		'
+		export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
 		whiptail --backtitle "Menu Interface: Simple Wifi Helper" --title "Simple Wifi Helper" --menu "" --nocancel 0 0 0 \
 			"1)" "Scan for SSID's" \
 			"2)" "Bring up interface" \

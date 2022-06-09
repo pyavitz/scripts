@@ -46,11 +46,7 @@ while getopts "copsrumh" OPTION; do
 		while [ 1 ]
 		do
 		CHOICE=$(
-		export NEWT_COLORS='
-		root=,black
-		roottext=lightgray,black
-		title=black,lightgray
-		'
+		export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
 		whiptail --backtitle "Menu Interface: Governor" --title "Governor" --menu "" --nocancel 0 0 0 \
 			"1)" "Conservative" \
 			"2)" "Ondemand" \

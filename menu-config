@@ -39,12 +39,8 @@ fi
 while [ 1 ]
 do
 CHOICE=$(
-export NEWT_COLORS='
-root=,black
-roottext=lightgray,black
-title=black,lightgray
-'
-whiptail --backtitle "Menu Interface: System Settings" --title "System Settings" --menu "" --nocancel 0 50 0 \
+export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
+whiptail --backtitle "Menu Interface: System Settings" --title "System Settings" --menu "" --nocancel 0 25 0 \
 	"1)" "Governor" \
 	"2)" "Wireless" \
 	"3)" "Locales" \
@@ -71,10 +67,10 @@ case $CHOICE in
 		sudo dpkg-reconfigure tzdata
 		;;
 	"6)")
-		export NEWT_COLORS='root=,black'
+		export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
 		supported_list
 		if [ $supported -eq 1 ]; then
-			if (whiptail --yesno "$BOARD_PN: Overclock?" 0 0); then
+			if (whiptail --backtitle "Board: $BOARD_PN" --title "$BOARD_PN" --yesno "   Overclock?" 0 0); then
 				overclock;
 			fi
 		else
