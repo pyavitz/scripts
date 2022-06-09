@@ -78,6 +78,7 @@ case $CHOICE in
 		fi
 		;;
 	"Q)")
+		clear -x
 		exit 0
 		;;
 	esac
