@@ -56,7 +56,7 @@ while getopts "copsrumh" OPTION; do
 			"2)" "Ondemand" \
 			"3)" "Performance" \
 			"4)" "Schedutil" \
-			"5)" "Exit ..." 3>&2 2>&1 1>&3
+			"E)" "Exit ..." 3>&2 2>&1 1>&3
 		)
 		case $CHOICE in
 			"1)")
@@ -79,11 +79,11 @@ while getopts "copsrumh" OPTION; do
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "Governor set to Schedutil" 0 0
 				;;
-			"5)")
+			"E)")
 				clear -x
 				exit 0
 				;;
-		esac
+			esac
 		done
 		;;
 	h)
