@@ -138,7 +138,11 @@ case $CHOICE in
 		governor -m
 		;;
 	"2)")
-		swh -m
+		if [[ `command -v nmtui` ]]; then
+			sudo nmtui;
+		else
+			swh -m;
+		fi
 		;;
 	"3)")
 		sudo dpkg-reconfigure locales
