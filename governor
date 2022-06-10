@@ -58,22 +58,22 @@ while getopts "copsrumh" OPTION; do
 			"1)")
 				governor -c > /dev/null 2>&1
 				export NEWT_COLORS='root=,black'
-				whiptail --msgbox "Governor set to Conservative" 0 0
+				whiptail --msgbox "    Governor set to Conservative" 0 0
 				;;
 			"2)")
 				governor -o > /dev/null 2>&1
 				export NEWT_COLORS='root=,black'
-				whiptail --msgbox "Governor set to Ondemand" 0 0
+				whiptail --msgbox "    Governor set to Ondemand" 0 0
 				;;
 			"3)")
 		        	governor -p > /dev/null 2>&1
 				export NEWT_COLORS='root=,black'
-				whiptail --msgbox "Governor set to Performance" 0 0
+				whiptail --msgbox "    Governor set to Performance" 0 0
 				;;
 			"4)")
 				governor -s > /dev/null 2>&1
 				export NEWT_COLORS='root=,black'
-				whiptail --msgbox "Governor set to Schedutil" 0 0
+				whiptail --msgbox "    Governor set to Schedutil" 0 0
 				;;
 			"E)")
 				clear -x
