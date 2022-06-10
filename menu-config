@@ -207,6 +207,7 @@ case $CHOICE in
 		fi
 		echo -e "[done]"
 		sleep 1s
+		clear -x
 		;;
 	"Q)")
 		clear -x
