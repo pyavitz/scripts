@@ -115,7 +115,6 @@ if [ -f homeassistant-supervised.deb ]; then rm -f homeassistant-supervised.deb;
 read -p "Press enter to continue."
 }
 
-
 # main menu
 while [ 1 ]
 do
@@ -129,6 +128,8 @@ whiptail --backtitle "Menu Interface: System Settings" --title "System Settings"
 	"5)" "Timezone" \
 	"6)" "Overclock" \
 	"7)" "Third-party" \
+	"" "" \
+	"U)" "Update" \
 	"Q)" "Quit ..." 3>&2 2>&1 1>&3
 )
 
@@ -184,6 +185,28 @@ case $CHOICE in
 				;;
 			esac
 		done
+		;;
+	"")
+		;;
+	"U)")
+		echo ""
+		echo -en "Updating menu and scripts "
+		governor -u > /dev/null 2>&1
+		swh -U > /dev/null 2>&1
+		MENU=`command -v menu-config`
+		MENUDIR="/usr/local/bin/"
+		if [ -f $MENU ]; then
+			sudo mv -f $MENU $MENU.orig;
+		fi
+		sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/menu-config -P $MENUDIR
+		sudo chmod +x `command -v menu-config`
+		if [ -f $MENU ]; then
+			sudo rm -f $MENU.orig;
+		else
+			sudo mv -f $MENU.orig $MENU;
+		fi
+		echo -e "[done]"
+		sleep 1s
 		;;
 	"Q)")
 		clear -x
