@@ -39,6 +39,11 @@ if [[ "$BOARD" == "rockpro64" ]]; then
 fi
 }
 
+overclock(){
+echo "overclock=1" | sudo tee /etc/opt/overclock.txt
+sudo service tweaks restart
+}
+
 HA_NOTES="The following install has been tested on the Odroid N2+ and Raspberry Pi 4B. \
 I do not use audio out of my smart home controller, so I have not vailidated that \
 the HA audio container works correctly. Other than that, this will give you a good \
@@ -48,7 +53,6 @@ when the final HA install script runs and you are asked to select the platform."
 
 homeAssistant(){
 clear -x
-source /etc/opt/board.txt
 echo ""
 echo "Installing Home Assistant ..."
 set -x
@@ -173,14 +177,18 @@ case $CHOICE in
 		supported_list
 		if [ $supported_oc -eq 1 ]; then
 			if (whiptail --backtitle "Board: $BOARD_PN" --title "$BOARD_PN" --yesno "   Overclock?" 0 0); then
-				echo ""
-				echo -en "Overclocking: $BOARD; "
-				echo "overclock=1" | sudo tee /etc/opt/overclock.txt;
-				sudo service tweaks restart;
-				sleep 1s
-				echo -e "[done]"
-				echo ""
-				read -p "You may need to reboot for it to take effect"
+				clear -x
+				echo -e "Overclocking: $BOARD_PN ";
+				echo "";
+				echo -en "Running service: "
+				overclock > /dev/null 2>&1;
+				sleep 1s;
+				echo -e "[done]";
+				echo "";
+				echo -e "Cores:" $(sudo cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq);
+				echo "";
+				read -p "You may need to reboot for it to take effect";
+				clear -x
 			fi
 		else
 			whiptail --msgbox "    Your board is not supported." 0 0;
