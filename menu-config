@@ -6,11 +6,11 @@ fi
 
 # functions
 supported_list(){
-if [[ "$BOARD" == "odroidhc4" ]]; then
+if [[ "$BOARD" == "odroidc4" ]]; then
 	BOARD_PN="Odroid C4";
 	supported_mixer=1;
 fi
-if [[ "$BOARD" == "odroidc4" ]]; then
+if [[ "$BOARD" == "odroidhc4" ]]; then
 	BOARD_PN="Odroid HC4";
 	supported_mixer=1;
 fi
