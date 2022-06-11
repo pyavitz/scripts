@@ -237,6 +237,12 @@ case $CHOICE in
 				are_you_online
 				echo ""
 				echo "Repairing tasksel ..."
+				if [[ `command -v tasksel` ]]; then
+					:;
+				else
+					sudo apt update;
+					sudo apt install -y tasksel;
+				fi
 				sleep 1s
 				sudo apt-get update
 				sudo apt-get install --reinstall debconf
