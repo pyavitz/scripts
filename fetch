@@ -225,6 +225,8 @@ while getopts "12brumUhf" OPTION; do
 			ECHO="update"
 			;;
 		m)
+			clear -x
+			echo -e "Fetching Linux Kernel Versions ..."
 			VERSION="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/version2"
 			LTS=`curl --silent -L $VERSION | sed -n 1p`
 			STB=`curl --silent -L $VERSION | sed -n 2p`
@@ -242,21 +244,25 @@ while getopts "12brumUhf" OPTION; do
 			case $CHOICE in
 				"1)")
 					fetch -1
+					echo ""
 					read -p "Press enter to continue."
 					clear -x
 					;;
 				"2)")
 					fetch -2
+					echo ""
 					read -p "Press enter to continue."
 					clear -x
 					;;
 				"3)")
 					fetch -f
+					echo ""
 					read -p "Press enter to continue."
 					clear x
 					;;
 				"4)")
 					fetch -U
+					echo ""
 					read -p "Press enter to continue."
 					clear -x
 					;;
