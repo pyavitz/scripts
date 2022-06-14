@@ -225,16 +225,16 @@ while getopts "12brumUhf" OPTION; do
 			ECHO="update"
 			;;
 		m)
-			VERSION="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/version"
-			LTS=`curl --silent -L $VERSION | sed -n 2p | sed "s/|//g" | sed 's/.....$//'`
-			STABLE=`curl --silent -L $VERSION | sed -n 3p | sed "s/|//g" | sed 's/...$//'`
+			VERSION="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/version2"
+			LTS=`curl --silent -L $VERSION | sed -n 1p`
+			STB=`curl --silent -L $VERSION | sed -n 2p`
 			while [ 1 ]
 			do
 			CHOICE=$(
 			export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
 			whiptail --backtitle "Fetch, Linux kernel installer for the Raspberry Pi Image Builder" --title "== Fetch ==" --menu "" --nocancel 0 0 0 \
 				"1)" "Linux $LTS       LTS Release" \
-				"2)" "Linux $STABLE       Stable Release" \
+				"2)" "Linux $STB       Stable Release" \
 				"3)" "Wifi/Bluetooth      Update Firmware" \
 				"4)" "Pi Userland         Update Userland" \
 				"E)" "Exit .." 3>&2 2>&1 1>&3
