@@ -226,7 +226,7 @@ while getopts "12brumUhf" OPTION; do
 			;;
 		m)
 			clear -x
-			echo -e "Fetching Linux Kernel Versions ..."
+			echo -e "Fetching Releases ..."
 			VERSION="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/version2"
 			LTS=`curl --silent -L $VERSION | sed -n 1p`
 			STB=`curl --silent -L $VERSION | sed -n 2p`
