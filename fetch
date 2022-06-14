@@ -203,9 +203,7 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-ECHO="false"
-
-while getopts "12bruUhf" OPTION; do
+while getopts "12brumUhf" OPTION; do
 	case $OPTION in
 
 		1)
@@ -226,6 +224,45 @@ while getopts "12bruUhf" OPTION; do
 		u)
 			ECHO="update"
 			;;
+		m)
+			VERSION="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/version"
+			LTS=`curl --silent -L $VERSION | sed -n 2p | sed "s/|//g" | sed 's/.....$//'`
+			STABLE=`curl --silent -L $VERSION | sed -n 3p | sed "s/|//g" | sed 's/...$//'`
+			while [ 1 ]
+			do
+			CHOICE=$(
+			export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
+			whiptail --backtitle "Fetch, Linux kernel installer for the Raspberry Pi Image Builder" --title "== Fetch ==" --menu "" --nocancel 0 0 0 \
+				"1)" "Linux $LTS       LTS Release" \
+				"2)" "Linux $STABLE       Stable Release" \
+				"3)" "Wifi/Bluetooth      Update Firmware" \
+				"4)" "Pi Userland         Update Userland" \
+				"E)" "Exit .." 3>&2 2>&1 1>&3
+			)
+			case $CHOICE in
+				"1)")
+					fetch -1
+					clear -x
+					;;
+				"2)")
+					fetch -2
+					clear -x
+					;;
+				"3)")
+					fetch -f
+					clear x
+					;;
+				"4)")
+					fetch -U
+					clear -x
+					;;
+				"E)")
+					clear -x
+					exit 0
+					;;
+				esac
+			done
+			;;
 		h)
 			echo -e "${WHT}Fetch, Linux kernel installer for the Raspberry Pi Image Builder${FIN}"
 			echo "https://github.com/pyavitz/rpi-img-builder"
@@ -233,12 +270,12 @@ while getopts "12bruUhf" OPTION; do
 			echo ""
 			list
 			echo ""
-			echo -e "   -1        Linux 5.15.y LTS"
-			echo -e "   -2        Linux Stable Branch"
-			echo -e "   -f        Update Wifi/BT Firmware"
-			echo -e "   -U        Update Raspberry Pi Userland"
+			echo -e "\t-1\tLinux 5.15.y LTS"
+			echo -e "\t-2\tLinux Stable Branch"
+			echo -e "\t-f\tUpdate Wifi/BT Firmware"
+			echo -e "\t-U\tUpdate Raspberry Pi Userland"
 			echo ""
-			echo -e "   -u        Update Fetch"
+			echo -e "\t-u\tUpdate Fetch"
 			echo ""
 			echo "Should you come across any bugs, either open an issue on GitHub or talk"
 			echo "with us directly by joining our channel on Libera; #arm-img-builder"
