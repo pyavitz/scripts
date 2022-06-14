@@ -12,7 +12,7 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-while getopts "6543ruh" OPTION; do
+while getopts "6543rumh" OPTION; do
 	case $OPTION in
 
 	6)
@@ -54,6 +54,46 @@ while getopts "6543ruh" OPTION; do
 			echo -e "This script requires an internet connection to update.";
 			exit 0;
 		fi
+		;;
+	m)
+		while [ 1 ]
+		do
+		CHOICE=$(
+		export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
+		whiptail --backtitle "Menu Interface: Odroid N2 Trip Point" --title "Fan Control" --menu "" --nocancel 0 0 0 \
+			"6)" "65°C" \
+			"5)" "55°C" \
+			"4)" "45°C" \
+			"3)" "35°C" \
+			"E)" "Exit .." 3>&2 2>&1 1>&3
+		)
+		case $CHOICE in
+			"6)")
+				governor -6 > /dev/null 2>&1
+				export NEWT_COLORS='root=,black'
+				whiptail --msgbox "    Trip point set to 65°C" 0 0
+				;;
+			"5)")
+				governor -5 > /dev/null 2>&1
+				export NEWT_COLORS='root=,black'
+				whiptail --msgbox "    Trip point set to 55°C" 0 0
+				;;
+			"4)")
+		        	governor -4 > /dev/null 2>&1
+				export NEWT_COLORS='root=,black'
+				whiptail --msgbox "    Trip point set to 45°C" 0 0
+				;;
+			"3)")
+				governor -3 > /dev/null 2>&1
+				export NEWT_COLORS='root=,black'
+				whiptail --msgbox "    Trip point set to 35°C" 0 0
+				;;
+			"E)")
+				clear -x
+				exit 0
+				;;
+			esac
+		done
 		;;
 	h)
 		echo -e "${WHT}Odroid N2 Trip Point${FIN}"
