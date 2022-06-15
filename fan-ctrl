@@ -16,19 +16,19 @@ while getopts "6543rumh" OPTION; do
 	case $OPTION in
 
 	6)
-		sudo sed -i "2s/.*/POINT="'"65000"'"/" /usr/local/bin/fan-ctrl
+		sudo sed -i "2s/.*/POINT="'"65000"'"/" $FIND
 		fan-ctrl -r
 		;;
 	5)
-		sudo sed -i "2s/.*/POINT="'"55000"'"/" /usr/local/bin/fan-ctrl
+		sudo sed -i "2s/.*/POINT="'"55000"'"/" $FIND
 		fan-ctrl -r
 		;;
 	4)
-		sudo sed -i "2s/.*/POINT="'"45000"'"/" /usr/local/bin/fan-ctrl
+		sudo sed -i "2s/.*/POINT="'"45000"'"/" $FIND
 		fan-ctrl -r
 		;;
 	3)
-		sudo sed -i "2s/.*/POINT="'"35000"'"/" /usr/local/bin/fan-ctrl
+		sudo sed -i "2s/.*/POINT="'"35000"'"/" $FIND
 		fan-ctrl -r
 		;;
 	r)
@@ -60,7 +60,7 @@ while getopts "6543rumh" OPTION; do
 		do
 		CHOICE=$(
 		export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
-		whiptail --backtitle "Menu Interface: Odroid N2 Trip Point" --title "Fan Control" --menu "" --nocancel 0 0 0 \
+		whiptail --backtitle "Menu Interface: Odroid N2 Trip Point" --title "== Fan Control ==" --menu "" --nocancel 0 0 0 \
 			"6)" "65°C" \
 			"5)" "55°C" \
 			"4)" "45°C" \
@@ -69,22 +69,26 @@ while getopts "6543rumh" OPTION; do
 		)
 		case $CHOICE in
 			"6)")
-				governor -6 > /dev/null 2>&1
+				clear -x
+				fan-ctrl -6
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Trip point set to 65°C" 0 0
 				;;
 			"5)")
-				governor -5 > /dev/null 2>&1
+				clear -x
+				fan-ctrl -5
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Trip point set to 55°C" 0 0
 				;;
 			"4)")
-		        	governor -4 > /dev/null 2>&1
+				clear -x
+				fan-ctrl -4
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Trip point set to 45°C" 0 0
 				;;
 			"3)")
-				governor -3 > /dev/null 2>&1
+				clear -x
+				fan-ctrl -3
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Trip point set to 35°C" 0 0
 				;;
