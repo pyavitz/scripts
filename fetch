@@ -243,24 +243,28 @@ while getopts "12brumUhf" OPTION; do
 			)
 			case $CHOICE in
 				"1)")
+					clear -x
 					fetch -1
 					echo ""
 					read -p "Press enter to continue."
 					clear -x
 					;;
 				"2)")
+					clear -x
 					fetch -2
 					echo ""
 					read -p "Press enter to continue."
 					clear -x
 					;;
 				"3)")
+					clear -x
 					fetch -f
 					echo ""
 					read -p "Press enter to continue."
-					clear x
+					clear -x
 					;;
 				"4)")
+					clear -x
 					fetch -U
 					echo ""
 					read -p "Press enter to continue."
