@@ -1,6 +1,5 @@
 #!/bin/bash
 
-BINURL="https://github.com/raspberrypi/firmware/raw/master/boot/"
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 RED="\e[1;31m"
 GRN="\e[1;32m"
@@ -40,10 +39,6 @@ echo_bdone(){
 echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
 
-echo_bins(){
-echo -e "${WHT}Downloading binaries${FIN} ..."
-}
-
 list(){
 os_release
 version=$(curl --silent -L ${URL}version)
@@ -64,18 +59,14 @@ fi
 fetch -h
 }
 
-initrd_script(){
-sudo mkdir -p /etc/initramfs/post-update.d/
-sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/scripts/99-initrd -P /etc/initramfs/post-update.d/
-sudo chmod +x /etc/initramfs/post-update.d/99-initrd
-sudo chown root:root /etc/initramfs/post-update.d/99-initrd
-}
-
 initrd_check(){
-if [ -e /etc/initramfs/post-update.d/99-initrd ]; then
+if [ -f /etc/initramfs/post-update.d/99-initrd ]; then
 	:;
 else
-	initrd_script > /dev/null 2>&1;
+	sudo mkdir -p /etc/initramfs/post-update.d/;
+	sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/scripts/99-initrd -P /etc/initramfs/post-update.d/;
+	sudo chmod +x /etc/initramfs/post-update.d/99-initrd;
+	sudo chown root:root /etc/initramfs/post-update.d/99-initrd;
 fi
 }
 
@@ -89,7 +80,7 @@ if [[ `wget -S --spider ${URL}$BOARD-$RELEASE.tar.xz 2>&1 | grep 'HTTP/1.1 200 O
 	echo_bdone;
 else
 	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
-	exit > /dev/null 2>&1;
+	exit 0;
 fi
 echo ""
 if [[ `sha256sum --check $BOARD-$RELEASE.sha256 | grep "OK"` ]]; then
@@ -104,8 +95,8 @@ if [[ `sha256sum --check $BOARD-$RELEASE.sha256 | grep "OK"` ]]; then
 	echo -e "${WHT}Done${FIN}.";
 	sudo rm -fdr ~/.build/*;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
-	exit > /dev/null 2>&1;
+	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using${FIN}.";
+	exit 0;
 fi
 }
 
@@ -114,7 +105,7 @@ firmware(){
 FWURL="https://github.com/pyavitz/firmware.git"
 FWDEST="/lib/firmware/updates/brcm"
 RBFALSE="sudo git config pull.rebase false"
-echo -e "${WHT}Checking firmware${FIN}" ...
+echo -e "${WHT}Checking firmware${FIN} ..."
 sudo mkdir -p /lib/firmware/updates
 if [ -e /etc/firmware ]; then
 	:;
@@ -140,8 +131,7 @@ cd ~
 
 # Userland
 rpi_userland(){
-echo
-echo -e "${WHT}Updating userland${FIN}."
+echo -e "${WHT}Updating userland${FIN} ..."
 mkdir -p ~/.build
 cd ~/.build
 git clone https://github.com/raspberrypi/userland.git
@@ -150,15 +140,14 @@ wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/
 patch -p1 < userland-remove-hi-pi.patch
 rm -f userland-remove-hi-pi.patch
 if [[ $(grep -w "Linux/arm64" "/usr/src/linux-headers-`uname -r`/.config") ]]; then
-	echo -e "\e[1;37m== ARM64\e[0m"
-	sleep 1s
+	echo -e "\e[1;37m== ARM64\e[0m";
+	sleep 1s;
 	./buildme --aarch64;
-else
-	if [[ $(grep -w "Linux/arm" "/usr/src/linux-headers-`uname -r`/.config") ]]; then
-		echo -e "\e[1;37m== ARM\e[0m"
-		sleep 1s
-		./buildme;
-	fi
+fi
+if [[ $(grep -w "Linux/arm" "/usr/src/linux-headers-`uname -r`/.config") ]]; then
+	echo -e "\e[1;37m== ARM\e[0m";
+	sleep 1s;
+	./buildme;
 fi
 cd ~
 sudo rm -fdr ~/.build/userland
