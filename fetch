@@ -166,33 +166,27 @@ sudo ldconfig
 echo -e "${WHT}Done${FIN}."
 }
 
-# Checks
-if [[ `command -v wget` ]]; then
-	[[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
-else
-	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
-		echo -e "${WHT}Installing missing depends${FIN}."
-		sudo apt update
-		sudo apt upgrade -y
-		sudo apt install -y wget;
+# Check
+if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+	if [[ `command -v wget` ]]; then
+		:;
 	else
-		echo -e "This script requires an internet connection."
-		exit;
+		sudo apt install -y wget;
 	fi
-fi
-if [[ `command -v aria2c` ]]; then
-	:;
+	if [[ `command -v aria2c` ]]; then
+		:;
+	else
+		sudo apt install -y aria2;
+	fi
+	if [[ `command -v pv` ]]; then
+		:;
+	else
+		sudo apt install -y pv;
+	fi
 else
-	sudo apt update;
-	sudo apt upgrade -y;
-	sudo apt install -y aria2;
-fi
-if [[ `command -v pv` ]]; then
-	:;
-else
-	sudo apt update;
-	sudo apt upgrade -y;
-	sudo apt install -y pv;
+	echo "";
+	read -p "This script requires an internet connection.";
+	exit 0;
 fi
 
 # Commands
