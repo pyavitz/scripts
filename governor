@@ -34,7 +34,7 @@ while getopts "copsrumh" OPTION; do
 	u)
 		sudo mv -f $FIND $FIND.orig
 		sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P $DIR
-		sudo chmod +x $FIND
+		sudo chmod +x $(command -v governor)
 		if [ -f $FIND ]; then
 			sudo rm -f $FIND.orig;
 		else

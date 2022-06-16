@@ -68,7 +68,7 @@ while getopts "hsudrWIUm" OPTION; do
 		if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 			sudo mv -f $FIND $FIND.orig
 			sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/swh -P $DIR
-			sudo chmod +x $FIND
+			sudo chmod +x $(command -v swh)
 			if [ -f $FIND ]; then
 				sudo rm -f $FIND.orig;
 			else

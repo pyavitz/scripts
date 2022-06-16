@@ -43,7 +43,7 @@ while getopts "6543rumh" OPTION; do
 		if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 			sudo mv -f $FIND $FIND.orig
 			sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl -P $DIR
-			sudo chmod +x $FIND
+			sudo chmod +x $(command -v fan-ctrl)
 			if [ -f $FIND ]; then
 				sudo rm -f $FIND.orig;
 			else
