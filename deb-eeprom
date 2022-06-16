@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
-PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/debian/patches/"
+PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/patches/"
 CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/bullseye/debian/changelog"
 URL="https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/"
 RED="\e[1;31m"
