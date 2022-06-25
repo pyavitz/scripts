@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [[ `command -v git` ]]; then
+	echo "Installing bash-it ...";
+	git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it;
+else
+	sudo apt update; sudo apt upgrade -y; sudo apt install git -y;
+	echo "Installing bash-it ...";
+	git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it;
+fi
+if [ -f ~/.bash_it/install.sh ]; then
+	~/.bash_it/install.sh
+	sed -i "s/export BASH_IT_THEME='bobby'/export BASH_IT_THEME='pro'/g" ~/.bashrc
+else
+	echo "Something went wrong?";
+	exit 1;
+fi
