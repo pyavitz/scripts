@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+# Description: WiFi config helper
 # Destination: /usr/local/bin/swh
 # Service: ssh
+
 INTERFACE="wlan0"
 FIND=`command -v swh`
 DIR="/usr/local/bin/"
