@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Description: get latest eeprom
 # Destination: /usr/local/bin/deb-eeprom
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
