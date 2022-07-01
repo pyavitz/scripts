@@ -4,7 +4,7 @@ DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-i
 RED="\e[1;31m"
 GRN="\e[1;32m"
 PNK="\e[1;35m"
-WHT="\e[1;37m"
+WHT="\033[1m"
 YLW="\e[1;33m"
 SRED="\e[0;31m"
 SGRN="\e[0;32m"
