@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Destination: /usr/local/bin/governor
+
 GOVERNOR="performance"
 FIND=`command -v governor`
 DIR="/usr/local/bin/"
