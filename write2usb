@@ -1,4 +1,5 @@
 #!/bin/bash
+# Description: Write operational image to usb
 # Destination: /usr/local/bin/write2usb
 
 USB="/dev/sda"
