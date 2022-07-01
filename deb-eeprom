@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Destination: /usr/local/bin/swh
+# Destination: /usr/local/bin/deb-eeprom
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
