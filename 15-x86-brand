@@ -1,0 +1,9 @@
+#!/bin/bash
+# depends: dmidecode figlet toilet
+
+MODEL=$(dmidecode -s system-product-name)
+BLD="\033[1m"
+FIN="\033[0m"
+echo -e "${BLD}";
+figlet -r -f term $MODEL;
+echo -e "${FIN}";
