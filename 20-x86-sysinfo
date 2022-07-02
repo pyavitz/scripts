@@ -7,6 +7,7 @@ CPUT=$(sensors | sed -rn 's/.*Core 0:\s+.([0-9.]+).*/\1°C/p')
 NETWORK=$(ip -o -4 -br a | grep -v '^lo'| sed 's/^/ /' | sed 's/\/..//' | sed -r '1s/\s+/ /g' | sed -r '2s/\s+/ /g')
 ETH0=`echo -e Wired:`
 WLAN0=`echo -e Wireless:`
+USB0=`echo -e Tether:`
 
 # function
 mem_hwinfo(){
