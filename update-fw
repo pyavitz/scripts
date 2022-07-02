@@ -1,13 +1,13 @@
 #!/bin/bash
 # Description: Update Raspberry Pi Firmware
 # Destination: /usr/local/bin/update-fw
-RED="\e[1;31m"
+WHT="\033[0m"
 FIN="\e[0m"
 
 update_firmware(){
 FWURL="https://github.com/pyavitz/firmware.git"
 FWDEST="/lib/firmware/updates/brcm"
-echo -e "${RED}Checking firmware${FIN}" ...
+echo -e "${TXT}Checking firmware${FIN}" ...
 if [ -e /etc/firmware ]; then
 	:;
 else
@@ -27,7 +27,7 @@ if [ -e ${FWDEST}/.git ]; then
 else
 	sudo git clone ${FWURL} ${FWDEST};
 fi
-echo -e "${RED}Done${FIN}".
+echo -e "${TXT}Done${FIN}".
 cd ~
 }
 

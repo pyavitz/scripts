@@ -1,10 +1,10 @@
 #!/bin/bash
 
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
-RED="\e[1;31m"
-GRN="\e[1;32m"
-PNK="\e[1;35m"
-WHT="\033[1m"
+RED="\e[0;31m"
+GRN="\e[0;32m"
+PNK="\e[0;35m"
+TXT="\033[0m"
 YLW="\e[1;33m"
 SRED="\e[0;31m"
 SGRN="\e[0;32m"
@@ -74,28 +74,28 @@ fi
 rpi-linux(){
 initrd_check; os_release; prep;
 if [[ `wget -S --spider ${URL}$BOARD-$RELEASE.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	echo -e "${WHT}Fetching $BOARD-$RELEASE${FIN} ...";
+	echo -e "${TXT}Fetching $BOARD-$RELEASE${FIN} ...";
 	${DOWNLOAD} ${URL}$BOARD-$RELEASE.sha256;
 	${DOWNLOAD} ${URL}$BOARD-$RELEASE.tar.xz;
 	echo_bdone;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
+	echo -e "${TXT}Something went wrong? Please report which Distribution and Release you are using.${FIN}";
 	exit 0;
 fi
 echo ""
 if [[ `sha256sum --check $BOARD-$RELEASE.sha256 | grep "OK"` ]]; then
-	echo -e "${WHT}Extracting archive${FIN} ...";
+	echo -e "${TXT}Extracting archive${FIN} ...";
 	pv $BOARD-$RELEASE.tar.xz | tar -xJ $BOARD-$RELEASE;
 	rm -f $BOARD-$RELEASE.tar.xz;
 	echo "";
-	echo -e "${WHT}Starting install${FIN} ...";
+	echo -e "${TXT}Starting install${FIN} ...";
 	cd $BOARD-$RELEASE;
 	sudo dpkg -i *.deb;
 	cd ~;
-	echo -e "${WHT}Done${FIN}.";
+	echo -e "${TXT}Done${FIN}.";
 	sudo rm -fdr ~/.build/*;
 else
-	echo -e "${WHT}Something went wrong? Please report which Distribution and Release you are using${FIN}.";
+	echo -e "${TXT}Something went wrong? Please report which Distribution and Release you are using${FIN}.";
 	exit 0;
 fi
 }
@@ -105,7 +105,7 @@ firmware(){
 FWURL="https://github.com/pyavitz/firmware.git"
 FWDEST="/lib/firmware/updates/brcm"
 RBFALSE="sudo git config pull.rebase false"
-echo -e "${WHT}Checking firmware${FIN} ..."
+echo -e "${TXT}Checking firmware${FIN} ..."
 sudo mkdir -p /lib/firmware/updates
 if [ -e /etc/firmware ]; then
 	:;
@@ -125,13 +125,13 @@ if [ -e ${FWDEST}/.git ]; then
 else
 	sudo git clone ${FWURL} ${FWDEST};
 fi
-echo -e "${WHT}Done${FIN}".
+echo -e "${TXT}Done${FIN}".
 cd ~
 }
 
 # Userland
 rpi_userland(){
-echo -e "${WHT}Updating userland${FIN} ..."
+echo -e "${TXT}Updating userland${FIN} ..."
 mkdir -p ~/.build
 cd ~/.build
 git clone https://github.com/raspberrypi/userland.git
@@ -152,7 +152,7 @@ fi
 cd ~
 sudo rm -fdr ~/.build/userland
 sudo ldconfig
-echo -e "${WHT}Done${FIN}."
+echo -e "${TXT}Done${FIN}."
 }
 
 # Check
@@ -261,7 +261,7 @@ while getopts "12brumUhf" OPTION; do
 			done
 			;;
 		h)
-			echo -e "${WHT}Fetch, Linux kernel installer for the Raspberry Pi Image Builder${FIN}"
+			echo -e "${TXT}Fetch, Linux kernel installer for the Raspberry Pi Image Builder${FIN}"
 			echo "https://github.com/pyavitz/rpi-img-builder"
 			echo "Usage: "
 			echo ""
@@ -356,7 +356,7 @@ if [ $ECHO = "userland" ]; then
 		rpi_userland;
 	else
 		echo
-		echo -e "${WHT}Something went wrong${FIN}?"
+		echo -e "${TXT}Something went wrong${FIN}?"
 		exit > /dev/null 2>&1;
 	fi
 fi

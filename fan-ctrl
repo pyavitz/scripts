@@ -2,7 +2,7 @@
 POINT="55000"
 FIND=`command -v fan-ctrl`
 DIR="/usr/local/bin/"
-WHT="\e[1;37m"
+TXT="\033[0m"
 FIN="\e[0m"
 
 if [ $# -eq 0 ]; then
@@ -100,7 +100,7 @@ while getopts "6543rumh" OPTION; do
 		done
 		;;
 	h)
-		echo -e "${WHT}Odroid N2 Trip Point${FIN}"
+		echo -e "${TXT}Odroid N2 Trip Point${FIN}"
 		echo -e "Usage: "
 		echo ""
 		echo -e "\t-6\t65°C"

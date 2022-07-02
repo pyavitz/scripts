@@ -5,7 +5,7 @@
 INTERFACE="wlan0"
 FIND=`command -v swh`
 DIR="/usr/local/bin/"
-WHT="\e[1;37m"
+TXT="\033[0m"
 FIN="\e[0m"
 
 spinner(){
@@ -29,7 +29,7 @@ while getopts "hsudrWIUm" OPTION; do
 	case $OPTION in
 
 	s)
-		echo -en "${WHT}"
+		echo -en "${TXT}"
 		echo -en "Scanning: "; spinner &
 
 		printf '\n'
@@ -124,7 +124,7 @@ while getopts "hsudrWIUm" OPTION; do
 		done
 		;;
 	h)
-		echo -e "${WHT}Simple wifi helper${FIN}"
+		echo -e "${TXT}Simple wifi helper${FIN}"
 		echo -e "Usage: "
 		echo ""
 		echo -e "\t-s\tScan for SSID's"
