@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Description: Set governor scheduler
+# Destination: /usr/local/bin/governor
+
 GOVERNOR="performance"
 FIND=`command -v governor`
 DIR="/usr/local/bin/"

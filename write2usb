@@ -1,4 +1,7 @@
 #!/bin/bash
+# Description: Write operational image to usb
+# Destination: /usr/local/bin/write2usb
+
 USB="/dev/sda"
 ERROR="$(ls {/dev/sdb,/dev/sdc,/dev/sdd} 2> /dev/null)"
 PI_EEPROM="pieeprom-2021-12-02"
