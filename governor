@@ -16,19 +16,19 @@ while getopts "copsrumh" OPTION; do
 	case $OPTION in
 
 	c)
-		sudo sed -i "5s/.*/GOVERNOR="'"conservative"'"/" $FIND
+		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"conservative"'"/" $FIND
 		governor -r
 		;;
 	o)
-		sudo sed -i "5s/.*/GOVERNOR="'"ondemand"'"/" $FIND
+		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"ondemand"'"/" $FIND
 		governor -r
 		;;
 	p)
-		sudo sed -i "5s/.*/GOVERNOR="'"performance"'"/" $FIND
+		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"performance"'"/" $FIND
 		governor -r
 		;;
 	s)
-		sudo sed -i "5s/.*/GOVERNOR="'"schedutil"'"/" $FIND
+		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"schedutil"'"/" $FIND
 		governor -r
 		;;
 	r)
