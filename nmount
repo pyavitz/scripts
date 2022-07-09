@@ -34,7 +34,7 @@ while getopts "muh" OPTION; do
 					sudo rm -f /usr/local/bin/nmount.orig;
 				else
 					sudo mv -f /usr/local/bin/nmount.orig /usr/local/bin/nmount;
-					fi
+				fi
 			fi
 			nmount -h
 			;;
