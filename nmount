@@ -1,22 +1,12 @@
 #!/bin/bash
 # depends on cifs-utils
-RED="\e[1;31m"
-WHT="\e[1;37m"
-FIN="\e[0m"
+GHURL="https://raw.githubusercontent.com/pyavitz/scripts/master"
 ADDR="10.0.0.1"
 FOLDER="Name"
 MNT="/your/location"
 USER="user"
 USERID="user"
 PASSWD="password"
-
-smount(){
-sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,password=$PASSWD,rw,uid=$USERID
-}
-
-sumount(){
-sudo umount $MNT
-}
 
 # Commands
 if [ $# -eq 0 ]; then
@@ -26,36 +16,37 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-ECHO="false"
-
 while getopts "muh" OPTION; do
-        case $OPTION in
+	case $OPTION in
 
-                m)
-                        ECHO="smount"
-                        ;;
-                u)
-                        ECHO="sumount"
-                        ;;
-                h)
-                        echo ""
-                        echo -e "${RED}Mount Network Share${FIN}"
-                        echo -e "${WHT}Usage:${FIN} nmount -opt"
-                        echo ""
-                        echo -e "${WHT}   -m${FIN}       Mount"
-                        echo -e "${WHT}   -u${FIN}       Unmount"
-                        echo ""
-                        echo -e "${WHT}   -h${FIN}       Help"
-                        echo ""
-                        exit 0
-                        ;;
-
-        esac
+		m)
+			sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,password=$PASSWD,rw,uid=$USERID
+			;;
+		u)
+			sudo umount $MNT
+			;;
+		U)
+			if [[ `wget -S --spider ${GHURL}/nmount 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+				sudo mv -f /usr/local/bin/nmount /usr/local/bin/nmount.orig;
+				sudo wget -cq ${GHURL}/nmount -P /usr/local/bin;
+				if [[ -f "/usr/local/bin/nmount" ]]; then
+					sudo chmod +x /usr/local/bin/nmount;
+					sudo rm -f /usr/local/bin/nmount.orig;
+				else
+					sudo mv -f /usr/local/bin/nmount.orig /usr/local/bin/nmount;
+					fi
+			fi
+			;;
+		h)
+			echo ""
+			echo -e "Mount Network Share"
+			echo ""
+			echo -e "\t-m\tMount"
+			echo -e "\t-u\tUnmount"
+			echo ""
+			echo -e "\t-h\tHelp"
+			echo ""
+			exit 0
+			;;
+	esac
 done
-
-if [ $ECHO = "smount" ]; then
-	smount;
-fi
-if [ $ECHO = "sumount" ]; then
-	sumount;
-fi
