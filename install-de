@@ -1,5 +1,5 @@
 #!/bin/bash
-# Debian Bullseye
+# Debian Bullseye (ARM)
 # sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/install-de -P /usr/local/bin; sudo chmod +x /usr/local/bin/install-de
 # Execute: install-de
 
@@ -61,8 +61,10 @@ sudo chown -R $USER:$USER /home/$USER
 sudo adduser $USER lightdm
 sudo usermod -a -G render $USER
 sudo sed -i "s/#autologin-user=/autologin-user=$USER/g" /etc/lightdm/lightdm.conf
-sudo sed -i "s/#dtoverlay=vc4-kms-v3d/dtoverlay=vc4-kms-v3d/g" /boot/config.txt
-sudo sed -i "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/g" /boot/config.txt
+if [ -f /boot/config.txt ]; then
+	sudo sed -i "s/#dtoverlay=vc4-kms-v3d/dtoverlay=vc4-kms-v3d/g" /boot/config.txt;
+	sudo sed -i "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/g" /boot/config.txt;
+fi
 mkdir -p ~/.local/share/applications
 echo "NoDisplay=true" | tee ~/.local/share/applications/xfburn.desktop > /dev/null 2>&1
 echo ""
