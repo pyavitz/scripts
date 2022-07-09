@@ -1,12 +1,16 @@
 #!/bin/bash
 # depends on cifs-utils
 GHURL="https://raw.githubusercontent.com/pyavitz/scripts/master"
-ADDR="10.0.0.1"
-FOLDER="Name"
-MNT="/your/location"
-USER="user"
-USERID="user"
-PASSWD="password"
+if [ -f ~/.config/nmount ]; then
+	source ~/.config/nmount
+else
+	ADDR="10.0.0.1"
+	FOLDER="Name"
+	MNT="/your/location"
+	USER="user"
+	USERID="user"
+	PASSWD="password"
+fi
 
 # Commands
 if [ $# -eq 0 ]; then
@@ -29,7 +33,7 @@ while getopts "muUh" OPTION; do
 			if [[ `wget -S --spider ${GHURL}/nmount 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 				sudo mv -f /usr/local/bin/nmount /usr/local/bin/nmount.orig;
 				sudo wget -cq ${GHURL}/nmount -P /usr/local/bin;
-				if [[ -f "/usr/local/bin/nmount" ]]; then
+				if [ -f /usr/local/bin/nmount ]; then
 					sudo chmod +x /usr/local/bin/nmount;
 					sudo rm -f /usr/local/bin/nmount.orig;
 				else
