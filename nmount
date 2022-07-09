@@ -36,6 +36,7 @@ while getopts "muh" OPTION; do
 					sudo mv -f /usr/local/bin/nmount.orig /usr/local/bin/nmount;
 					fi
 			fi
+			nmount -h
 			;;
 		h)
 			echo ""
