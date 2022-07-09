@@ -11,8 +11,6 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-ECHO="false"
-
 while getopts "muh" OPTION; do
         case $OPTION in
 
@@ -24,13 +22,13 @@ while getopts "muh" OPTION; do
                         ;;
                 h)
                         echo ""
-                        echo -e "${RED}Mount Drive${FIN}"
-                        echo -e "${WHT}Usage: ${FIN}"
+                        echo -e "Mount Drive"
+                        echo -e "Usage: "
                         echo ""
-                        echo -e "${WHT}   -m${FIN}       Mount"
-                        echo -e "${WHT}   -u${FIN}       Unmount"
+                        echo -e "\t-m\tMount"
+                        echo -e "\t-u\tUnmount"
                         echo ""
-                        echo -e "${WHT}   -h${FIN}       Help"
+                        echo -e "\t-h\tHelp"
                         echo ""
                         exit 0
                         ;;
