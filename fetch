@@ -129,6 +129,7 @@ cd ~
 # Userland
 rpi_userland(){
 echo -e "${TXT}Updating userland${FIN} ..."
+if [ -d ~/.build/userland ]; then rm -fdr ~/.build/*; fi
 mkdir -p ~/.build
 cd ~/.build
 git clone https://github.com/raspberrypi/userland.git
