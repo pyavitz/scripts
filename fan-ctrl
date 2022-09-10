@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 source /etc/opt/board.txt
 POINT="55000"
-FIND=`command -v fan-ctrl`
-DIR="/usr/local/bin/"
+DIR="/usr/local/bin"
 TXT="\033[0m"
 FIN="\e[0m"
 
@@ -55,10 +54,7 @@ while getopts "6543rumh" OPTION; do
 		fan-ctrl -r
 		;;
 	r)
-		if [[ "$BOARD" == "odroidn2" ]]; then
-			odroidn2;
-		fi
-		if [[ "$BOARD" == "odroidn2plus" ]]; then
+		if [[ "$BOARD" == "odroidn2" ]] || [[ "$BOARD" == "odroidn2plus" ]]; then
 			odroidn2;
 		fi
 		if [[ "$BOARD" == "odroidxu4" ]]; then
@@ -67,13 +63,15 @@ while getopts "6543rumh" OPTION; do
 		;;
 	u)
 		if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-			sudo mv -f $FIND $FIND.orig
-			sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl -P $DIR
+			if [ -f `command -v fan-ctrl` ]; then
+				sudo mv -f $DIR/fan-ctrl $DIR/fan-ctrl.orig;
+			fi
+			sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fan-ctrl -P $DIR/
 			sudo chmod +x $(command -v fan-ctrl)
-			if [ -f $FIND ]; then
-				sudo rm -f $FIND.orig;
+			if [ -f `command -v fan-ctrl` ]; then
+				sudo rm -f $DIR/fan-ctrl.orig;
 			else
-				sudo mv -f $FIND.orig $FIND;
+				sudo mv -f $DIR/fan-ctrl.orig $DIR/fan-ctrl;
 			fi
 			fan-ctrl -h;
 		else
@@ -142,3 +140,5 @@ while getopts "6543rumh" OPTION; do
 
 	esac
 done
+
+exit 0
