@@ -38,19 +38,19 @@ while getopts "6543rumh" OPTION; do
 	case $OPTION in
 
 	6)
-		sudo sed -i "3s/.*/POINT="'"65000"'"/" $FIND
+		sudo sed -i "3s/.*/POINT="'"65000"'"/" $DIR/fan-ctrl
 		fan-ctrl -r
 		;;
 	5)
-		sudo sed -i "3s/.*/POINT="'"55000"'"/" $FIND
+		sudo sed -i "3s/.*/POINT="'"55000"'"/" $DIR/fan-ctrl
 		fan-ctrl -r
 		;;
 	4)
-		sudo sed -i "3s/.*/POINT="'"45000"'"/" $FIND
+		sudo sed -i "3s/.*/POINT="'"45000"'"/" $DIR/fan-ctrl
 		fan-ctrl -r
 		;;
 	3)
-		sudo sed -i "3s/.*/POINT="'"35000"'"/" $FIND
+		sudo sed -i "3s/.*/POINT="'"35000"'"/" $DIR/fan-ctrl
 		fan-ctrl -r
 		;;
 	r)
