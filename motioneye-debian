@@ -1,38 +1,50 @@
 #!/bin/bash
-##### https://github.com/ccrisan/motioneye/wiki/Install-On-Debian
-# Debian Buster
-echo Starting install as $USER
-echo
-echo Installing needed packages and dependencies.
-sleep 1s
-sudo apt update
-sudo apt upgrade -y 
-sudo apt install -y \
-	apache2 motion ffmpeg v4l-utils python-pip python-pil python-dev python-setuptools \
-	python-pycurl python-tornado curl libssl-dev libcurl4-openssl-dev libjpeg-dev libz-dev
-echo Done.
-sleep 1s
-echo
-echo Installing motionEye.
-sudo pip install motioneye
-echo Done.
-sleep 1s
-echo
-echo Setting up configuration and media directory.
-sudo mkdir -p /etc/motioneye
-sudo cp /usr/local/share/motioneye/extra/motioneye.conf.sample /etc/motioneye/motioneye.conf
-sudo mkdir -p /var/lib/motioneye
-sudo cp /usr/local/share/motioneye/extra/motioneye.systemd-unit-local /etc/systemd/system/motioneye.service
-echo Done.
-sleep 1s
-echo
-echo Enabling services
-sudo systemctl daemon-reload
-sudo systemctl enable apache2
-sudo systemctl enable motioneye
-sudo systemctl start apache2
-sudo systemctl start motioneye
-echo Done.
-echo
-sleep 1s
-echo Please look over the instructions and wiki for further information.
+
+SUPPORTED_ARCH=`uname -m`
+
+if [ $# -eq 0 ]; then
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
+fi
+
+while getopts "iuh" OPTION; do
+	case $OPTION in
+
+		i)
+			if [[ "$SUPPORTED_ARCH" == "armv7l" ]]; then
+				sudo apt update
+				sudo apt --no-install-recommends install -y ca-certificates curl python3 python3-distutils
+				curl -sSfO 'https://bootstrap.pypa.io/get-pip.py'
+				sudo python3 get-pip.py
+				rm get-pip.py
+				printf '%b' '[global]\nextra-index-url=https://www.piwheels.org/simple/\n' | sudo tee /etc/pip.conf > /dev/null
+				sudo python3 -m pip install 'https://github.com/motioneye-project/motioneye/archive/dev.tar.gz'
+				sudo motioneye_init
+			else
+				echo "Your $SUPPORTED_ARCH is not supported by this script."
+			fi
+			;;
+		u)
+			if [[ "$SUPPORTED_ARCH" == "armv7l" ]] || [[ `systemctl status motioneye | grep -w "meyectl"` ]]; then
+				sudo systemctl stop motioneye
+				sudo python3 -m pip install --upgrade --force-reinstall --no-deps 'https://github.com/motioneye-project/motioneye/archive/dev.tar.gz'
+				sudo systemctl start motioneye
+			else
+				echo "Your $SUPPORTED_ARCH is not supported by this script."
+			fi
+			;;
+		h)
+			echo ""
+			echo -e "MotionEYE"
+			echo ""
+			echo -e "\t-m\tInstall"
+			echo -e "\t-u\tUpgrade"
+			echo ""
+			echo -e "\t-h\tHelp"
+			echo ""
+			exit 0
+			;;
+	esac
+done
