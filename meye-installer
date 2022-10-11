@@ -1,4 +1,5 @@
 #!/bin/bash
+# MotionEYE installer for Debian Bullseye
 
 SUPPORTED_ARCH=`uname -m`
 
@@ -37,7 +38,7 @@ while getopts "iuh" OPTION; do
 			;;
 		h)
 			echo ""
-			echo -e "MotionEYE"
+			echo -e "MotionEYE installer"
 			echo ""
 			echo -e "\t-m\tInstall"
 			echo -e "\t-u\tUpgrade"
