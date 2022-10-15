@@ -14,13 +14,21 @@ while getopts "iuh" OPTION; do
 	case $OPTION in
 
 		i)
-			if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" ]]; then
+			if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" || "$ARCH" == "aarch64" ]]; then
 				sudo apt update
-				sudo apt --no-install-recommends install -y ca-certificates curl python3 python3-distutils
+				sudo apt upgrade -y
+				if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" ]]; then
+					sudo apt --no-install-recommends install -y ca-certificates curl python3 python3-distutils
+				fi
+				if [[ "$ARCH" == "aarch64" ]]; then
+					sudo apt --no-install-recommends install ca-certificates curl python3 python3-dev libcurl4-openssl-dev gcc libssl-dev
+				fi
 				curl -sSfO 'https://bootstrap.pypa.io/get-pip.py'
 				sudo python3 get-pip.py
 				rm get-pip.py
-				printf '%b' '[global]\nextra-index-url=https://www.piwheels.org/simple/\n' | sudo tee /etc/pip.conf > /dev/null
+				if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" ]]; then
+					printf '%b' '[global]\nextra-index-url=https://www.piwheels.org/simple/\n' | sudo tee /etc/pip.conf > /dev/null
+				fi
 				sudo python3 -m pip install 'https://github.com/motioneye-project/motioneye/archive/dev.tar.gz'
 				sudo motioneye_init
 			else
@@ -28,7 +36,7 @@ while getopts "iuh" OPTION; do
 			fi
 			;;
 		u)
-			if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" ]] || [[ `systemctl status motioneye | grep -w "meyectl"` ]]; then
+			if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" || "$ARCH" == "aarch64" ]] && [[ `systemctl status motioneye | grep -w "meyectl"` ]]; then
 				sudo systemctl stop motioneye
 				sudo python3 -m pip install --upgrade --force-reinstall --no-deps 'https://github.com/motioneye-project/motioneye/archive/dev.tar.gz'
 				sudo systemctl start motioneye
