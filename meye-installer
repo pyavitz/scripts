@@ -40,7 +40,7 @@ while getopts "iuh" OPTION; do
 			echo ""
 			echo -e "MotionEYE installer"
 			echo ""
-			echo -e "\t-m\tInstall"
+			echo -e "\t-i\tInstall"
 			echo -e "\t-u\tUpgrade"
 			echo ""
 			echo -e "\t-h\tHelp"
