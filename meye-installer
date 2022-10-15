@@ -24,7 +24,7 @@ while getopts "iuh" OPTION; do
 				sudo python3 -m pip install 'https://github.com/motioneye-project/motioneye/archive/dev.tar.gz'
 				sudo motioneye_init
 			else
-				echo -e "ARCH: $SUPPORTED_ARCH is not supported by this script."
+				echo -e "$ARCH is not supported by this script."
 			fi
 			;;
 		u)
@@ -33,7 +33,7 @@ while getopts "iuh" OPTION; do
 				sudo python3 -m pip install --upgrade --force-reinstall --no-deps 'https://github.com/motioneye-project/motioneye/archive/dev.tar.gz'
 				sudo systemctl start motioneye
 			else
-				echo -e "ARCH: $ARCH is not supported by this script."
+				echo -e "$ARCH is not supported by this script."
 			fi
 			;;
 		h)
