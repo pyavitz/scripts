@@ -1,5 +1,5 @@
 #!/bin/bash
-# MotionEYE installer for Debian Bullseye
+# MotionEYE installer for Debian & Ubuntu
 
 ARCH=`uname -m`
 
@@ -15,17 +15,16 @@ while getopts "iuh" OPTION; do
 
 		i)
 			if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" || "$ARCH" == "aarch64" ]]; then
-				sudo apt update
-				sudo apt upgrade -y
+				sudo apt update; sudo apt upgrade -y
 				if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" ]]; then
 					sudo apt --no-install-recommends install -y ca-certificates curl python3 python3-distutils
 				fi
 				if [[ "$ARCH" == "aarch64" ]]; then
-					sudo apt --no-install-recommends install ca-certificates curl python3 python3-dev libcurl4-openssl-dev gcc libssl-dev
+					sudo apt --no-install-recommends install -y ca-certificates curl python3 python3-dev libcurl4-openssl-dev gcc libssl-dev
 				fi
 				curl -sSfO 'https://bootstrap.pypa.io/get-pip.py'
 				sudo python3 get-pip.py
-				rm get-pip.py
+				rm -f get-pip.py
 				if [[ "$ARCH" == "armv6l" || "$ARCH" == "armv7l" ]]; then
 					printf '%b' '[global]\nextra-index-url=https://www.piwheels.org/simple/\n' | sudo tee /etc/pip.conf > /dev/null
 				fi
@@ -45,15 +44,17 @@ while getopts "iuh" OPTION; do
 			fi
 			;;
 		h)
-			echo ""
+			echo -e ""
 			echo -e "MotionEYE installer"
-			echo ""
+			echo -e ""
 			echo -e "\t-i\tInstall"
-			echo -e "\t-u\tUpgrade"
-			echo ""
+			echo -e "\t-u\tUpdate"
+			echo -e ""
 			echo -e "\t-h\tHelp"
-			echo ""
+			echo -e ""
 			exit 0
 			;;
 	esac
 done
+
+exit 0
