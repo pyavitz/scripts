@@ -13,23 +13,10 @@ FIN="\e[0m"
 
 prep(){
 if [ -e ~/.build ]; then
-	sudo rm -fdr ~/.build/*;
-	cd ~/.build;
+	sudo rm -fdr ~/.build/*; cd ~/.build
 else
-	mkdir -p ~/.build;
-	cd ~/.build;
+	mkdir -p ~/.build; cd ~/.build
 fi
-}
-
-os_release(){
-if [[ `grep -w "focal" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "bullseye" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "bookworm" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "chimaera" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "daedalus" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "jammy" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "kinetic" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
-if [[ `grep -w "unstable" "/etc/os-release"` ]]; then URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/"; fi
 }
 
 echo_bdone(){
@@ -37,27 +24,28 @@ echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
 
 list(){
-os_release
+URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-11/"
 version=$(curl --silent -L ${URL}version)
 echo $version
 }
 
 update(){
-sudo mv -f /usr/local/bin/fetch /usr/local/bin/fetch.orig
-sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fetch -P /usr/local/bin
-if [ -e /usr/local/bin/fetch ]; then
-	sudo chmod +x /usr/local/bin/fetch;
-fi
-if [ -e /usr/local/bin/fetch ]; then
-	sudo rm -f /usr/local/bin/fetch.orig;
-else
-	sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch;
+if [[ -f "/usr/local/bin/fetch" ]]; then
+	sudo mv -f /usr/local/bin/fetch /usr/local/bin/fetch.orig
+	sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fetch -P /usr/local/bin
+	sleep .50
+	if [[ -f "/usr/local/bin/fetch" ]]; then
+		sudo rm -f /usr/local/bin/fetch.orig
+		sudo chmod +x /usr/local/bin/fetch
+	else
+		sudo mv -f /usr/local/bin/fetch.orig /usr/local/bin/fetch
+	fi
 fi
 fetch -h
 }
 
 initrd_check(){
-if [ -f /etc/initramfs/post-update.d/99-initrd ]; then
+if [[ -f "/etc/initramfs/post-update.d/99-initrd" ]]; then
 	:;
 else
 	sudo mkdir -p /etc/initramfs/post-update.d/;
@@ -155,25 +143,15 @@ echo -e "${TXT}Done${FIN}."
 
 # Check
 if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
-	if [[ `command -v wget` ]]; then
+	if [[ `command -v wget` ]] && [[ `command -v aria2c` ]] && [[ `command -v pv` ]]; then
 		:;
 	else
-		sudo apt install -y wget;
-	fi
-	if [[ `command -v aria2c` ]]; then
-		:;
-	else
-		sudo apt install -y aria2;
-	fi
-	if [[ `command -v pv` ]]; then
-		:;
-	else
-		sudo apt install -y pv;
+		sudo apt install -y wget aria2 pv;
 	fi
 else
-	echo "";
-	read -p "This script requires an internet connection.";
-	exit 0;
+	echo ""
+	read -p "This script requires an internet connection."
+	exit 0
 fi
 
 # Commands
@@ -208,7 +186,7 @@ while getopts "12brumUhf" OPTION; do
 		m)
 			clear -x
 			echo -e "Fetching Releases ..."
-			VERSION="https://github.com/pyavitz/rpi-linux/releases/download/gcc-10/version2"
+			VERSION="https://github.com/pyavitz/rpi-linux/releases/download/gcc-11/version2"
 			LTS=`curl --silent -L $VERSION | sed -n 1p`
 			STB=`curl --silent -L $VERSION | sed -n 2p`
 			while [ 1 ]
