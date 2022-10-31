@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
+URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-11/"
 RED="\e[0;31m"
 GRN="\e[0;32m"
 PNK="\e[0;35m"
@@ -24,7 +25,6 @@ echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
 
 list(){
-URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-11/"
 version=$(curl --silent -L ${URL}version)
 echo $version
 }
@@ -57,7 +57,7 @@ fi
 
 # Linux
 rpi-linux(){
-initrd_check; os_release; prep;
+initrd_check; prep;
 if [[ `wget -S --spider ${URL}$BOARD-$RELEASE.tar.xz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	echo -e "${TXT}Fetching $BOARD-$RELEASE${FIN} ...";
 	${DOWNLOAD} ${URL}$BOARD-$RELEASE.sha256;
