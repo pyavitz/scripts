@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LC_ALL=$(locale -a|grep -ix 'c.utf-\?8' || echo C)
+
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 URL="https://github.com/pyavitz/rpi-linux/releases/download/gcc-11/"
 RED="\e[0;31m"
@@ -141,7 +143,7 @@ sudo ldconfig
 echo -e "${TXT}Done${FIN}."
 }
 
-# Check
+# check
 if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 	if [[ `command -v wget` ]] && [[ `command -v aria2c` ]] && [[ `command -v pv` ]]; then
 		:;
@@ -154,7 +156,7 @@ else
 	exit 0
 fi
 
-# Commands
+# commands
 if [ $# -eq 0 ]; then
 	echo -e "\e[0;31mMissing options!${FIN}"
 	echo "(run $0 -h for help)"
@@ -264,17 +266,14 @@ if [ $ECHO = "5.15" ]; then
 		BOARD="rpi";
 		rpi-linux;
 	fi
-	
 	if [[ `grep -w "bcm2709" "/etc/opt/soc.txt"` ]]; then
 		BOARD="rpi2";
 		rpi-linux;
 	fi
-
 	if [[ `grep -w "bcm2710" "/etc/opt/soc.txt"` ]]; then
 		BOARD="rpi3";
 		rpi-linux;
 	fi
-
 	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
 		if [[ `grep -w "arm64" "/etc/opt/soc.txt"` ]]; then
 			BOARD="rpi4";
@@ -293,17 +292,14 @@ if [ $ECHO = "stable" ]; then
 		BOARD="rpi";
 		rpi-linux;
 	fi
-	
 	if [[ `grep -w "bcm2709" "/etc/opt/soc.txt"` ]]; then
 		BOARD="rpi2";
 		rpi-linux;
 	fi
-
 	if [[ `grep -w "bcm2710" "/etc/opt/soc.txt"` ]]; then
 		BOARD="rpi3";
 		rpi-linux;
 	fi
-
 	if [[ `grep -w "bcm2711" "/etc/opt/soc.txt"` ]]; then
 		if [[ `grep -w "arm64" "/etc/opt/soc.txt"` ]]; then
 			BOARD="rpi4";
