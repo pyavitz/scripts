@@ -5,16 +5,7 @@ DIR="/usr/local/bin"
 TXT="\033[0m"
 FIN="\e[0m"
 
-odroidn2(){
-if [[ -f "/sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp" ]]; then
-	echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp;
-else
-	echo -e "You are missing trip_point_4_temp?";
-	exit 0;
-fi
-}
-
-odroidxu4(){
+point0(){
 TZONE0="/sys/devices/virtual/thermal/thermal_zone0/trip_point_0_temp"
 TZONE1="/sys/devices/virtual/thermal/thermal_zone1/trip_point_0_temp"
 TZONE2="/sys/devices/virtual/thermal/thermal_zone2/trip_point_0_temp"
@@ -23,6 +14,15 @@ if [[ -f "$TZONE0" ]] && [[ -f "$TZONE1" ]] && [[ -f "$TZONE2" ]] && [[ -f "$TZO
 	echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone{0,1,2,3}/trip_point_0_temp;
 else
 	echo -e "You are missing a trip point?";
+	exit 0;
+fi
+}
+
+point4(){
+if [[ -f "/sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp" ]]; then
+	echo $POINT | sudo tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp;
+else
+	echo -e "You are missing trip_point_4_temp?";
 	exit 0;
 fi
 }
@@ -54,11 +54,11 @@ while getopts "6543rumh" OPTION; do
 		fan-ctrl -r
 		;;
 	r)
-		if [[ "$BOARD" == "odroidn2" ]] || [[ "$BOARD" == "odroidn2plus" ]]; then
-			odroidn2;
+		if [[ "$BOARD" == "nanopct4" || "$BOARD" == "odroidn2" || "$BOARD" == "odroidn2plus" ]]; then
+			point4
 		fi
 		if [[ "$BOARD" == "odroidxu4" ]]; then
-			odroidxu4;
+			point0
 		fi
 		;;
 	u)
@@ -84,7 +84,7 @@ while getopts "6543rumh" OPTION; do
 		do
 		CHOICE=$(
 		export NEWT_COLORS='root=,black roottext=lightgray,black title=black,lightgray'
-		whiptail --backtitle "Menu Interface: Odroid Trip Point" --title "== Fan Control ==" --menu "" --nocancel 0 0 0 \
+		whiptail --backtitle "Menu Interface: Trip Points" --title "== Fan Control ==" --menu "" --nocancel 0 0 0 \
 			"6)" "65°C" \
 			"5)" "55°C" \
 			"4)" "45°C" \
@@ -124,7 +124,7 @@ while getopts "6543rumh" OPTION; do
 		done
 		;;
 	h)
-		echo -e "${TXT}Odroid Trip Point${FIN}"
+		echo -e "${TXT}Trip Points${FIN}"
 		echo -e "Usage: "
 		echo ""
 		echo -e "\t-6\t65°C"

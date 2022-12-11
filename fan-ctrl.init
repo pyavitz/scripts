@@ -5,7 +5,7 @@
 # Required-Stop:
 # Default-Start: 2
 # Default-Stop:
-# Short-Description: Odroid Fan Control
+# Short-Description: Fan Control
 # Description:
 ### END INIT INFO
 
@@ -16,12 +16,12 @@
 
 case "$1" in
 	start)
-		log_daemon_msg "Odroid Fan Control"
+		log_daemon_msg "Fan Control"
 		/usr/local/bin/fan-ctrl -r 2>/dev/null
 		log_end_msg $?
 		;;
 	restart)
-		log_daemon_msg "Restarting Odroid Fan Control"
+		log_daemon_msg "Restarting Fan Control"
 		/usr/local/bin/fan-ctrl -r 2>/dev/null
 		log_end_msg $?
 		;;
