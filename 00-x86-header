@@ -2,7 +2,7 @@
 # depends: figlet toilet
 
 UNAME_R=$(uname -r)
-UNAME_V=$(uname -v | sed 's/ SMP//g' | sed 's/ PREEMPT//g')
+UNAME_V=$(uname -v | sed 's/ SMP//g' | sed 's/ PREEMPT//g' | sed '/PREEMPT_DYNAMIC //g')
 UNAME_M=$(uname -m)
 # Ubuntu
 if [[ -f "/etc/lsb-release" ]]; then
