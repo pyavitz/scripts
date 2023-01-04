@@ -2,15 +2,21 @@
 # sshot, takes screenshot of computer A and moves it to computer B
 # depends: scrot, ssh
 
+DATE="$(date +%F)"
+TIME="$(date +%T | sed 's/://g' | sed 's/..$//')"
 USER="user@ipaddress"
-DESC="Fetching Screenshot"
 SHOT='DISPLAY=:0 scrot -d 1'
-NAME="filename"
 
-echo
-echo -e "\e[1;37m${DESC}\e[0m ..."
+DESC="Fetching Screenshot"
+IMAGE="image-file-name"
+NAME="${IMAGE}-${DATE}-${TIME}"
+
+echo ""
+echo -e "${DESC} ..."
 ssh ${USER} ${SHOT}
 scp -3 ${USER}:~/*.png ~/${NAME}.png
 ssh ${USER} 'rm ~/*.png'
-echo -e "\e[1;37mDone\e[0m."
-echo
+echo -e "Done."
+echo ""
+
+exit 0
