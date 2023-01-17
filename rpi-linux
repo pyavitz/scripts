@@ -1,0 +1,36 @@
+#!/bin/bash
+
+export LC_ALL=$(locale -a|grep -ix 'c.utf-\?8' || echo C)
+DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
+URL="https://github.com/pyavitz/rpi-linux/releases/download/personal/"
+BOARD_IMAGE="linux-image-bcm2708-rpi"
+#BOARD_HEADERS="linux-headers-bcm2708-rpi"
+RELEASE="5.15.88-1"
+ARCH="armel"
+
+if [[ `command -v aria2c` ]]; then :; else sudo apt install aria2 -y; fi
+if [[ -d "/home/$USER/.deb" ]]; then
+	if [[ -f "/home/$USER/.deb/${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb" ]]; then
+		echo ""
+		echo "File already exists?"
+		exit 0
+	fi
+else
+	mkdir -p /home/$USER/.deb
+	cd /home/$USER/.deb/
+fi
+if [[ `wget -S --spider ${URL}${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	echo ""
+	echo -e "Downloading ${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb ..."
+	${DOWNLOAD} ${URL}${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb
+	echo ""
+	echo -e "Starting install ..."
+	sudo dpkg -i ${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb
+	cd ~
+	echo -e "Done."
+else
+	echo -e "Something went wrong? Please report which Distribution and Release you are using."
+	exit 0
+fi
+
+exit 0
