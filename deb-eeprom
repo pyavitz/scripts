@@ -184,14 +184,11 @@ fi
 
 ECHO="false"
 
-while getopts "uUwh" OPTION; do
+while getopts "uUh" OPTION; do
         case $OPTION in
 
                 U)
                         ECHO="upgrade"
-                        ;;
-                w)
-                        ECHO="rite2usb"
                         ;;
                 u)
                         ECHO="update"
@@ -204,7 +201,6 @@ while getopts "uUwh" OPTION; do
                         latest
                         echo ""
                         echo "   -U       Upgrade eeprom package"
-                        echo "   -w       Transfer to USB"
                         echo "   -u       Update script"
                         echo ""
                         exit 0
@@ -215,9 +211,6 @@ done
 
 if [ $ECHO = "upgrade" ]; then
 	upgrade_eeprom;
-fi
-if [ $ECHO = "rite2usb" ]; then
-	rite2usb;
 fi
 if [ $ECHO = "update" ]; then
 	update;
