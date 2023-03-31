@@ -3,7 +3,11 @@
 NODE="/dev/sda1"
 POINT="/mnt/external"
 
-# Commands
+if [ "$USER" != "root" ]; then
+	echo "Please run this as root or with sudo privileges."
+	exit 0
+fi
+
 if [ $# -eq 0 ]; then
 	echo "Missing options!"
 	echo "(run $0 -h for help)"
@@ -12,39 +16,33 @@ if [ $# -eq 0 ]; then
 fi
 
 while getopts "muh" OPTION; do
-        case $OPTION in
-
-                m)
-                        ECHO="mount"
-                        ;;
-                u)
-                        ECHO="umount"
-                        ;;
-                h)
-                        echo ""
-                        echo -e "Mount Drive"
-                        echo -e "Usage: "
-                        echo ""
-                        echo -e "\t-m\tMount"
-                        echo -e "\t-u\tUnmount"
-                        echo ""
-                        echo -e "\t-h\tHelp"
-                        echo ""
-                        exit 0
-                        ;;
-
-        esac
+	case $OPTION in
+		m)
+			if [[ -e "${NODE}" ]] && [[ -e "${POINT}" ]]; then
+				mount ${NODE} ${POINT}
+			else
+				mkdir -p ${POINT}
+				sleep .75
+				mount ${NODE} ${POINT}
+			fi
+			;;
+		u)
+			if [[ -e "${NODE}" ]] && [[ -e "${POINT}" ]]; then
+				umount ${POINT}
+			fi
+			;;
+		h)
+			echo ""
+			echo -e "Mount Drive"
+			echo ""
+			echo -e "\t-m\tMount"
+			echo -e "\t-u\tUnmount"
+			echo ""
+			echo -e "\t-h\tHelp"
+			echo ""
+			exit 0
+			;;
+	esac
 done
 
-if [ $ECHO = "mount" ]; then
-	if [ -e ${POINT} ]; then
-		sudo mount ${NODE} ${POINT};
-	else
-		sudo mkdir -p ${POINT};
-		sleep 1s;
-		sudo mount ${NODE} ${POINT};
-	fi
-fi
-if [ $ECHO = "umount" ]; then
-	sudo umount ${POINT};
-fi
+exit 0
