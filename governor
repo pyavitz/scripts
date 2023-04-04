@@ -2,46 +2,61 @@
 # Description: Set governor scheduler
 # Destination: /usr/local/bin/governor
 
-GOVERNOR="performance"
-FIND=`command -v governor`
-DIR="/usr/local/bin/"
+export LANG=$LANG:C
+if [[ $EUID -ne 0 ]]; then
+	sudo $0 $@ 
+	exit 0
+fi
+
+if [[ -f "/etc/default/governor" ]]; then
+	. /etc/default/governor
+else
+	echo 'GOVERNOR="performance"' | tee /etc/default/governor
+	sleep .25
+	. /etc/default/governor
+fi
+
 if [ $# -eq 0 ]; then
-	echo "Missing options!";
-	echo "(run $0 -h for help)";
-	echo "";
-	exit 0;
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 while getopts "copsrumh" OPTION; do
 	case $OPTION in
 
 	c)
-		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"conservative"'"/" $FIND
+		echo 'GOVERNOR="conservative"' | tee /etc/default/governor > /dev/null 2>&1
+		. /etc/default/governor
 		governor -r
 		;;
 	o)
-		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"ondemand"'"/" $FIND
+		echo 'GOVERNOR="ondemand"' | tee /etc/default/governor > /dev/null 2>&1
+		. /etc/default/governor
 		governor -r
 		;;
 	p)
-		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"performance"'"/" $FIND
+		echo 'GOVERNOR="performance"' | tee /etc/default/governor > /dev/null 2>&1
+		. /etc/default/governor
 		governor -r
 		;;
 	s)
-		sudo sed -i "s/^GOVERNOR=.*/GOVERNOR="'"schedutil"'"/" $FIND
+		echo 'GOVERNOR="schedutil"' | tee /etc/default/governor > /dev/null 2>&1
+		. /etc/default/governor
 		governor -r
 		;;
 	r)
-		echo "$GOVERNOR" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+		echo "$GOVERNOR" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 		;;
 	u)
-		sudo mv -f $FIND $FIND.orig
-		sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P $DIR
-		sudo chmod +x $(command -v governor)
-		if [ -f $FIND ]; then
-			sudo rm -f $FIND.orig;
+		mv -f /etc/default/governor /etc/default/governor.orig
+		wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P /usr/local/bin/
+		chmod +x $(command -v governor)
+		if [[ -f "/etc/default/governor" ]]; then
+			rm -f /etc/default/governor.orig
 		else
-			sudo mv -f $FIND.orig $FIND;
+			mv -f /etc/default/governor.orig /etc/default/governor
 		fi
 		governor -h
 		;;
@@ -59,22 +74,22 @@ while getopts "copsrumh" OPTION; do
 		)
 		case $CHOICE in
 			"1)")
-				governor -c > /dev/null 2>&1
+				governor -c
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Governor set to Conservative" 0 0
 				;;
 			"2)")
-				governor -o > /dev/null 2>&1
+				governor -o
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Governor set to Ondemand" 0 0
 				;;
 			"3)")
-		        	governor -p > /dev/null 2>&1
+		        	governor -p
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Governor set to Performance" 0 0
 				;;
 			"4)")
-				governor -s > /dev/null 2>&1
+				governor -s
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Governor set to Schedutil" 0 0
 				;;
@@ -101,3 +116,5 @@ while getopts "copsrumh" OPTION; do
 		;;
 	esac
 done
+
+exit 0
