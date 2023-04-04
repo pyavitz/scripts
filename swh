@@ -2,9 +2,13 @@
 # Description: WiFi config helper
 # Destination: /usr/local/bin/swh
 
+export LANG=$LANG:C
+if [[ $EUID -ne 0 ]]; then
+	sudo $0 $@ 
+	exit 0
+fi
+
 INTERFACE="wlan0"
-FIND=`command -v swh`
-DIR="/usr/local/bin/"
 TXT="\033[0m"
 FIN="\e[0m"
 
@@ -70,25 +74,25 @@ while getopts "hsSudrWIUm" OPTION; do
 		sudo ifup ${INTERFACE}
 		;;
 	W)
-		sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+		nano /etc/wpa_supplicant/wpa_supplicant.conf
 		;;
 	I)
-		sudo nano /etc/network/interfaces
+		nano /etc/network/interfaces
 		;;
 	U)
 		if [[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-			sudo mv -f $FIND $FIND.orig
-			sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/swh -P $DIR
-			sudo chmod +x $(command -v swh)
-			if [ -f $FIND ]; then
-				sudo rm -f $FIND.orig;
+			mv -f /usr/local/bin/swh /usr/local/bin/swh.orig
+			wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/swh -P /usr/local/bin/
+			chmod +x $(command -v swh)
+			if [[ `command -v swh` ]]; then
+				rm -f /usr/local/bin/swh.orig
 			else
-				sudo mv -f $FIND.orig $FIND;
+				mv -f /usr/local/bin/swh.orig /usr/local/bin/swh
 			fi
-			swh -h;
+			swh -h
 		else
-			echo -e "This script requires an internet connection to update.";
-			exit 0;
+			echo -e "This script requires an internet connection to update."
+			exit 0
 		fi
 		;;
 	m)
