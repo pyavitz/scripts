@@ -50,13 +50,13 @@ while getopts "copsrumh" OPTION; do
 		echo "$GOVERNOR" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 		;;
 	u)
-		mv -f /etc/default/governor /etc/default/governor.orig
+		mv -f /usr/local/bin/governor /usr/local/bin/governor.orig
 		wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/governor -P /usr/local/bin/
 		chmod +x $(command -v governor)
-		if [[ -f "/etc/default/governor" ]]; then
-			rm -f /etc/default/governor.orig
+		if [[ -f "/usr/local/bin/governor" ]]; then
+			rm -f /usr/local/bin/governor.orig
 		else
-			mv -f /etc/default/governor.orig /etc/default/governor
+			mv -f /usr/local/bin/governor.orig /usr/local/bin/governor
 		fi
 		governor -h
 		;;
