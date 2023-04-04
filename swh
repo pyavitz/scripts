@@ -37,7 +37,7 @@ while getopts "hsSudrWIUm" OPTION; do
 		echo -en "Scanning: "; spinner &
 
 		printf '\n'
-		sudo iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption key:'
+		iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption key:'
 
 		kill "$!" # kill the spinner
 		printf '\n'
@@ -48,29 +48,29 @@ while getopts "hsSudrWIUm" OPTION; do
 		echo ""
 		echo -en "Scan specific SSID: "
 		read SSID
-		sudo iwlist ${INTERFACE} scanning | grep -C5 -i -w "$SSID"
+		iwlist ${INTERFACE} scanning | grep -C5 -i -w "$SSID"
 		echo ""
 		read -p "Press enter to continue."
 		;;
 	u)
 		echo ""
 		echo "Bringing up interface."
-		sudo ifup ${INTERFACE}
+		ifup ${INTERFACE}
 		echo "Done."
 		echo ""
 		;;
 	d)
 		echo ""
 		echo "Bringing down interface."
-		sudo ifdown ${INTERFACE}
+		ifdown ${INTERFACE}
 		echo "Done."
 		echo ""
 		;;
 	r)
 		echo ""
 		echo "Restarting ..."
-		sudo ifdown ${INTERFACE}
-		sleep 1s
+		ifdown ${INTERFACE}
+		sleep .75
 		sudo ifup ${INTERFACE}
 		;;
 	W)
