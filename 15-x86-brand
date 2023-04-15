@@ -1,9 +1,14 @@
 #!/bin/bash
 # depends: dmidecode figlet toilet
 
+AP="Atomic Pi"
 MODEL=$(dmidecode -s system-product-name)
 BLD="\033[1m"
 FIN="\033[0m"
-echo -e "${BLD}";
-figlet -r -f term $MODEL;
-echo -e "${FIN}";
+echo -e "${BLD}"
+if [[ "$MODEL" == "MF-001" ]]; then
+	figlet -r -f term $AP
+else
+	figlet -r -f term $MODEL
+fi
+echo -e "${FIN}"
