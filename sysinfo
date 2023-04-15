@@ -1,5 +1,4 @@
 #!/bin/bash
-# depends: lm-sensors
 
 # variables
 CPU0=`lscpu | grep "Model name" | sed -n 1p | sed 's/Model name://g'`
@@ -7,32 +6,28 @@ CPUT=$(sensors | sed -rn 's/.*Core 0:\s+.([0-9.]+).*/\1°C/p')
 NETWORK=$(ip -o -4 -br a | grep -v '^lo'| sed 's/^/ /' | sed 's/\/..//' | sed -r '1s/\s+/ /g' | sed -r '2s/\s+/ /g')
 ETH0=`echo -e Wired:`
 WLAN0=`echo -e Wireless:`
-USB0=`echo -e Tether:`
-
-# function
-mem_hwinfo(){
-meminfo=$(awk '$3=="kB"{if ($2>1024^2){$2=$2/1024^2;$3="GB";} else if ($2>1024){$2=$2/1024;$3="MB";}} 1' /proc/meminfo)
-echo "$meminfo" | column -t;
-unset meminfo;
-}
 
 # display
-echo -e "== DISK"
-df -h | egrep '(Filesystem)|(/dev/mmc)|(/dev/root)|(/dev/sd)|(/dev/nvme)'
-echo ""
-echo -e "== NETWORK"
-echo -e "Hostname:    $(hostname)"
-echo -e "$NETWORK" | sed "s/^[ \t]*//" | sed "s/eth0/$ETH0       eth0/g" | sed "s/wlan0/$WLAN0    wlan0/g" | sed "s/usb0/$USB0      usb0/g"
-echo ""
-echo -e "== SYSTEM"
+AP="Atomic Pi"
+MODEL=$(sudo dmidecode -s system-product-name)
+BLD="\033[1m"
+FIN="\033[0m"
+if [[ "$MODEL" == "MF-001" ]]; then
+	echo -en "== ${BLD}${AP}${FIN}";
+else
+	echo -en "== ${BLD}${MODEL}${FIN}";
+fi
+echo -e " (`uname -r`)"
 if [[ -f "/sys/devices/system/cpu/present" ]]; then
 	echo -en "Processor:  " $CPU0; echo -e " $CPUT";
 fi
 echo -e "Online:     " $(lscpu | grep -w "On-line CPU(s) list:" | sed "s/On-line CPU(s) list:/ /g" | sed -e "s/\s\{3,\}//g")
 echo -e "Governor:   " $(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
 if [[ -f "/proc/meminfo" ]]; then
-	MEMTOTAL=$(mem_hwinfo | awk '/MemTotal/ {printf "%.2f", $2; print $3}')
-	echo -e "Memory:     " $MEMTOTAL;
+	echo -e "Memory:     " $(free -h | sed 's/i//g' | sed 's/Mem://g' | awk '{print $1" "$2}' | sed -n 'n;p')
 fi
 echo -e "Entropy:    " $(cat /proc/sys/kernel/random/entropy_avail)
+echo -e "$NETWORK" | sed "s/^[ \t]*//" | sed "s/eth0/$ETH0       eth0/g" | sed "s/wlan0/$WLAN0    wlan0/g" | sed "s/usb0/$USB0      usb0/g"
 echo -e "Uptime:     " $(uptime)
+
+exit 0
