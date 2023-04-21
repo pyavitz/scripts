@@ -11,7 +11,7 @@ sudo modprobe bcm2835-v4l2
 
 -- or --
 
-sudo echo bcm2835-v4l2 >> /etc/modules
+echo "bcm2835-v4l2" | sudo tee -a /etc/modules
 
 ### After install
 The motionEye server should be running on your system and listening on port 8765.
