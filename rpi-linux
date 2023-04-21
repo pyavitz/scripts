@@ -27,6 +27,9 @@ if [[ "$INSTALL_RULES" == "true" ]]; then
 	if [[ -f "/lib/udev/rules.d/99-com.rules" ]]; then
 		sudo rm -f /lib/udev/rules.d/99-com.rules
 	fi
+	if [[ -f "/etc/udev/rules.d/10-vchiq-permissions.rules" ]]; then
+		sudo rm -f /etc/udev/rules.d/10-vchiq-permissions.rules
+	fi
 	if [[ -f "/etc/udev/rules.d/99-com.rules" ]]; then
 		sudo rm -f /etc/udev/rules.d/99-com.rules
 		sudo wget -cq --show-progress $UDEV_RULES/99-com.rules -P /etc/udev/rules.d/
@@ -35,15 +38,15 @@ if [[ "$INSTALL_RULES" == "true" ]]; then
 	fi
 	if [[ -f "/lib/udev/rules.d/10-local-rpi.rules" ]]; then
 		sudo rm -f /lib/udev/rules.d/10-local-rpi.rules
-		sudo wget -cq --show-progress $UDEV_RULES/10-local-rpi.rules /lib/udev/rules.d/
+		sudo wget -cq --show-progress $UDEV_RULES/10-local-rpi.rules -P /lib/udev/rules.d/
 	else
-		sudo wget -cq --show-progress $UDEV_RULES/10-local-rpi.rules /lib/udev/rules.d/
+		sudo wget -cq --show-progress $UDEV_RULES/10-local-rpi.rules -P /lib/udev/rules.d/
 	fi
 	if [[ -f "/lib/udev/rules.d/60-rpi.gpio-common.rules" ]]; then
 		sudo rm -f /lib/udev/rules.d/60-rpi.gpio-common.rules
-		sudo wget -cq --show-progress $UDEV_RULES/60-rpi.gpio-common.rules /lib/udev/rules.d/
+		sudo wget -cq --show-progress $UDEV_RULES/60-rpi.gpio-common.rules -P /lib/udev/rules.d/
 	else
-		sudo wget -cq --show-progress $UDEV_RULES/60-rpi.gpio-common.rules /lib/udev/rules.d/
+		sudo wget -cq --show-progress $UDEV_RULES/60-rpi.gpio-common.rules -P /lib/udev/rules.d/
 	fi
 fi
 
