@@ -1,30 +1,69 @@
 #!/bin/bash
+# This is a personal script used for upgrading the kernel and udev rules on my pi cams.
 
 export LC_ALL=$(locale -a|grep -ix 'c.utf-\?8' || echo C)
+
+if [[ -f "/etc/opt/board.txt" ]]; then
+	. /etc/opt/board.txt
+else
+	echo "The board isn't supported."
+	exit 0
+fi
+
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 URL="https://github.com/pyavitz/rpi-linux/releases/download/personal/"
-BOARD_IMAGE="linux-image-bcm2708-rpi"
-#BOARD_HEADERS="linux-headers-bcm2708-rpi"
-RELEASE="6.1.24-1"
-ARCH="armel"
-
+UDEV_RULES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/misc"
 if [[ `command -v aria2c` ]]; then :; else sudo apt install aria2 -y; fi
-if [[ -d "/home/$USER/.deb" ]]; then
-	if [[ -f "/home/$USER/.deb/${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb" ]]; then
+if [[ `command -v wget` ]]; then :; else sudo apt install wget -y; fi
+
+# USER OPTIONS
+INSTALL_RULES="true" # recommended
+RELEASE="6.1.24-1"
+
+# Install new udev rules
+if [[ "$INSTALL_RULES" == "true" ]]; then
+	sudo mkdir -p /etc/udev/rules.d/
+	sudo mkdir -p /lib/udev/rules.d/
+	if [[ -f "/lib/udev/rules.d/99-com.rules" ]]; then
+		sudo rm -f /lib/udev/rules.d/99-com.rules
+	fi
+	if [[ -f "/etc/udev/rules.d/99-com.rules" ]]; then
+		sudo rm -f /etc/udev/rules.d/99-com.rules
+		sudo wget -cq --show-progress $UDEV_RULES/99-com.rules -P /etc/udev/rules.d/
+	else
+		sudo wget -cq --show-progress $UDEV_RULES/99-com.rules -P /etc/udev/rules.d/
+	fi
+	if [[ -f "/lib/udev/rules.d/10-local-rpi.rules" ]]; then
+		sudo rm -f /lib/udev/rules.d/10-local-rpi.rules
+		sudo wget -cq --show-progress $UDEV_RULES/10-local-rpi.rules /lib/udev/rules.d/
+	else
+		sudo wget -cq --show-progress $UDEV_RULES/10-local-rpi.rules /lib/udev/rules.d/
+	fi
+	if [[ -f "/lib/udev/rules.d/60-rpi.gpio-common.rules" ]]; then
+		sudo rm -f /lib/udev/rules.d/60-rpi.gpio-common.rules
+		sudo wget -cq --show-progress $UDEV_RULES/60-rpi.gpio-common.rules /lib/udev/rules.d/
+	else
+		sudo wget -cq --show-progress $UDEV_RULES/60-rpi.gpio-common.rules /lib/udev/rules.d/
+	fi
+fi
+
+# Install new kernel
+if [[ -d "${HOME}/.deb" ]]; then
+	if [[ -f "${HOME}/.deb/${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb" ]]; then
 		echo ""
 		echo "File already exists?"
 		exit 0
 	fi
 fi
-mkdir -p /home/$USER/.deb
-cd /home/$USER/.deb/
-if [[ `wget -S --spider ${URL}${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+mkdir -p ${HOME}/.deb
+cd ${HOME}/.deb/
+if [[ `wget -S --spider ${URL}${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	echo ""
-	echo -e "Downloading ${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb ..."
-	${DOWNLOAD} ${URL}${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb
+	echo -e "Downloading ${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb ..."
+	${DOWNLOAD} ${URL}${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb
 	echo ""
 	echo -e "Starting install ..."
-	sudo dpkg -i ${BOARD_IMAGE}_${RELEASE}_${ARCH}.deb
+	sudo dpkg -i ${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb
 	cd ~
 	echo -e "Done."
 else
