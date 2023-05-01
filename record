@@ -1,0 +1,14 @@
+#!/bin/bash
+# usage: ./record filename
+
+if [[ `command -v arecord` ]]; then :; else sudo apt install alsa-utils; fi
+
+HW="hw:1,0" # card 1, device 0
+TIME=""
+#TIME="-d 15" # test mic with 15 second sound clip
+FILE=`echo $1` # file name
+RECORD=`arecord -D ${HW} ${TIME} -f cd $1.wav -c 1`
+
+${RECORD}
+
+exit 0
