@@ -67,6 +67,7 @@ else
 fi
 
 # PIANOBAR
+cd ~
 echo "Installing Pianobar ..."
 git clone https://github.com/PromyLOPh/pianobar.git
 cd pianobar
