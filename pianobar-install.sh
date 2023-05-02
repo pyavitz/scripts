@@ -1,4 +1,12 @@
 #!/bin/bash
+# Distro: Debian; Devuan; Ubuntu
+
+if [[ `command -v sudo` ]]; then
+	:;
+else
+	echo "This script requires you to setup sudo."
+	exit 0
+fi
 
 # USER VARIABLES
 EMAIL="user@email.com" # login username
@@ -66,6 +74,16 @@ make -j${CORES} CC=/usr/bin/${GCC}
 sudo make install
 cd ..
 sudo rm -fdr pianobar
+
+# LIBAO CONFIG
+if [[ -f "/etc/libao.conf" ]]; then
+	sudo mv -f /etc/libao.conf /etc/libao.conf.bak
+	echo "default_driver=alsa" | sudo tee /etc/libao.conf
+	echo "quiet" | sudo tee -a /etc/libao.conf
+else
+	echo "default_driver=alsa" | sudo tee /etc/libao.conf
+	echo "quiet" | sudo tee -a /etc/libao.conf
+fi
 
 # USER CONFIG
 mkdir -p ${CONFIGDIR}
