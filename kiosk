@@ -2,32 +2,36 @@
 URL="http://ipaddress/"
 FILE="file.html"
 
-if [[ `grep -w "ID=debian" "/etc/os-release"` ]]; then
-	:;
-else
-	echo ""
-	echo "This script was created to be used on Debian"
-	exit > /dev/null 2>&1;
-fi
-
-if [[ `command -v chromium` ]]; then
-	echo "Restarting Chromium ..."
-	if [[ `command -v killall` ]]; then
-		killall chromium > /dev/null 2>&1;
+if [[ -e "/etc/os-release" ]]; then
+	if [[ `grep -w "ID=debian" "/etc/os-release"` ]]; then
+		:;
 	else
-		pkill -o chromium > /dev/null 2>&1;
+		echo ""
+		echo -e "This script requires Debian."
+		exit 0
 	fi
-	sleep 1s
-	if [ -e ~/.cache/chromium ]; then
-		rm -fdr ~/.cache/chromium;
+fi
+if [[ `command -v chromium` ]]; then :; else sudo apt update; sudo apt upgrade -y; sudo apt install -y chromium; fi
+if [[ `command -v chromium` ]]; then
+	echo -en "Restarting kiosk "
+	if [[ `command -v killall` ]]; then
+		killall chromium; killall chromium > /dev/null 2>&1
+	else
+		pkill -o chromium; pkill -o chromium > /dev/null 2>&1
 	fi
-	if [ -e ~/.config/chromium ]; then
-		rm -fdr ~/.config/chromium;
+	sleep 1.25
+	if [[ -e "${HOME}/.cache/chromium" ]] || [[ -d "${HOME}/.cache/chromium" ]]; then
+		rm -fdr ${HOME}/.cache/chromium
+	fi
+	if [[ -e "${HOME}/.config/chromium" ]] || [[ -d "${HOME}/.config/chromium" ]]; then
+		rm -fdr ${HOME}/.config/chromium
 	fi
 	DISPLAY=:0 chromium --noerrdialogs --incognito --kiosk --force-device-scale-factor=1 --disk-cache-dir=/tmp/null ${URL}${FILE} > /dev/null 2>&1 &
-	echo "Done.";
+	echo -e "[done]"
 else
 	echo ""
-	echo "You do not have Chromium installed."
-	exit > /dev/null 2>&1;
+	echo -e "You do not have Chromium installed."
+	exit 0
 fi
+
+exit 0
