@@ -10,6 +10,10 @@ if [[ -e "/etc/os-release" ]]; then
 		echo -e "This script requires Debian."
 		exit 0
 	fi
+else
+        echo ""
+        echo "This script requires Debian."
+        exit 0
 fi
 if [[ `command -v chromium` ]]; then :; else sudo apt update; sudo apt upgrade -y; sudo apt install -y chromium; fi
 if [[ `command -v chromium` ]]; then
