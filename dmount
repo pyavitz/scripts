@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# host machine
+DISTRO=`cat /etc/os-release | grep -w NAME | sed 's/NAME=//g' | sed 's/"//g' | sed 's/ GNU\/Linux//g'`
+CODENAME=`cat /etc/os-release | grep -w "VERSION_CODENAME" | sed 's/VERSION_CODENAME=//g'`
+ARCH=`uname -m`
+
+# manual
 NODE="/dev/sda1"
 POINT="/mnt/external"
 
@@ -20,10 +26,16 @@ while getopts "muh" OPTION; do
 		m)
 			if [[ -e "${NODE}" ]] && [[ -e "${POINT}" ]]; then
 				mount ${NODE} ${POINT}
+				if [[ "$DISTRO" == "Debian" || "$DISTRO" == "Kali" || "$DISTRO" == "Raspbian" || "$DISTRO" == "Ubuntu" ]]; then
+					systemctl daemon-reload
+				fi
 			else
 				mkdir -p ${POINT}
 				sleep .75
 				mount ${NODE} ${POINT}
+				if [[ "$DISTRO" == "Debian" || "$DISTRO" == "Kali" || "$DISTRO" == "Raspbian" || "$DISTRO" == "Ubuntu" ]]; then
+					systemctl daemon-reload
+				fi
 			fi
 			;;
 		u)
