@@ -54,7 +54,7 @@ while getopts "6543rumh" OPTION; do
 		fan-ctrl -r
 		;;
 	r)
-		if [[ "$BOARD" == "nanopct4" || "$BOARD" == "odroidn2" || "$BOARD" == "odroidn2plus" ]]; then
+		if [[ "$BOARD" == "nanopct4" || "$BOARD" == "odroidn2" || "$BOARD" == "odroidn2l" || "$BOARD" == "odroidn2plus" ]]; then
 			point4
 		fi
 		if [[ "$BOARD" == "odroidxu4" ]]; then
