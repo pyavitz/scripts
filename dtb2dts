@@ -1,0 +1,13 @@
+#!/bin/bash
+# decompile device tree binary
+
+DTB=`echo $1`
+DTS=`echo $1 | sed 's/dtb/dts/g'`
+
+if [[ -z "$DTB" ]]; then
+	echo -e "A dtb file is required."
+else
+	dtc -I dtb -O dts ${DTB} -o ${DTS}
+fi
+
+exit 0
