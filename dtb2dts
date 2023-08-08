@@ -1,6 +1,19 @@
 #!/bin/bash
 # decompile device tree binary
 
+# depends
+if [[ `command -v dtc` ]]; then
+	:;
+else
+	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+		echo -e "You are missing dependencies ..."
+		sudo apt update; sudo apt install -y device-tree-compiler
+	else
+		echo -e "You are missing dependencies?"
+		exit 0
+	fi
+fi
+
 DTB=`echo $1`
 DTS=`echo $1 | sed 's/dtb/dts/g'`
 
