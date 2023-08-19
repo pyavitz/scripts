@@ -32,24 +32,24 @@ echo -e "$WARNING_MSG"
 exit 0
 }
 
-point0 (){
+trip_point0 (){
 TZONE0="/sys/devices/virtual/thermal/thermal_zone0/trip_point_0_temp"
 TZONE1="/sys/devices/virtual/thermal/thermal_zone1/trip_point_0_temp"
 TZONE2="/sys/devices/virtual/thermal/thermal_zone2/trip_point_0_temp"
 TZONE3="/sys/devices/virtual/thermal/thermal_zone3/trip_point_0_temp"
 if [[ -f "$TZONE0" ]] && [[ -f "$TZONE1" ]] && [[ -f "$TZONE2" ]] && [[ -f "$TZONE3" ]]; then
-	echo $POINT | tee /sys/devices/virtual/thermal/thermal_zone{0,1,2,3}/trip_point_0_temp
+	echo "$POINT" | tee /sys/devices/virtual/thermal/thermal_zone{0,1,2,3}/trip_point_0_temp
 else
 	echo -e "You are missing a trip point?"
 	exit 0
 fi
 }
 
-point4 (){
-if [[ -f "/sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp" ]]; then
-	echo $POINT | tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
+trip_point3 (){
+if [[ -f "/sys/devices/virtual/thermal/thermal_zone0/trip_point_3_temp" ]]; then
+	echo "$POINT" | tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_3_temp
 else
-	echo -e "You are missing trip_point_4_temp?"
+	echo -e "You are missing trip_point_3_temp?"
 	exit 0
 fi
 }
@@ -85,11 +85,11 @@ fanctrl run
 }
 
 run (){ # run script
-if [[ "$BOARD" == "nanopct4" || "$BOARD" == "odroidn2" || "$BOARD" == "odroidn2l" || "$BOARD" == "odroidn2plus" ]]; then
-	point4
+if [[ "$BOARD" == "odroidn2l" || "$BOARD" == "odroidn2plus" ]]; then
+	trip_point3
 fi
 if [[ "$BOARD" == "odroidxu4" ]]; then
-	point0
+	trip_point0
 fi
 }
 
