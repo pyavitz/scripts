@@ -149,16 +149,16 @@ update (){
 if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 	echo -en "Updating fanctrl script"
 	if [[ `command -v fanctrl` ]]; then
-		sudo mv -f /usr/local/bin/fanctrl /usr/local/bin/fanctrl.orig
+		mv -f /usr/local/bin/fanctrl /usr/local/bin/fanctrl.orig
 	fi
-	sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fanctrl -P /usr/local/bin
-	sudo chmod +x $(command -v fanctrl)
+	wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/fanctrl -P /usr/local/bin
+	chmod +x $(command -v fanctrl)
 	if [[ `command -v fanctrl` ]]; then
 		echo -e " [done]"
-		sudo rm -f /usr/local/bin/fan-ctrl.orig;
+		rm -f /usr/local/bin/fan-ctrl.orig;
 	else
 		echo -e " [fail]"
-		sudo mv -f /usr/local/bin/fanctrl.orig /usr/local/bin/fanctrl
+		mv -f /usr/local/bin/fanctrl.orig /usr/local/bin/fanctrl
 	fi
 	fanctrl
 else
