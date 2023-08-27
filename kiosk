@@ -1,4 +1,6 @@
 #!/bin/bash
+# Script is used to ssh into a running unit and force restart a running chromium browser in kiosk mode.
+# Example: ssh mydisplay.local 'kiosk'
 URL="http://ipaddress/"
 FILE="file.html"
 
@@ -17,7 +19,7 @@ else
 fi
 if [[ `command -v chromium` ]]; then :; else sudo apt update; sudo apt upgrade -y; sudo apt install -y chromium; fi
 if [[ `command -v chromium` ]]; then
-	echo -en "Restarting kiosk "
+	echo -en "Killing kiosk "
 	if [[ `command -v killall` ]]; then
 		killall chromium; killall chromium > /dev/null 2>&1
 	else
@@ -30,7 +32,9 @@ if [[ `command -v chromium` ]]; then
 	if [[ -e "${HOME}/.config/chromium" ]] || [[ -d "${HOME}/.config/chromium" ]]; then
 		rm -fdr ${HOME}/.config/chromium
 	fi
-	DISPLAY=:0 chromium --noerrdialogs --incognito --kiosk --force-device-scale-factor=1 --disk-cache-dir=/tmp/null ${URL}${FILE} > /dev/null 2>&1 &
+	echo -e "[done]"
+	echo -en "Starting kiosk "
+	DISPLAY=:0 chromium --noerrdialogs --incognito --kiosk --force-device-scale-factor=1 --disk-cache-dir=/tmp/null --enable-features=WebUIDarkMode --force-dark-mode ${URL}${FILE} > /dev/null 2>&1 &
 	echo -e "[done]"
 else
 	echo ""
