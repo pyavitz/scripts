@@ -1,5 +1,20 @@
 #!/bin/bash
 
+if [[ "$USER" == "root" ]]; then
+	:;
+else
+	if [[ `command -v sudo` ]]; then
+		export LANG=$LANG:C
+		if [[ $EUID -ne 0 ]]; then
+			sudo "$0" "$@" 
+			exit
+		fi
+	else
+		echo "Please run this as root or with sudo privileges."
+		exit 0
+	fi
+fi
+
 # host machine
 DISTRO=`cat /etc/os-release | grep -w NAME | sed 's/NAME=//g' | sed 's/"//g' | sed 's/ GNU\/Linux//g'`
 CODENAME=`cat /etc/os-release | grep -w "VERSION_CODENAME" | sed 's/VERSION_CODENAME=//g'`
@@ -8,11 +23,6 @@ ARCH=`uname -m`
 # manual
 NODE="/dev/sda1"
 POINT="/mnt/external"
-
-if [ "$USER" != "root" ]; then
-	echo "Please run this as root or with sudo privileges."
-	exit 0
-fi
 
 if [ $# -eq 0 ]; then
 	echo "Missing options!"

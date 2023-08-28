@@ -1,5 +1,21 @@
 #!/bin/bash
 # depends on cifs-utils
+
+if [[ "$USER" == "root" ]]; then
+	:;
+else
+	if [[ `command -v sudo` ]]; then
+		export LANG=$LANG:C
+		if [[ $EUID -ne 0 ]]; then
+			sudo "$0" "$@" 
+			exit
+		fi
+	else
+		echo "Please run this as root or with sudo privileges."
+		exit 0
+	fi
+fi
+
 GHURL="https://raw.githubusercontent.com/pyavitz/scripts/master"
 if [ -f ~/.config/nmount ]; then
 	source ~/.config/nmount
@@ -24,20 +40,20 @@ while getopts "muUh" OPTION; do
 	case $OPTION in
 
 		m)
-			sudo mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,password=$PASSWD,rw,uid=$USERID
+			mount -t cifs //$ADDR/$FOLDER $MNT -o username=$USER,password=$PASSWD,rw,uid=$USERID
 			;;
 		u)
-			sudo umount $MNT
+			umount $MNT
 			;;
 		U)
 			if [[ `wget -S --spider ${GHURL}/nmount 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-				sudo mv -f /usr/local/bin/nmount /usr/local/bin/nmount.orig;
-				sudo wget -cq ${GHURL}/nmount -P /usr/local/bin;
+				mv -f /usr/local/bin/nmount /usr/local/bin/nmount.orig;
+				wget -cq ${GHURL}/nmount -P /usr/local/bin;
 				if [ -f /usr/local/bin/nmount ]; then
-					sudo chmod +x /usr/local/bin/nmount;
-					sudo rm -f /usr/local/bin/nmount.orig;
+					chmod +x /usr/local/bin/nmount;
+					rm -f /usr/local/bin/nmount.orig;
 				else
-					sudo mv -f /usr/local/bin/nmount.orig /usr/local/bin/nmount;
+					mv -f /usr/local/bin/nmount.orig /usr/local/bin/nmount;
 				fi
 			fi
 			nmount -h
