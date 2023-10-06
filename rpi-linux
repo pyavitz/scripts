@@ -16,9 +16,8 @@ UDEV_RULES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/fil
 if [[ `command -v aria2c` ]]; then :; else sudo apt install aria2 -y; fi
 if [[ `command -v wget` ]]; then :; else sudo apt install wget -y; fi
 
-# USER OPTIONS
-INSTALL_RULES="true" # recommended
-RELEASE="6.1.24-1"
+# Optional
+INSTALL_RULES="false"
 
 # Install new udev rules
 if [[ "$INSTALL_RULES" == "true" ]]; then
@@ -50,6 +49,8 @@ if [[ "$INSTALL_RULES" == "true" ]]; then
 	fi
 fi
 
+RELEASE=`echo $1`
+
 # Install new kernel
 if [[ -d "${HOME}/.deb" ]]; then
 	if [[ -f "${HOME}/.deb/${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb" ]]; then
@@ -64,14 +65,14 @@ if [[ `wget -S --spider ${URL}${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb 2>&1 | g
 	echo ""
 	echo -e "Downloading ${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb ..."
 	${DOWNLOAD} ${URL}${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb
-	echo ""
-	echo -e "Starting install ..."
+	echo ""; echo ""
+	echo -e "Installing ${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb ..."
 	sudo dpkg -i ${LINUX_IMAGE}_${RELEASE}_${ARCH_EXT}.deb
 	cd ~
 	echo -e "Done."
 else
 	cd ~
-	echo -e "Something went wrong? Please report which Distribution and Release you are using."
+	echo -e "HELP? Example: rpi-linux 6.1.55-1"
 	exit 0
 fi
 
