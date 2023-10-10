@@ -85,7 +85,7 @@ fanctrl run
 }
 
 run (){ # run script
-if [[ "$BOARD" == "odroidn2l" || "$BOARD" == "odroidn2plus" ]]; then
+if [[ "$BOARD" == "bananapicm4" || "$BOARD" == "odroidn2l" || "$BOARD" == "odroidn2plus" ]]; then
 	trip_point3
 fi
 if [[ "$BOARD" == "odroidxu4" ]]; then
