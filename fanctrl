@@ -60,8 +60,20 @@ sleep .25
 fanctrl run
 }
 
+60(){ # 60°C
+sed -i "s/^POINT=.*/POINT="'"60000"'"/" $FINDME
+sleep .25
+fanctrl run
+}
+
 55(){ # 55°C
 sed -i "s/^POINT=.*/POINT="'"55000"'"/" $FINDME
+sleep .25
+fanctrl run
+}
+
+50(){ # 50°C
+sed -i "s/^POINT=.*/POINT="'"50000"'"/" $FINDME
 sleep .25
 fanctrl run
 }
@@ -72,8 +84,20 @@ sleep .25
 fanctrl run
 }
 
+40(){ # 40°C
+sed -i "s/^POINT=.*/POINT="'"40000"'"/" $FINDME
+sleep .25
+fanctrl run
+}
+
 35(){ # 35°C
 sed -i "s/^POINT=.*/POINT="'"35000"'"/" $FINDME
+sleep .25
+fanctrl run
+}
+
+30(){ # 30°C
+sed -i "s/^POINT=.*/POINT="'"30000"'"/" $FINDME
 sleep .25
 fanctrl run
 }
@@ -168,14 +192,14 @@ fi
 }
 
 if [ $# -eq 0 ]; then
-	>&2 echo -e "Arguments: 65 55 45 35 25 menu run update"
+	>&2 echo -e "Arguments: 65 60 55 50 45 40 35 30 25 menu run update"
 	exit 1
 fi
 case $1 in
-	65|55|45|35|25|menu|run|update)
+	65|60|55|50|45|40|35|30|25|menu|run|update)
 	;;
 	*)
-	echo -e "Arguments: 65 55 45 35 25 menu run update" >&2
+	echo -e "Arguments: 65 60 55 50 45 40 35 30 25 menu run update" >&2
 	exit 1
 esac
 FANCTRL=`echo $1`
