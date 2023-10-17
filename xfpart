@@ -1,0 +1,85 @@
+#!/bin/bash
+# Quickly partition and format with an XFS filesystem.
+# Depends: kpartx cloud-utils parted xfsprogs bash
+
+if [ "$USER" != "root" ]; then
+        echo "Please run this as root or with sudo privileges."
+        exit 1
+fi
+
+NODE="/dev/sdc" # /dev/nvme0n1 /dev/sda /dev/mmcblk0
+PART="1" # if /dev/sda remove the "p".
+LABEL="EXTERNAL"
+GPT="false"
+OFFSET="4MiB" # options: 1MiB 4MiB 16MiB
+
+# SUMMARY
+echo -e ""
+echo -e "Summary List"
+echo -e "Drive: $NODE"
+echo -e "Label: $LABEL"
+echo -e "GPT: $GPT"
+echo -e "Offset: $OFFSET"
+echo -e ""
+options=("Continue" "Quit")
+select opt in "${options[@]}"
+do
+	case $opt in
+		"Continue")
+			break
+			;;
+		"Quit")
+			echo -e "Program Terminated."
+			exit 0
+			;;
+		*) echo "invalid option $REPLY";;
+	esac
+done
+
+if [[ -e "${NODE}" ]]; then
+	# delete
+	sfdisk --delete ${NODE}
+	sleep 1
+	kpartx ${NODE}
+	sleep .25
+	kpartx -u ${NODE}
+	sleep 1
+	# partition
+	if [[ "$GPT" == "true" ]]; then
+		parted --script "${NODE}" \
+		mklabel gpt \
+		mkpart 1 ext2 ${OFFSET} 100%
+	else
+		parted --script ${NODE} \
+		mklabel msdos \
+		mkpart primary ext2 ${OFFSET} 100%
+	fi
+	partprobe ${NODE}
+	sleep 1.25
+else
+	echo -e "Drive not found: ${NODE}"
+	exit 0
+fi
+if [[ -e "${NODE}${PART}" ]]; then
+	mkdir -p /mnt/${PART}
+	echo 'y' | mkfs.xfs -f -L $LABEL ${NODE}${PART}
+	sleep .50
+	mount ${NODE}${PART} /mnt/${PART}
+	sync
+	umount /mnt/${PART}
+	sleep .50
+	mount -o defaults,noatime ${NODE}${PART} /mnt/${PART}
+	bash growpart ${NODE} 1
+	sleep .75
+	xfs_growfs -d /mnt/${PART}
+	sleep .50
+	umount /mnt/${PART}
+	if [[ -d "/mnt/${PART}" ]]; then
+		rm -fd /mnt/${PART}
+	fi
+else
+	echo -e "Partition not found: ${NODE}${PART}"
+	exit 0
+fi
+
+exit 0
