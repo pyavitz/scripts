@@ -21,10 +21,13 @@ else
 		exit 0
 	fi
 fi
-
-# trip point
-POINT="55000"
-FINDME=`command -v fanctrl`
+if [[ -f "/etc/default/fanctrl" ]]; then
+	. /etc/default/fanctrl
+else
+	echo 'POINT="55000"' | tee /etc/default/fanctrl
+	sleep .25
+	. /etc/default/fanctrl
+fi
 
 warning (){
 WARNING_MSG="Argument is not supported."
@@ -55,55 +58,64 @@ fi
 }
 
 65(){ # 65°C
-sed -i "s/^POINT=.*/POINT="'"65000"'"/" $FINDME
+echo 'POINT="65000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 60(){ # 60°C
-sed -i "s/^POINT=.*/POINT="'"60000"'"/" $FINDME
+echo 'POINT="60000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 55(){ # 55°C
-sed -i "s/^POINT=.*/POINT="'"55000"'"/" $FINDME
+echo 'POINT="55000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 50(){ # 50°C
-sed -i "s/^POINT=.*/POINT="'"50000"'"/" $FINDME
+echo 'POINT="50000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 45(){ # 45°C
-sed -i "s/^POINT=.*/POINT="'"45000"'"/" $FINDME
+echo 'POINT="45000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 40(){ # 40°C
-sed -i "s/^POINT=.*/POINT="'"40000"'"/" $FINDME
+echo 'POINT="40000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 35(){ # 35°C
-sed -i "s/^POINT=.*/POINT="'"35000"'"/" $FINDME
+echo 'POINT="35000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 30(){ # 30°C
-sed -i "s/^POINT=.*/POINT="'"30000"'"/" $FINDME
+echo 'POINT="30000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
 
 25(){ # 25°C
-sed -i "s/^POINT=.*/POINT="'"25000"'"/" $FINDME
+echo 'POINT="25000"' | tee /etc/default/fanctrl > /dev/null 2>&1
+source /etc/default/fanctrl
 sleep .25
 fanctrl run
 }
@@ -179,7 +191,7 @@ if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 	chmod +x $(command -v fanctrl)
 	if [[ `command -v fanctrl` ]]; then
 		echo -e " [done]"
-		rm -f /usr/local/bin/fan-ctrl.orig;
+		rm -f /usr/local/bin/fan-ctrl.orig
 	else
 		echo -e " [fail]"
 		mv -f /usr/local/bin/fanctrl.orig /usr/local/bin/fanctrl
