@@ -35,6 +35,16 @@ echo -e "$WARNING_MSG"
 exit 0
 }
 
+check (){
+if [[ "$BOARD" == "bananapicm4" ]]; then
+	X=`echo $POINT | sed 's/...$//'`
+	Y="5"
+	echo -e "Current trip points: ${POINT}, $(($X+$Y))000"
+else
+	echo -e "Current trip point: $POINT"
+fi
+}
+
 run (){ # run script
 if [[ "$BOARD" == "bananapicm4" ]]; then
 	if [[ -f "/sys/devices/virtual/thermal/thermal_zone0/trip_point_3_temp" ]]; then
@@ -45,7 +55,7 @@ if [[ "$BOARD" == "bananapicm4" ]]; then
 			echo "$(($X+$Y))000" | tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
 		fi
 	else
-		echo -e "You are missing trip_point_3_temp?"
+		echo -e "You are missing trip point?"
 		exit 0
 	fi
 fi
@@ -53,7 +63,7 @@ if [[ "$BOARD" == "odroidn2l" || "$BOARD" == "odroidn2plus" ]]; then
 	if [[ -f "/sys/devices/virtual/thermal/thermal_zone0/trip_point_3_temp" ]]; then
 		echo "$POINT" | tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_3_temp
 	else
-		echo -e "You are missing trip_point_3_temp?"
+		echo -e "You are missing trip point temp?"
 		exit 0
 	fi
 fi
@@ -101,14 +111,14 @@ fi
 }
 
 if [ $# -eq 0 ]; then
-	>&2 echo -e "Arguments: 65 60 55 50 45 40 35 30 25 run update"
+	>&2 echo -e "Arguments: 65 60 55 50 45 40 35 30 25 check run update"
 	exit 1
 fi
 case $1 in
-	65|60|55|50|45|40|35|30|25|run|update)
+	65|60|55|50|45|40|35|30|25|check|run|update)
 	;;
 	*)
-	echo -e "Arguments: 65 60 55 50 45 40 35 30 25 run update" >&2
+	echo -e "Arguments: 65 60 55 50 45 40 35 30 25 check run update" >&2
 	exit 1
 esac
 
