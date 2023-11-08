@@ -98,7 +98,7 @@ if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 	chmod +x $(command -v fanctrl)
 	if [[ `command -v fanctrl` ]]; then
 		echo -e " [done]"
-		rm -f /usr/local/bin/fan-ctrl.orig
+		rm -f /usr/local/bin/fanctrl.orig
 	else
 		echo -e " [fail]"
 		mv -f /usr/local/bin/fanctrl.orig /usr/local/bin/fanctrl
