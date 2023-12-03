@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [[ -f "/etc/opt/board.txt" ]]; then . /etc/opt/board.txt; fi
+
+USER="user@192.168.1.100"
+DEB_DIR="of/debs"
+DIR="the/location/${DEB_DIR}"
+
+if [[ `ls *.deb` ]] > /dev/null 2>&1; then mkdir -p .deb; mv -f *.deb .deb/; fi
+echo ""
+echo -e "${DEFAULT_MOTD}" | sed -e 's/\(.*\)/\U\1/'
+scp -3 ${USER}:~/${DIR}/linux-*.deb ~/
+if [[ `ls *.deb` ]] > /dev/null 2>&1; then
+	sudo dpkg -i linux-*.deb
+else
+	echo -e "Oops! Something went wrong?"
+	exit 0
+fi
+
+exit 0
