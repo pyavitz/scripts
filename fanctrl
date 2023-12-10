@@ -55,7 +55,7 @@ if [[ "$BOARD" == "bananapicm4" ]]; then
 			echo "$(($X+$Y))000" | tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_4_temp
 		fi
 	else
-		echo -e "You are missing trip point?"
+		echo -e "Trip point missing."
 		exit 0
 	fi
 fi
@@ -63,7 +63,7 @@ if [[ "$BOARD" == "odroidn2l" || "$BOARD" == "odroidn2plus" ]]; then
 	if [[ -f "/sys/devices/virtual/thermal/thermal_zone0/trip_point_3_temp" ]]; then
 		echo "$POINT" | tee /sys/devices/virtual/thermal/thermal_zone0/trip_point_3_temp
 	else
-		echo -e "You are missing trip point temp?"
+		echo -e "Trip point missing."
 		exit 0
 	fi
 fi
@@ -72,10 +72,11 @@ if [[ "$BOARD" == "odroidxu4" ]]; then
 	TZONE1="/sys/devices/virtual/thermal/thermal_zone1/trip_point_0_temp"
 	TZONE2="/sys/devices/virtual/thermal/thermal_zone2/trip_point_0_temp"
 	TZONE3="/sys/devices/virtual/thermal/thermal_zone3/trip_point_0_temp"
-	if [[ -f "$TZONE0" ]] && [[ -f "$TZONE1" ]] && [[ -f "$TZONE2" ]] && [[ -f "$TZONE3" ]]; then
-		echo "$POINT" | tee /sys/devices/virtual/thermal/thermal_zone{0,1,2,3}/trip_point_0_temp
+	TZONE4="/sys/devices/virtual/thermal/thermal_zone3/trip_point_0_temp"
+	if [[ -f "$TZONE0" ]] && [[ -f "$TZONE1" ]] && [[ -f "$TZONE2" ]] && [[ -f "$TZONE3" ]] && [[ -f "$TZONE4" ]]; then
+		echo "$POINT" | tee /sys/devices/virtual/thermal/thermal_zone{0,1,2,3,4}/trip_point_0_temp
 	else
-		echo -e "You are missing a trip point?"
+		echo -e "Trip point missing."
 		exit 0
 	fi
 fi
