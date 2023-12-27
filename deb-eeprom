@@ -5,7 +5,7 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/patches/"
-CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/bullseye/debian/changelog"
+CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/debian/bookworm/debian/changelog"
 URL="https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/"
 RED="\e[0;31m"
 GRN="\e[0;32m"
@@ -94,9 +94,9 @@ echo -en "Running setup "
 sleep 1s
 mkdir -p /home/$USER/.build/eeprom
 cd /home/$USER/.build/eeprom
-wget -cq ${PATCHES}rpi-eeprom-control.patch
+wget -cq ${PATCHES}rpi-eeprom-control
 wget -cq ${PATCHES}rpi-eeprom-update.patch
-if ls /home/$USER/.build/eeprom/{rpi-eeprom-control.patch,rpi-eeprom-update.patch} > /dev/null 2>&1; then
+if ls /home/$USER/.build/eeprom/{rpi-eeprom-control,rpi-eeprom-update.patch} > /dev/null 2>&1; then
 	echo_bdone
 else
 	echo_fail
@@ -141,11 +141,10 @@ rm -f rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 mkdir -p debian/patches
 mv rpi-eeprom-update.patch debian/patches/rpi-eeprom-update.patch 
 echo rpi-eeprom-update.patch >> debian/patches/series
+rm -f debian/control; mv -f rpi-eeprom-control debian/control
 mv -f debian rpi-eeprom-${EEPROM_VERSION}/
 mv rpi-eeprom-control.patch rpi-eeprom-${EEPROM_VERSION}/
 cd rpi-eeprom-${EEPROM_VERSION}
-patch -p1 < rpi-eeprom-control.patch
-rm -f rpi-eeprom-control.patch
 dpkg-buildpackage -us -nc -uc
 cd ..
 sudo dpkg -i *.deb
