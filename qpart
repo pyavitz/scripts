@@ -7,8 +7,9 @@ if [ "$USER" != "root" ]; then
         exit 1
 fi
 
-NODE="/dev/sdc" # /dev/nvme0n1 /dev/sda /dev/mmcblk0
-PART="1" # if /dev/sda remove the "p".
+NODE="/dev/mmcblk0" # /dev/nvme0n1 /dev/sda /dev/mmcblk0
+PART="p1" # if /dev/sda remove the "p".
+FSTYPE="xfs" # ext4 xfs
 LABEL="EXTERNAL"
 GPT="false"
 OFFSET="4MiB" # options: 1MiB 4MiB 16MiB
@@ -17,24 +18,34 @@ OFFSET="4MiB" # options: 1MiB 4MiB 16MiB
 echo -e ""
 echo -e "Summary List"
 echo -e "Drive: $NODE"
+echo -e "Fstype: $FSTYPE"
 echo -e "Label: $LABEL"
 echo -e "GPT: $GPT"
 echo -e "Offset: $OFFSET"
 echo -e ""
-options=("Continue" "Quit")
+options=("Continue" "Exit")
 select opt in "${options[@]}"
 do
 	case $opt in
 		"Continue")
 			break
 			;;
-		"Quit")
+		"Exit")
 			echo -e "Program Terminated."
 			exit 0
 			;;
 		*) echo "invalid option $REPLY";;
 	esac
 done
+
+if [[ "$FSTYPE" == "ext4" ]]; then
+	MKFS="mkfs.ext4 -L $LABEL ${NODE}${PART}"
+	RESIZEFS="resize2fs ${NODE}${PART}"
+fi
+if [[ "$FSTYPE" == "xfs" ]]; then
+	MKFS="mkfs.xfs -f -L $LABEL ${NODE}${PART}"
+	RESIZEFS="xfs_growfs -d /mnt/${PART}"
+fi
 
 if [[ -e "${NODE}" ]]; then
 	# delete
@@ -58,11 +69,11 @@ if [[ -e "${NODE}" ]]; then
 	sleep 1.25
 else
 	echo -e "Drive not found: ${NODE}"
-	exit 0
+	exit 1
 fi
 if [[ -e "${NODE}${PART}" ]]; then
 	mkdir -p /mnt/${PART}
-	echo 'y' | mkfs.xfs -f -L $LABEL ${NODE}${PART}
+	echo 'y' | $MKFS
 	sleep .50
 	mount ${NODE}${PART} /mnt/${PART}
 	sync
@@ -71,7 +82,7 @@ if [[ -e "${NODE}${PART}" ]]; then
 	mount -o defaults,noatime ${NODE}${PART} /mnt/${PART}
 	bash growpart ${NODE} 1
 	sleep .75
-	xfs_growfs -d /mnt/${PART}
+	$RESIZEFS
 	sleep .50
 	umount /mnt/${PART}
 	if [[ -d "/mnt/${PART}" ]]; then
@@ -79,7 +90,7 @@ if [[ -e "${NODE}${PART}" ]]; then
 	fi
 else
 	echo -e "Partition not found: ${NODE}${PART}"
-	exit 0
+	exit 1
 fi
 
 exit 0
