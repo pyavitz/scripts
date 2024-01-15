@@ -1,0 +1,42 @@
+#!/bin/bash
+# If thermals drop below 55*C restart kiosk
+
+service (){
+sudo tee /etc/systemd/system/kiosk.service <<EOF
+[Unit]
+Description=Kiosk
+ConditionPathExists=/usr/local/bin/kiosk-serv
+After=network.target network-online.target ifup@.service rc-local.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/kiosk-serv &>/dev/null
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl enable kiosk
+}
+
+kiosk_temp (){
+LOW="0"
+HIGH="54"
+NUMBER=$(cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2)
+while :; do
+	if ((NUMBER >= $LOW && NUMBER <= $HIGH)); then
+		kiosk > /dev/null 2>&1; break
+	fi
+done
+}
+
+# provide a minute for chromium to start before running loop
+sleep 120
+
+# run loop
+while true
+do
+	kiosk_temp; sleep 300
+done
+
+exit 0
