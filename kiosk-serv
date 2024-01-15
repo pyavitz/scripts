@@ -1,42 +1,36 @@
 #!/bin/bash
+# Run script from openbox autostart
 # If thermals drop below 55*C restart kiosk
 
-service (){
-sudo tee /etc/systemd/system/kiosk.service <<EOF
-[Unit]
-Description=Kiosk
-ConditionPathExists=/usr/local/bin/kiosk-serv
-After=network.target network-online.target ifup@.service rc-local.service
+# verbosity
+#set -x
 
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/local/bin/kiosk-serv &>/dev/null
-
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo systemctl enable kiosk
-}
-
-kiosk_temp (){
+# number range
 LOW="0"
 HIGH="54"
+
+# dynamic variable
+number (){
 NUMBER=$(cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2)
-while :; do
-	if ((NUMBER >= $LOW && NUMBER <= $HIGH)); then
-		kiosk > /dev/null 2>&1; break
-	fi
-done
 }
 
-# provide a minute for chromium to start before running loop
-sleep 120
+# url and html file
+URL="http://feed.com/"
+HTML="cams.html"
+
+# allow 1 minute before running loop
+sleep 60
 
 # run loop
-while true
-do
-	kiosk_temp; sleep 300
+while true; do
+	number
+	if ((NUMBER >= $LOW && NUMBER <= $HIGH)); then
+		killall chromium > /dev/null 2>&1; killall chromium > /dev/null 2>&1
+		rm -fdr ${HOME}/.cache/chromium
+		rm -fdr ${HOME}/.config/chromium
+		DISPLAY=:0 chromium --noerrdialogs --incognito --kiosk --force-device-scale-factor=1 --disk-cache-dir=/tmp/null --enable-features=WebUIDarkMode --force-dark-mode ${URL}${HTML} > /dev/null 2>&1 &
+		sleep 300
+	fi
 done
 
 exit 0
