@@ -1,0 +1,38 @@
+#!/bin/bash
+# https://github.com/chubin/wttr.in
+
+if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+	:;
+else
+	echo ""
+	echo "wttr requires an internet connection."
+	exit 1
+fi
+
+URL="http://v2.wttr.in"
+
+rpt (){
+curl ${URL}
+}
+
+chk (){
+curl -s "${URL}/?format=%l:%c:%t"
+echo ""
+}
+
+if [ $# -eq 0 ]; then
+	>&2 echo -e "Arguments: chk rpt"
+	exit 1
+fi
+case $1 in
+	chk|rpt)
+	;;
+	*)
+	echo -e "Arguments: chk rpt" >&2
+	exit 1
+esac
+
+WTTR=`echo $1`
+$WTTR
+
+exit 0
