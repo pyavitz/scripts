@@ -27,8 +27,12 @@ else
 		exit 0
 	fi
 fi
-
 if [[ `command -v aria2c` ]]; then :; else sudo apt update; sudo apt upgrade -y; sudo apt install -y aria2; fi
+if [[ -e "/boot/firmware" ]]; then
+	:;
+else
+	if [[ -d "/boot/broadcom" ]]; then sudo ln -s /boot/broadcom /boot/firmware; fi
+fi
 
 echo_bdone(){
 echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
