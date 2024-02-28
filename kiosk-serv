@@ -5,12 +5,10 @@
 # verbosity
 #set -x
 
-# number range
+# dynamic variables
+number (){
 LOW="0"
 HIGH="54"
-
-# dynamic variable
-number (){
 NUMBER=$(cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2)
 }
 
@@ -23,6 +21,7 @@ sleep 60
 
 # run loop
 while true; do
+	service avahi-daemon restart # make sure avahi is available
 	number
 	if ((NUMBER >= $LOW && NUMBER <= $HIGH)); then
 		killall chromium > /dev/null 2>&1; killall chromium > /dev/null 2>&1
