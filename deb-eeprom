@@ -14,31 +14,36 @@ TXT="\033[0m"
 YLW="\e[0;33m"
 FIN="\e[0m"
 
+if [ "$USER" != "root" ]; then
+        echo "Please run this as root or with privileges."
+        exit 1
+fi
+
 if [[ `command -v wget` ]]; then
 	[[ `wget -S --spider http://github.com 2>&1 | grep 'HTTP/1.1 200 OK'` ]];
 else
 	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 		echo -e "${TXT}Installing missing depends${FIN}."
-		sudo apt update
-		sudo apt upgrade -y
-		sudo apt install -y wget
+		apt update
+		apt upgrade -y
+		apt install -y wget
 	else
 		echo -e "This script requires an internet connection."
 		exit 0
 	fi
 fi
-if [[ `command -v aria2c` ]]; then :; else sudo apt update; sudo apt upgrade -y; sudo apt install -y aria2; fi
+if [[ `command -v aria2c` ]]; then :; else apt update; apt upgrade -y; apt install -y aria2; fi
 if [[ -e "/boot/firmware" ]]; then
 	:;
 else
-	if [[ -d "/boot/broadcom" ]]; then sudo ln -s /boot/broadcom /boot/firmware; fi
+	if [[ -d "/boot/broadcom" ]]; then ln -s /boot/broadcom /boot/firmware; fi
 fi
 
-echo_bdone(){
+echo_bdone (){
 echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
 
-echo_fail(){
+echo_fail (){
 echo -n -e "${PNK}[${FIN}${RED}failed${FIN}${PNK}]${FIN}"
 }
 
@@ -59,13 +64,13 @@ echo -e ${TXT}Something went wrong${FIN}? ${YLW}Please report error${FIN}.
 
 update (){
 if [[ `command -v deb-eeprom` ]]; then
-	sudo mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
-	sudo wget -cq https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
-	sudo chmod +x /usr/local/bin/deb-eeprom
+	mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
+	wget -cq https://github.com/pyavitz/scripts/raw/master/deb-eeprom -P /usr/local/bin
+	chmod +x /usr/local/bin/deb-eeprom
 	if [[ -f "/usr/local/bin/deb-eeprom" ]]; then
-		sudo rm -f /usr/local/bin/deb-eeprom.orig
+		rm -f /usr/local/bin/deb-eeprom.orig
 	else
-		sudo mv -f /usr/local/bin/deb-eeprom.orig /usr/local/bin/deb-eeprom
+		mv -f /usr/local/bin/deb-eeprom.orig /usr/local/bin/deb-eeprom
 	fi
 fi
 deb-eeprom
@@ -79,13 +84,21 @@ rm -fdr /home/$USER/.build/eeprom
 checking (){
 echo ""
 echo -e "Checking for updates ..."
-sudo apt update
-sudo apt upgrade -y
-sudo apt install help2man rsync pciutils aria2 -y
+apt update
+apt upgrade -y
+apt install help2man rsync pciutils aria2 -y
 if [ -e /home/$USER/.eeprom ]; then rm -f /home/$USER/.eeprom; fi
-if ls /home/$USER/.build/eeprom > /dev/null 2>&1; then sudo rm -fdr /home/$USER/.build/eeprom; fi
-if ls /usr/local/src/*.patch > /dev/null 2>&1; then sudo rm -f /usr/local/src/*.patch; fi
-if [ -e /usr/local/bin/deb-eeprom-update ]; then sudo rm -f /usr/local/bin/deb-eeprom-update; fi
+if ls /home/$USER/.build/eeprom > /dev/null 2>&1; then rm -fdr /home/$USER/.build/eeprom; fi
+if ls /usr/local/src/*.patch > /dev/null 2>&1; then rm -f /usr/local/src/*.patch; fi
+if [ -e /usr/local/bin/deb-eeprom-update ]; then rm -f /usr/local/bin/deb-eeprom-update; fi
+}
+
+checkup (){
+echo ""
+rpi-eeprom-update
+echo ""
+echo "Update bootloader; rpi-eeprom-update -a"
+echo ""
 }
 
 builddir (){
@@ -146,15 +159,12 @@ mv -f debian rpi-eeprom-${EEPROM_VERSION}/
 cd rpi-eeprom-${EEPROM_VERSION}
 dpkg-buildpackage -us -nc -uc
 cd ..
-sudo dpkg -i *.deb
+dpkg -i *.deb
 cd ..
 echo -e "Done."
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
-echo ""
-echo "Check for update - sudo rpi-eeprom-update"
-echo "Update bootloader - sudo rpi-eeprom-update -a"
-echo ""
+checkup
 }
 
 upgrade (){
@@ -180,15 +190,12 @@ echo rpi-eeprom-update.patch >> debian/patches/series
 rm -f debian/control; mv -f ../rpi-eeprom-control debian/control
 dpkg-buildpackage -us -nc -uc
 cd ..
-sudo dpkg -i *.deb
+dpkg -i *.deb
 cd ..
 echo -e "Done."
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
-echo ""
-echo "Check for update - sudo rpi-eeprom-update"
-echo "Update bootloader - sudo rpi-eeprom-update -a"
-echo ""
+checkup
 }
 
 if [ $# -eq 0 ]; then
