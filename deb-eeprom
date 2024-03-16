@@ -13,6 +13,7 @@ PNK="\e[0;35m"
 TXT="\033[0m"
 YLW="\e[0;33m"
 FIN="\e[0m"
+DEPENDS="help2man rsync pciutils flashrom"
 
 if [ "$USER" != "root" ]; then
         echo "Please run this as root or with privileges."
@@ -24,12 +25,10 @@ if [[ `command -v wget` ]]; then
 else
 	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
 		echo -e "${TXT}Installing missing depends${FIN}."
-		apt update
-		apt upgrade -y
-		apt install -y wget
+		apt update; apt upgrade -y; apt install -y wget
 	else
 		echo -e "This script requires an internet connection."
-		exit 0
+		exit 1
 	fi
 fi
 if [[ `command -v aria2c` ]]; then :; else apt update; apt upgrade -y; apt install -y aria2; fi
@@ -86,11 +85,11 @@ echo ""
 echo -e "Checking for updates ..."
 apt update
 apt upgrade -y
-apt install help2man rsync pciutils aria2 -y
-if [ -e /home/$USER/.eeprom ]; then rm -f /home/$USER/.eeprom; fi
-if ls /home/$USER/.build/eeprom > /dev/null 2>&1; then rm -fdr /home/$USER/.build/eeprom; fi
-if ls /usr/local/src/*.patch > /dev/null 2>&1; then rm -f /usr/local/src/*.patch; fi
-if [ -e /usr/local/bin/deb-eeprom-update ]; then rm -f /usr/local/bin/deb-eeprom-update; fi
+apt install ${DEPENDS} -y
+if [[ -e /home/$USER/.eeprom ]]; then rm -f /home/$USER/.eeprom; fi
+if [[ `ls /home/$USER/.build/eeprom` ]] > /dev/null 2>&1; then rm -fdr /home/$USER/.build/eeprom; fi
+if [[ `ls /usr/local/src/*.patch` ]] > /dev/null 2>&1; then rm -f /usr/local/src/*.patch; fi
+if [[ -f /usr/local/bin/deb-eeprom-update ]]; then rm -f /usr/local/bin/deb-eeprom-update; fi
 }
 
 checkup (){
@@ -131,16 +130,14 @@ EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==10) {print substr
 if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	download_eeprom
 else
-	error
-	cleaning
-	exit 1
+	error; cleaning; exit 1
 fi
 }
 
 download_eeprom (){
 echo ""
 echo -en "Searching ..."
-sleep 1s
+sleep .75
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
 ${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
 }
