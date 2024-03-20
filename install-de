@@ -5,22 +5,36 @@
 
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 
-DE="xfce4 xinit thunar mousepad gvfs-backends gvfs-fuse gnome-screensaver feh \
+DE="xfce4 xinit thunar mousepad gvfs-backends gvfs-fuse gnome-screensaver feh wget mpv \
 	xfce4-terminal avahi-utils pulseaudio blueman xfce4-goodies file-roller gimp \
 	fbi alacarte chromium lightdm-gtk-greeter lightdm x11-xserver-utils xserver-xorg"
 
 MESADEV="llvm-dev ninja-build meson libvdpau-dev libxvmc-dev libva-dev libomxil-bellagio-dev python3-mako \
 	libdrm-nouveau2 libdrm-dev wayland-protocols libwayland-egl-backend-dev libunwind-dev libxdamage-dev \
 	libxcb-glx0-dev libxcb-shm0-dev libx11-xcb-dev libxcb-dri2-0-dev libxcb-dri3-dev libxcb-present-dev \
-	libxshmfence-dev libxxf86vm-dev libxrandr-dev valgrind mpv"
+	libxshmfence-dev libxxf86vm-dev libxrandr-dev valgrind"
 
 MESA_VERSION="23.3"
 M_REV="6"
 
-### CHECK ARIA2
+# internet check
+if [[ `command -v curl` ]]; then
+	:;
+else
+	echo -e "Missing dependency: curl"
+	exit 1
+fi
+if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+	:;
+else
+	echo -e "Script requires an internet connection."
+	exit 1
+fi
+
+# check for aria2
 if [ `command -v aria2c` ]; then :; else sudo apt install -y aria2; fi
 
-### MESA
+# mesa install function
 mesa_install (){
 echo ""
 echo "Installing Mesa ${MESA_VERSION}"
@@ -41,23 +55,29 @@ cd ~
 sudo rm -fdr mesa
 sudo apt purge -y --autoremove ninja-build meson
 sudo chown -R $USER:$USER /home/$USER
-echo Done.
+echo "Done."
 }
 
-### RUN
+# run script
 sudo apt update
 sudo apt upgrade -y
 sudo apt install -y ${DE}
 sudo apt purge -y light-locker
+sudo mkdir -p /usr/local/bin
 sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/sleep-locker -P /usr/local/bin
-sudo chmod +x /usr/local/bin/sleep-locker
-sudo chown root:root /usr/local/bin/sleep-locker
+if [[ -f "/usr/local/bin/sleep-locker" ]]; then
+	sudo chmod +x /usr/local/bin/sleep-locker
+	sudo chown root:root /usr/local/bin/sleep-locker
+fi
 sudo chown -R $USER:$USER /home/$USER
 sudo adduser $USER lightdm
 sudo usermod -a -G render $USER
-sudo sed -i "s/#autologin-user=/autologin-user=$USER/g" /etc/lightdm/lightdm.conf
+if [[ -f "/etc/lightdm/lightdm.conf" ]]; then
+	sudo sed -i "s/#autologin-user=/autologin-user=$USER/g" /etc/lightdm/lightdm.conf
+fi
 mkdir -p ~/.local/share/applications
 echo "NoDisplay=true" | tee ~/.local/share/applications/xfburn.desktop > /dev/null 2>&1
 mesa_install
 echo -e "You may now reboot ..."
-#sudo rm -f /usr/local/bin/install-de
+
+exit 0
