@@ -1,12 +1,12 @@
 #!/bin/bash
-# Debian Bullseye (ARM)
-# sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/install-de -P /usr/local/bin; sudo chmod +x /usr/local/bin/install-de
-# Execute: install-de
+# Debian Bookworm (ARM) (Pi5)
+# This script may or may not work "use at own risk"
+# Execute: install-de (Xfce4)
 
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 
-XFCE="xfce4 xinit thunar mousepad gvfs-backends gvfs-fuse gnome-screensaver feh \
-	xfce4-terminal avahi-utils pulseaudio blueman xfce4-goodies file-roller \
+DE="xfce4 xinit thunar mousepad gvfs-backends gvfs-fuse gnome-screensaver feh \
+	xfce4-terminal avahi-utils pulseaudio blueman xfce4-goodies file-roller gimp \
 	fbi alacarte chromium lightdm-gtk-greeter lightdm x11-xserver-utils xserver-xorg"
 
 MESADEV="llvm-dev ninja-build meson libvdpau-dev libxvmc-dev libva-dev libomxil-bellagio-dev python3-mako \
@@ -14,30 +14,28 @@ MESADEV="llvm-dev ninja-build meson libvdpau-dev libxvmc-dev libva-dev libomxil-
 	libxcb-glx0-dev libxcb-shm0-dev libx11-xcb-dev libxcb-dri2-0-dev libxcb-dri3-dev libxcb-present-dev \
 	libxshmfence-dev libxxf86vm-dev libxrandr-dev valgrind mpv"
 
+MESA_VERSION="23.3"
+M_REV="6"
+
 ### CHECK ARIA2
-aria2c_check(){
-if [ `command -v aria2c` ]; then
-	:;
-else
-	sudo apt install -y aria2;
-fi
-}
+if [ `command -v aria2c` ]; then :; else sudo apt install -y aria2; fi
 
-### MESA 20.3
-mesa_install(){
-echo
-echo Installing Mesa 20.3
+### MESA
+mesa_install (){
+echo ""
+echo "Installing Mesa ${MESA_VERSION}"
 sudo apt install -y ${MESADEV}
-
 cd ~
-mkdir mesa
-cd mesa
-${DOWNLOAD} https://gitlab.freedesktop.org/mesa/mesa/-/archive/20.3/mesa-20.3.tar.gz
-tar xf mesa-20.3.tar.gz
-rm -f mesa-20.3.tar.gz
-mkdir -p mesa-20.3/build
-cd mesa-20.3/build
-sudo meson --prefix=/usr -Dglx=disabled -Dplatforms=auto -Dllvm=disabled -Dvulkan-drivers='' -Ddri-drivers='' -Dgallium-drivers=vc4,v3d,kmsro ..
+mkdir -p mesa; cd mesa
+${DOWNLOAD} https://gitlab.freedesktop.org/mesa/mesa/-/archive/${MESA_VERSION}/mesa-${MESA_VERSION}.${M_REV}.tar.gz
+tar xf mesa-${MESA_VERSION}*.tar.gz
+rm -f mesa-${MESA_VERSION}*.tar.gz
+mv -f mesa-${MESA_VERSION}* mesa-${MESA_VERSION}.${M_REV}
+mkdir -p mesa-${MESA_VERSION}.${M_REV}/build
+cd mesa-${MESA_VERSION}.${M_REV}/build
+export CFLAGS="-mcpu=cortex-a76"
+export CXXFLAGS="-mcpu=cortex-a76"
+sudo meson --prefix /usr -Dplatforms=auto -Dvulkan-drivers=broadcom -Dgallium-drivers=kmsro,v3d,vc4 -Dbuildtype=release ..
 sudo ninja install
 cd ~
 sudo rm -fdr mesa
@@ -49,24 +47,17 @@ echo Done.
 ### RUN
 sudo apt update
 sudo apt upgrade -y
-aria2c_check
-#mesa_install
-echo ""
-sudo apt install -y ${XFCE}
+sudo apt install -y ${DE}
 sudo apt purge -y light-locker
-sudo wget -cq https://raw.githubusercontent.com/pyavitz/rpi-img-builder/xfce/files/scripts/sleep-locker -P /usr/local/bin
+sudo wget -cq https://raw.githubusercontent.com/pyavitz/scripts/master/sleep-locker -P /usr/local/bin
 sudo chmod +x /usr/local/bin/sleep-locker
 sudo chown root:root /usr/local/bin/sleep-locker
 sudo chown -R $USER:$USER /home/$USER
 sudo adduser $USER lightdm
 sudo usermod -a -G render $USER
 sudo sed -i "s/#autologin-user=/autologin-user=$USER/g" /etc/lightdm/lightdm.conf
-if [ -f /boot/config.txt ]; then
-	sudo sed -i "s/#dtoverlay=vc4-kms-v3d/dtoverlay=vc4-kms-v3d/g" /boot/config.txt;
-	sudo sed -i "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/g" /boot/config.txt;
-fi
 mkdir -p ~/.local/share/applications
 echo "NoDisplay=true" | tee ~/.local/share/applications/xfburn.desktop > /dev/null 2>&1
-echo ""
+mesa_install
 echo -e "You may now reboot ..."
-sudo rm -f /usr/local/bin/install-de
+#sudo rm -f /usr/local/bin/install-de
