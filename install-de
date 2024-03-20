@@ -49,7 +49,7 @@ mkdir -p mesa-${MESA_VERSION}.${M_REV}/build
 cd mesa-${MESA_VERSION}.${M_REV}/build
 export CFLAGS="-mcpu=cortex-a76"
 export CXXFLAGS="-mcpu=cortex-a76"
-sudo meson --prefix /usr -Dplatforms=auto -Dvulkan-drivers=broadcom -Dgallium-drivers=kmsro,v3d,vc4 -Dbuildtype=release ..
+sudo meson --prefix /usr -Dglx=disabled -Dplatforms=auto -Dllvm=disabled -Dvulkan-drivers=broadcom -Dgallium-drivers=kmsro,v3d,vc4 -Dbuildtype=release ..
 sudo ninja install
 cd ~
 sudo rm -fdr mesa
