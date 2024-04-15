@@ -1,0 +1,38 @@
+#!/bin/bash
+# If wlan loses connection restart
+# depends: ifupdown swh curl avahi
+
+func () {
+tee /etc/systemd/system/wlan-chk.service <<EOF
+[Unit]
+Description=Wlan Check
+ConditionFileIsExecutable=/usr/local/bin/wlan-chk
+After=network.target network-online.target ifup@.service bluetooth.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/wlan-chk > /dev/null 2>&1
+TimeoutSec=0
+RemainAfterExit=yes
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable wlan-chk
+}
+
+# verbosity
+#set -x
+
+# allow 1 minute before running loop
+sleep 60
+
+# run loop
+while true; do
+	service avahi-daemon restart # make sure avahi is available
+	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then sleep 300; else swh -r; sleep 300; fi
+done
+
+exit 0
