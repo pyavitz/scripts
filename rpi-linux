@@ -50,6 +50,7 @@ if [[ "$INSTALL_RULES" == "true" ]]; then
 fi
 
 RELEASE=`echo $1`
+LINUX_IMAGE="linux-image-${SERIES}"
 
 # Install new kernel
 if [[ -d "${HOME}/.deb" ]]; then
