@@ -1,27 +1,120 @@
 #!/bin/bash
-# Quickly partition and format with an XFS filesystem.
-# Depends: kpartx cloud-utils parted xfsprogs bash
+# Quickly partition and format drive
+# Depends: kpartx cloud-utils parted e2fsprogs xfsprogs bash
 
 if [ "$USER" != "root" ]; then
         echo "Please run this as root or with sudo privileges."
         exit 1
 fi
 
-NODE="/dev/mmcblk0" # /dev/nvme0n1 /dev/sda /dev/mmcblk0
-PART="p1" # if /dev/sda remove the "p".
-FSTYPE="xfs" # ext4 xfs
-LABEL="EXTERNAL"
-GPT="false"
-OFFSET="4MiB" # options: 1MiB 4MiB 16MiB
+BLD="\033[1m"
+ITL="\033[3m"
+FIN="\033[0m"
+
+# CURRENT
+echo -e ""
+echo -e "${BLD}${ITL}CURRENT PARTITION SCHEME${FIN}"
+if [[ `findmnt -v -n -o SOURCE /boot` ]]; then
+	CB_NODE=`findmnt -v -n -o SOURCE /boot`
+	CB_FSTYPE=`findmnt -v -n -o FSTYPE /boot`
+	echo -en "BOOT: ${BLD}${CB_NODE}${FIN} "
+	echo -e "FSTYPE: ${BLD}${CB_FSTYPE}${FIN}"
+fi
+if [[ `findmnt -v -n -o SOURCE /` ]]; then
+	CR_NODE=`findmnt -v -n -o SOURCE /`
+	CR_FSTYPE=`findmnt -v -n -o FSTYPE /`
+	echo -en "ROOT: ${BLD}${CR_NODE}${FIN} "
+	echo -e "FSTYPE: ${BLD}${CR_FSTYPE}${FIN}"
+fi
+
+# AVAILABLE 
+if [[ `ls /dev/sd*[a-z]` ]] > /dev/null 2>&1 || \
+	[[ `ls /dev/nvme*[0-9]` ]] > /dev/null 2>&1 || \
+		[[ `ls /dev/mmcblk[0-9]` ]] > /dev/null 2>&1; then
+	echo -e ""
+	echo -e "${BLD}${ITL}AVAILABLE DRIVES${FIN}"
+	if [[ `ls /dev/sd*[a-z]` ]] > /dev/null 2>&1; then
+		HD_CHK=`findmnt -v -n -o SOURCE / | sed 's/.$//'`
+		ls /dev/sd*[a-z]
+	fi
+	if [[ `ls /dev/nvme*[0-9]` ]] > /dev/null 2>&1; then
+		NVME_CHK=`findmnt -v -n -o SOURCE / | sed 's/..$//'`
+		ls /dev/nvme*[0-9]n1
+	fi
+	if [[ `ls /dev/mmcblk[0-9]` ]] > /dev/null 2>&1; then
+		MMC_CHK=`findmnt -v -n -o SOURCE / | sed 's/..$//'`
+		ls /dev/mmcblk[0-9]
+	fi
+else
+	echo -e ""
+	echo -e "There are no available drives to format."
+	exit 0
+fi
+
+# CHOOSE DRIVE
+echo -e ""
+echo -e "${BLD}Write in the device node you want to format:${FIN} "
+echo -en "/dev/"
+read DEVICE_NODE
+NODE="/dev/${DEVICE_NODE}"
+if [[ -e "$NODE" ]]; then
+	:;
+else
+	echo -e
+	echo -e "${BLD}WARNING:${FIN} The drive you selected is not available or invalid."
+	exit 1
+fi
+if [[ "$HD_CHK" == "$NODE" || "$NVME_CHK" == "$NODE" || "$MMC_CHK" == "$NODE" ]]; then
+	echo -e
+	echo -e "${BLD}WARNING:${FIN} The drive you selected is currently in use."
+	exit 1
+fi
+PART="p1"
+if [[ `ls $NODE | grep "/dev/sd"` ]]; then PART=`echo $PART | sed 's/p//g'`; fi
+
+# Filesystem Types
+echo -e ""
+echo -e "${BLD}Filesystem Types${FIN}"
+echo -e "${ITL}OPTIONS: ${FIN}ext4 xfs"
+echo -e ""
+echo -en "Filesystem: "
+read FSTYPE
+if [[ "$FSTYPE" =~ ^(ext4|xfs)$ ]]; then :; else echo -e "$FSTYPE not supported!"; exit 1; fi
+
+# GUID Partition Table
+echo -e ""
+echo -e "${BLD}GUID Partition Table${FIN}"
+echo -e "${ITL}OPTIONS: ${FIN}true false"
+echo -e ""
+echo -en "GPT: "
+read GPT
+if [[ "$GPT" =~ ^(true|false|yes|no)$ ]]; then :; else echo -e "Unknown option chosen?"; exit 1; fi
+
+# Partition Offset
+echo -e ""
+echo -e "${BLD}Partition Offset${FIN}"
+echo -e "${ITL}If unsure choose: 1: ${FIN}"
+echo -e ""
+echo -en "OFFSET: "
+read PART_OFFSET
+OFFSET="${PART_OFFSET}MiB"
+
+# Partition Label
+echo -e ""
+echo -e "${BLD}Partition Label${FIN}"
+echo -e "${ITL}EXAMPLE: ${FIN}EXTERNAL"
+echo -e ""
+echo -en "LABEL: "
+read LABEL
 
 # SUMMARY
 echo -e ""
-echo -e "Summary List"
+echo -e "${BLD}Summary List${FIN}"
 echo -e "Drive: $NODE"
 echo -e "Fstype: $FSTYPE"
-echo -e "Label: $LABEL"
 echo -e "GPT: $GPT"
 echo -e "Offset: $OFFSET"
+echo -e "Label: $LABEL"
 echo -e ""
 options=("Continue" "Exit")
 select opt in "${options[@]}"
@@ -56,7 +149,7 @@ if [[ -e "${NODE}" ]]; then
 	kpartx -u ${NODE}
 	sleep 1
 	# partition
-	if [[ "$GPT" == "true" ]]; then
+	if [[ "$GPT" =~ ^(true|yes)$ ]]; then
 		parted --script "${NODE}" \
 		mklabel gpt \
 		mkpart 1 ext2 ${OFFSET} 100%
