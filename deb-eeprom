@@ -199,11 +199,12 @@ if [ $# -eq 0 ]; then
 	current
 	latest
 	echo ""
-	>&2 echo -e "Arguments: check (release status)
-	   devel (unstable)
-	   edit (firmware status)
-	   update (script)
-	   upgrade (stable)"
+	>&2 echo -e "Arguments: check    (release status)
+	   devel    (unstable)
+	   edit     (firmware status)
+	   update   (script)
+	   upgrade  (stable)"
+	echo -e ""
 	exit 1
 fi
 case $1 in
