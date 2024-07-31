@@ -61,6 +61,15 @@ echo ""
 echo -e ${TXT}Something went wrong${FIN}? ${YLW}Please report error${FIN}.
 }
 
+edit (){
+if [[ -f "/etc/default/rpi-eeprom-update" ]]; then
+	nano /etc/default/rpi-eeprom-update
+else
+	echo -e ""
+	echo -e "${TXT}/etc/default/rpi-eeprom-update is missing${FIN}?"
+fi
+}
+
 update (){
 if [[ `command -v deb-eeprom` ]]; then
 	mv -f /usr/local/bin/deb-eeprom /usr/local/bin/deb-eeprom.orig
@@ -92,7 +101,7 @@ if [[ `ls /usr/local/src/*.patch` ]] > /dev/null 2>&1; then rm -f /usr/local/src
 if [[ -f /usr/local/bin/deb-eeprom-update ]]; then rm -f /usr/local/bin/deb-eeprom-update; fi
 }
 
-checkup (){
+check (){
 echo ""
 rpi-eeprom-update
 echo ""
@@ -109,29 +118,19 @@ cd /home/$USER/.build/eeprom
 wget -cq ${PATCHES}rpi-eeprom-control
 wget -cq ${PATCHES}rpi-eeprom-update.patch
 if ls /home/$USER/.build/eeprom/{rpi-eeprom-control,rpi-eeprom-update.patch} > /dev/null 2>&1; then
-	echo_bdone
-else
-	echo_fail
-	exit 1
-fi
+	echo_bdone; else echo_fail; exit 1; fi
 }
 
 find_eeprom (){
 EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
 if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	download_eeprom
-else
-	finding_eeprom
-fi
+	download_eeprom; else finding_eeprom; fi
 }
 
 finding_eeprom (){
 EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==10) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
 if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-	download_eeprom
-else
-	error; cleaning; exit 1
-fi
+	download_eeprom; else error; cleaning; exit 1; fi
 }
 
 download_eeprom (){
@@ -161,7 +160,7 @@ cd ..
 echo -e "Done."
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
-checkup
+check
 }
 
 upgrade (){
@@ -192,7 +191,7 @@ cd ..
 echo -e "Done."
 cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
-checkup
+check
 }
 
 if [ $# -eq 0 ]; then
@@ -200,14 +199,14 @@ if [ $# -eq 0 ]; then
 	current
 	latest
 	echo ""
-	>&2 echo -e "Arguments: upgrade (stable) | devel (unstable) | update (script)"
+	>&2 echo -e "Arguments: check (status) | devel (unstable) | edit (status) | update (script) | upgrade (stable)"
 	exit 1
 fi
 case $1 in
-	upgrade|devel|update)
+	check|devel|edit|update|upgrade)
 	;;
 	*)
-	echo -e "Arguments: upgrade devel update" >&2
+	echo -e "Arguments: check devel edit update upgrade" >&2
 	exit 1
 esac
 
