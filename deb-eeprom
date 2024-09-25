@@ -199,11 +199,12 @@ if [ $# -eq 0 ]; then
 	current
 	latest
 	echo ""
-	>&2 echo -e "Arguments: check    (release status)
-	   devel    (unstable)
-	   edit     (firmware status)
-	   update   (script)
-	   upgrade  (stable)"
+	>&2 echo -e "Arguments: upgrade		install stable release
+	   devel		install devel release
+	   check		release status
+	   edit			firmware release status
+
+	   update		deb-eeprom script"
 	echo -e ""
 	exit 1
 fi
