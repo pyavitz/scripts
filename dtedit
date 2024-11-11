@@ -1,0 +1,52 @@
+#!/bin/bash
+# compile and decompile device tree file
+
+# depends
+if [[ ! `command -v dtc` ]]; then
+	if [[ `curl -I https://github.com 2>&1 | grep 'HTTP/2 200'` ]]; then
+		echo -e "You are missing dependencies ..."
+		sudo apt update; sudo apt install -y device-tree-compiler
+	else
+		echo -e "You are missing the dependency device-tree-compiler"
+		exit 1
+	fi
+fi
+
+dtb (){
+DTS=`echo $1`
+DTB=`echo $1 | sed 's/dts/dtb/g'`
+if [[ -z "$DTS" ]]; then
+	echo -e "A dts file is required."
+else
+	dtc -I dts -O dtb ${DTS} -o ${DTB}
+	echo -en "Compiled: "; ls ${DTB}
+fi
+}
+
+dts (){
+DTB=`echo $1`
+DTS=`echo $1 | sed 's/dtb/dts/g'`
+if [[ -z "$DTB" ]]; then
+	echo -e "A dtb file is required."
+else
+	dtc -I dtb -O dts ${DTB} -o ${DTS}
+	echo -en "Decompiled: "; ls ${DTS}
+fi
+}
+
+if [ $# -eq 0 ]; then
+	>&2 echo -e "Arguments: dtb dts"
+	exit 1
+fi
+case $1 in
+	dtb|dts)
+	;;
+	*)
+	echo -e "Arguments: dtb dts" >&2
+	exit 1
+esac
+
+DTEDIT=`echo $1 $2`
+$DTEDIT 2>/dev/null
+
+exit 0
