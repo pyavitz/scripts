@@ -93,7 +93,7 @@ if [[ "$GPT" =~ ^(true|false|yes|no)$ ]]; then :; else echo -e "Unknown option c
 # Partition Offset
 echo -e ""
 echo -e "${BLD}Partition Offset${FIN}"
-echo -e "${ITL}If unsure choose: 1: ${FIN}"
+echo -e "${ITL}If unsure choose: 1 ${FIN}"
 echo -e ""
 echo -en "OFFSET: "
 read PART_OFFSET
