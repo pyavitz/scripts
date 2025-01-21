@@ -157,10 +157,10 @@ cd rpi-eeprom-${EEPROM_VERSION}
 dpkg-buildpackage -us -nc -uc
 cd ..
 dpkg -i *.deb
-cd ..
 echo -e "Done."
-cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
+if [[ -d "/home/root" ]]; then rm -fdr /home/root; fi
+cd ~
 check
 }
 
@@ -185,13 +185,14 @@ mkdir -p debian/patches
 mv ../rpi-eeprom-update.patch debian/patches/rpi-eeprom-update.patch 
 echo rpi-eeprom-update.patch >> debian/patches/series
 rm -f debian/control; mv -f ../rpi-eeprom-control debian/control
+echo "12" > debian/compat
 dpkg-buildpackage -us -nc -uc
 cd ..
 dpkg -i *.deb
-cd ..
 echo -e "Done."
-cd /home/$USER
 rm -fdr /home/$USER/.build/eeprom
+if [[ -d "/home/root" ]]; then rm -fdr /home/root; fi
+cd ~
 check
 }
 
