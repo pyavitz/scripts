@@ -142,6 +142,7 @@ fi
 
 if [[ -e "${NODE}" ]]; then
 	# delete
+	dd if=/dev/zero of=${NODE} bs=4096 count=4096
 	sfdisk --delete ${NODE}
 	sleep 1
 	kpartx ${NODE}
