@@ -170,13 +170,13 @@ checking; builddir; find_eeprom; build_eeprom
 
 devel (){
 builddir
-DEBIAN="https://github.com/raspberrypi/rpi-eeprom.git -b debian/bookworm"
+DEBIAN="https://github.com/raspberrypi/rpi-eeprom.git -b pios/bookworm"
 FIRMWARE="https://github.com/raspberrypi/rpi-eeprom.git"
 echo ""
 git clone ${FIRMWARE}
 git clone -q -n --filter=tree:0 --sparse ${DEBIAN} tmp &> /dev/null
 cd tmp
-git sparse-checkout set --no-cone --quiet debian &> /dev/null
+git sparse-checkout add debian &> /dev/null
 git checkout --quiet &> /dev/null
 mv debian ../rpi-eeprom
 cd ../rpi-eeprom
