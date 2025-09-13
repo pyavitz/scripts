@@ -1,6 +1,6 @@
 #!/bin/bash
 # Quickly partition and format drive
-# Depends: kpartx cloud-utils parted e2fsprogs xfsprogs bash
+# Depends: kpartx cloud-utils parted btrfs-progs e2fsprogs xfsprogs bash
 
 if [ "$USER" != "root" ]; then
         echo "Please run this as root or with sudo privileges."
@@ -75,11 +75,11 @@ if [[ `ls $NODE | grep "/dev/sd"` ]]; then PART=`echo $PART | sed 's/p//g'`; fi
 # Filesystem Types
 echo -e ""
 echo -e "${BLD}Filesystem Types${FIN}"
-echo -e "${ITL}OPTIONS: ${FIN}ext4 xfs"
+echo -e "${ITL}OPTIONS: ${FIN}btrfs ext4 xfs"
 echo -e ""
 echo -en "Filesystem: "
 read FSTYPE
-if [[ "$FSTYPE" =~ ^(ext4|xfs)$ ]]; then :; else echo -e "$FSTYPE not supported!"; exit 1; fi
+if [[ "$FSTYPE" =~ ^(btrfs|ext4|xfs)$ ]]; then :; else echo -e "$FSTYPE not supported!"; exit 1; fi
 
 # GUID Partition Table
 echo -e ""
@@ -131,6 +131,10 @@ do
 	esac
 done
 
+if [[ "$FSTYPE" == "btrfs" ]]; then
+	MKFS="mkfs.btrfs -f -L $LABEL ${NODE}${PART}"
+	RESIZEFS="btrfs filesystem resize max /mnt/${PART}"
+fi
 if [[ "$FSTYPE" == "ext4" ]]; then
 	MKFS="mkfs.ext4 -L $LABEL ${NODE}${PART}"
 	RESIZEFS="resize2fs ${NODE}${PART}"
@@ -170,10 +174,15 @@ if [[ -e "${NODE}${PART}" ]]; then
 	echo 'y' | $MKFS
 	sleep .50
 	mount ${NODE}${PART} /mnt/${PART}
+	if [[ "$FSTYPE" == "btrfs" ]]; then btrfs subvolume create /mnt/${PART}/@; fi
 	sync
 	umount /mnt/${PART}
 	sleep .50
-	mount -o defaults,noatime ${NODE}${PART} /mnt/${PART}
+	if [[ "$FSTYPE" == "btrfs" ]]; then
+		mount -o compress=lzo,noatime,subvol=@ ${NODE}${PART} /mnt/${PART}
+	else
+		mount -o defaults,noatime ${NODE}${PART} /mnt/${PART}
+	fi
 	bash growpart ${NODE} 1
 	sleep .75
 	$RESIZEFS
