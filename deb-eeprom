@@ -5,7 +5,7 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 DOWNLOAD="aria2c -c --download-result=hide --console-log-level=error --disable-ipv6=true --summary-interval=0 --show-files=false"
 PATCHES="https://raw.githubusercontent.com/pyavitz/rpi-img-builder/master/files/patches/"
-CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/pios/bookworm/debian/changelog"
+CHANGELOG="https://raw.githubusercontent.com/raspberrypi/rpi-eeprom/pios/trixie/debian/changelog"
 URL="https://archive.raspberrypi.org/debian/pool/main/r/rpi-eeprom/"
 RED="\e[0;31m"
 GRN="\e[0;32m"
@@ -170,7 +170,7 @@ checking; builddir; find_eeprom; build_eeprom
 
 devel (){
 builddir
-DEBIAN="https://github.com/raspberrypi/rpi-eeprom.git -b pios/bookworm"
+DEBIAN="https://github.com/raspberrypi/rpi-eeprom.git -b pios/trixie"
 FIRMWARE="https://github.com/raspberrypi/rpi-eeprom.git"
 echo ""
 git clone ${FIRMWARE}
