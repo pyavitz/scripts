@@ -2,7 +2,7 @@
 # Description: WiFi config helper
 # Destination: /usr/local/bin/swh
 
-export LANG=$LANG:C
+#export LANG=$LANG:C
 if [[ $EUID -ne 0 ]]; then
 	sudo "$0" "$@" 
 	exit 0
