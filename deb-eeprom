@@ -13,7 +13,7 @@ PNK="\e[0;35m"
 TXT="\033[0m"
 YLW="\e[0;33m"
 FIN="\e[0m"
-DEPENDS="help2man rsync pciutils flashrom python3-pycryptodome"
+DEPENDS="debhelper d-shlibs help2man rsync pciutils flashrom python3-pycryptodome"
 
 if [ "$USER" != "root" ]; then
         echo "Please run this as root or with privileges."
