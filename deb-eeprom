@@ -39,11 +39,11 @@ else
 fi
 
 echo_bdone (){
-echo -e "${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
+echo -e " ${PNK}[${FIN}${GRN}done${FIN}${PNK}]${FIN}"
 }
 
 echo_fail (){
-echo -n -e "${PNK}[${FIN}${RED}failed${FIN}${PNK}]${FIN}"
+echo -n -e " ${PNK}[${FIN}${RED}failed${FIN}${PNK}]${FIN}"
 }
 
 current (){
@@ -106,9 +106,9 @@ echo ""
 if [[ `rpi-eeprom-update | grep "BOOTLOADER: update available"` ]]; then rpi-eeprom-update -a; fi
 }
 
-builddir (){
+devel_dir (){
 echo ""
-echo -en "Running setup "
+echo -en "Running setup"
 sleep 1s
 mkdir -p /home/$USER/.build/eeprom
 cd /home/$USER/.build/eeprom
@@ -118,42 +118,49 @@ if ls /home/$USER/.build/eeprom/{rpi-eeprom-control,rpi-eeprom-update.patch} > /
 	echo_bdone; else echo_fail; exit 1; fi
 }
 
+upgrade_dir (){
+echo ""
+echo -en "Running setup: "
+sleep 1s
+mkdir -p /home/$USER/.build/eeprom
+cd /home/$USER/.build/eeprom
+}
+
 find_eeprom (){
 EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==1) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
-if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}-1_all.deb 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	download_eeprom; else finding_eeprom; fi
 }
 
 finding_eeprom (){
 EEPROM_VERSION=$(curl --silent -L ${CHANGELOG} | awk '{if (NR==10) {print substr($2, 1, length($2)-3)}}' | sed 's/[()]//g')
-if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}-1_all.deb 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 	download_eeprom; else error; cleaning; exit 1; fi
 }
 
 download_eeprom (){
-echo ""
 echo -en "Searching ..."
 sleep .75
-${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
-${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz && echo_bdone
+${DOWNLOAD} ${URL}rpi-eeprom_${EEPROM_VERSION}-1_all.deb
+${DOWNLOAD} ${URL}rpi-eeprom-images_${EEPROM_VERSION}-1_all.deb && echo_bdone
 }
 
-build_eeprom (){
+install_eeprom (){
 echo ""
 echo -e "Updating rpi-eeprom ..."
-tar xf rpi-eeprom_${EEPROM_VERSION}.orig.tar.gz
-tar xf rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
-rm -f rpi-eeprom_${EEPROM_VERSION}-1.debian.tar.xz
-mkdir -p debian/patches
-mv rpi-eeprom-update.patch debian/patches/rpi-eeprom-update.patch 
-echo rpi-eeprom-update.patch >> debian/patches/series
-rm -f debian/control; mv -f rpi-eeprom-control debian/control
-echo "12" > debian/compat
-mv -f debian rpi-eeprom-${EEPROM_VERSION}/
-cd rpi-eeprom-${EEPROM_VERSION}
-dpkg-buildpackage -us -nc -uc
-cd ..
-dpkg -i *.deb
+CTRL=`ar t rpi-eeprom_${EEPROM_VERSION}-1_all.deb | grep "control"`
+if [[ -f "rpi-eeprom_${EEPROM_VERSION}-1_all.deb" ]]; then
+	ar x rpi-eeprom_${EEPROM_VERSION}-1_all.deb; rm -f {data.tar.xz,debian-binary}
+	mkdir tmp; mv ${CTRL} tmp/; cd tmp
+	tar xf ${CTRL}; rm ${CTRL}
+	sed -i "s/^Depends.*/Depends: python3, binutils, pciutils, python3-pycryptodome/" control
+	tar -cJf ${CTRL} *
+	mv ${CTRL} ../; cd ..
+	ar r rpi-eeprom_${EEPROM_VERSION}-1_all.deb ${CTRL}
+	rm -fdr ${CTRL} tmp
+	dpkg -i rpi-eeprom-images_${EEPROM_VERSION}-1_all.deb rpi-eeprom_${EEPROM_VERSION}-1_all.deb
+	cd ..
+fi
 echo -e "Done."
 rm -fdr /home/$USER/.build/eeprom
 if [[ -d "/home/root" ]]; then rm -fdr /home/root; fi
@@ -162,11 +169,12 @@ check
 }
 
 upgrade (){
-checking; builddir; find_eeprom; build_eeprom
+upgrade_dir; find_eeprom; install_eeprom
 }
 
 devel (){
-builddir
+checking
+devel_dir
 DEBIAN="https://github.com/raspberrypi/rpi-eeprom.git -b pios/trixie"
 FIRMWARE="https://github.com/raspberrypi/rpi-eeprom.git"
 echo ""
