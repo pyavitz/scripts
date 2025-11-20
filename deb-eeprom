@@ -103,7 +103,11 @@ if [[ -f /usr/local/bin/deb-eeprom-update ]]; then rm -f /usr/local/bin/deb-eepr
 
 check (){
 echo ""
-if [[ `rpi-eeprom-update | grep "BOOTLOADER: update available"` ]]; then rpi-eeprom-update -a; fi
+if [[ `rpi-eeprom-update | grep "BOOTLOADER: update available"` ]]; then
+	rpi-eeprom-update -a
+else
+	echo "BOOTLOADER: no update available"
+fi
 }
 
 devel_dir (){
