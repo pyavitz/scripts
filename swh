@@ -37,8 +37,11 @@ while getopts "hsSudrWIUm" OPTION; do
 		echo -en "Scanning: "; spinner &
 
 		printf '\n'
-		iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption key:'
-
+		if [[ `command -v iwlist` ]]; then
+			iwlist ${INTERFACE} scan | grep 'ESSID:\|Frequency:\|Quality=\|Encryption key:'
+		else
+			sudo iw dev ${INTERFACE} scan | grep "SSID:"
+		fi
 		kill "$!" # kill the spinner
 		printf '\n'
 		echo -en "${FIN}"
