@@ -23,7 +23,7 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-while getopts "copsrumh" OPTION; do
+while getopts "copsrumhx" OPTION; do
 	case $OPTION in
 
 	c)
@@ -41,13 +41,18 @@ while getopts "copsrumh" OPTION; do
 		. /etc/default/governor
 		governor -r
 		;;
+	x)
+		echo 'GOVERNOR="powersave"' | tee /etc/default/governor > /dev/null 2>&1
+		. /etc/default/governor
+		governor -r
+		;;
 	s)
 		echo 'GOVERNOR="schedutil"' | tee /etc/default/governor > /dev/null 2>&1
 		. /etc/default/governor
 		governor -r
 		;;
 	r)
-		echo "$GOVERNOR" | tee /sys/devices/system/cpu/cpu[0-9]/cpufreq/scaling_governor > /dev/null 2>&1
+		echo "$GOVERNOR" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1
 		;;
 	u)
 		mv -f /usr/local/bin/governor /usr/local/bin/governor.orig
@@ -69,7 +74,8 @@ while getopts "copsrumh" OPTION; do
 			"1)" "Conservative" \
 			"2)" "Ondemand" \
 			"3)" "Performance" \
-			"4)" "Schedutil" \
+			"4)" "Powersave" \
+			"5)" "Schedutil" \
 			"E)" "Exit .." 3>&2 2>&1 1>&3
 		)
 		case $CHOICE in
@@ -89,6 +95,11 @@ while getopts "copsrumh" OPTION; do
 				whiptail --msgbox "    Governor set to Performance" 0 0
 				;;
 			"4)")
+		        	governor -p
+				export NEWT_COLORS='root=,black'
+				whiptail --msgbox "    Governor set to Powersave" 0 0
+				;;
+			"5)")
 				governor -s
 				export NEWT_COLORS='root=,black'
 				whiptail --msgbox "    Governor set to Schedutil" 0 0
@@ -107,6 +118,7 @@ while getopts "copsrumh" OPTION; do
 		echo -e "\t-c\tConservative"
 		echo -e "\t-o\tOndemand"
 		echo -e "\t-p\tPerformance"
+		echo -e "\t-x\tPowersave"
 		echo -e "\t-s\tSchedutil"
 		echo ""
 		echo -e "\t-r\tRun"
