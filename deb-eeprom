@@ -142,6 +142,11 @@ if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}-1_all.deb 2>&1 | grep
 	download_eeprom; else error; cleaning; exit 1; fi
 }
 
+man_eeprom (){
+if [[ `wget -S --spider ${URL}rpi-eeprom_${EEPROM_VERSION}-1_all.deb 2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+	download_eeprom; else error; cleaning; exit 1; fi
+}
+
 download_eeprom (){
 echo -en "Searching ..."
 sleep .75
@@ -170,6 +175,13 @@ rm -fdr /home/$USER/.build/eeprom
 if [[ -d "/home/root" ]]; then rm -fdr /home/root; fi
 cd ~
 check
+}
+
+manual (){
+echo -e ""
+echo -en "   VERSION:  "
+read EEPROM_VERSION
+upgrade_dir; man_eeprom; install_eeprom
 }
 
 upgrade (){
@@ -220,10 +232,10 @@ if [ $# -eq 0 ]; then
 	exit 1
 fi
 case $1 in
-	check|devel|edit|update|upgrade)
+	check|devel|edit|manual|update|upgrade)
 	;;
 	*)
-	echo -e "Arguments: check devel edit update upgrade" >&2
+	echo -e "Arguments: check devel edit manual update upgrade" >&2
 	exit 1
 esac
 
